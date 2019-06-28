@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+
+# source /etc/dci-downloader/dcirc.sh
+# podman pull quay.io/distributedci/dci-downloader:stable 
+# podman run --rm -ti --network host \
+# -e DCI_CLIENT_ID \
+# -e DCI_API_SECRET \
+# -e DCI_CS_URL \
+# -p 80:8000 \
+# -p 5000:5000 \
+# quay.io/distributedci/dci-downloader:stable
+
+LOCAL_STORAGE_FOLDER=${VARIABLE:-"/var/lib/dci"}
+podman run \
+    --rm \
+    -e DCI_CLIENT_ID \
+    -e DCI_API_SECRET \
+    -e DCI_CS_URL \
+    -v ${LOCAL_STORAGE_FOLDER}:/var/lib/dci:Z \
+    -p 8000:8000 \
+    -p 5000:5000 \
+    dci-downloader "$@"
