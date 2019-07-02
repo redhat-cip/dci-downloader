@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+
+function print_env_variables_missing {
+    echo "DCI_CLIENT_ID, DCI_API_SECRET and DCI_CS_URL environment variables should be defined"
+}
+
+if [[ -z "${DCI_CLIENT_ID}" ]]; then
+    print_env_variables_missing
+    exit 1
+fi
+
+if [[ -z "${DCI_API_SECRET}" ]]; then
+    print_env_variables_missing
+    exit 1
+fi
+
+if [[ -z "${DCI_CS_URL}" ]]; then
+    print_env_variables_missing
+    exit 1
+fi
+
+LOCAL_STORAGE_FOLDER=${LOCAL_STORAGE_FOLDER:-"/var/lib/dci"}
+if [ ! -d "${LOCAL_STORAGE_FOLDER}" ]; then
+    mkdir -p ${LOCAL_STORAGE_FOLDER};
+    if [ $? -ne 0 ] ; then
+        exit 1
+    fi
+fi
+
+podman pull quay.io/distributedci/dci-downloader:stable 
+podman run \
+    --rm \
+    -e DCI_CLIENT_ID \
+    -e DCI_API_SECRET \
+    -e DCI_CS_URL \
+    -e LOCAL_STORAGE_FOLDER \
+    -v ${LOCAL_STORAGE_FOLDER}:/var/lib/dci:Z \
+    quay.io/distributedci/dci-downloader:stable "$@"

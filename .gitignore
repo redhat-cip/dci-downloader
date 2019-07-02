@@ -1,0 +1,7 @@
+*.pyc
+*.egg-info
+build
+.egg
+.tox
+dist
+dcirc.sh
