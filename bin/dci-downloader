@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+if [ ! -f /etc/dci-downloader/dcirc.sh ]; then
+    echo "File /etc/dci-downloader/dcirc.sh not found!"
+    exit 1
+fi
+
+source /etc/dci-downloader/dcirc.sh
+podman pull quay.io/distributedci/dci-downloader:stable 
+
+LOCAL_STORAGE_FOLDER=${LOCAL_STORAGE_FOLDER:-"/var/lib/dci"}
+podman run \
+    --rm \
+    -e DCI_CLIENT_ID \
+    -e DCI_API_SECRET \
+    -e DCI_CS_URL \
+    -e LOCAL_STORAGE_FOLDER \
+    -v ${LOCAL_STORAGE_FOLDER}:/var/lib/dci:Z \
+    quay.io/distributedci/dci-downloader:stable "$@"
