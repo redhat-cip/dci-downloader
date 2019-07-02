@@ -1,0 +1,3 @@
+dci ALL=(ALL) NOPASSWD:ALL
+
+Defaults:dci !requiretty
