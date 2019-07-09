@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fa0fd125_c06aa8d2",
+        "filename": "dci_downloader/stats.py",
+        "patchSetId": 17
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 526
+      },
+      "writtenOn": "2019-07-09T04:38:31Z",
+      "side": 1,
+      "message": "The disk space check should be for \"local_path/topic\" and not \"local_path\".\n\nie: In this use case I have an extra disk for RHEL-8.0 with 146 free Gi:\n\n[root@jumpbox html]# df -ah /var/www/html/RHEL-8.0/\nFilesystem      Size  Used Avail Use% Mounted on\n/dev/sdc1       150G  4.6G  146G   4% /var/www/html/RHEL-8.0\n\nThe check failed because of /var/www/html df is only 4 Gi.",
+      "range": {
+        "startLine": 11,
+        "startChar": 0,
+        "endLine": 11,
+        "endChar": 41
+      },
+      "revId": "4d89c24e65431ba12c333b8148b32f62a599d92e",
+      "serverId": "6c1dc8ef-8b94-40e4-bd83-c2359d45ecc0",
+      "unresolved": false
+    }
+  ]
+}
