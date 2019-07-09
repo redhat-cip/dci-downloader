@@ -108,6 +108,24 @@
     },
     {
       "key": {
+        "uuid": "289b4d4c_b8d305c7",
+        "filename": "bin/dci-downloader",
+        "patchSetId": 24
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 28
+      },
+      "writtenOn": "2019-07-09T15:49:52Z",
+      "side": 1,
+      "message": "Red Hat is going the registry way to distribute its containerized products (OSP, OCP, …) I don\u0027t see why we should package our container images into RPMs.",
+      "parentUuid": "6f5e3add_09e4dfea",
+      "revId": "8ae30d5083235d48fc230d8a81191a0e3c5dfd61",
+      "serverId": "6c1dc8ef-8b94-40e4-bd83-c2359d45ecc0",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1d1064f1_f8b216a8",
         "filename": "dci-downloader.spec",
         "patchSetId": 24
