@@ -2,6 +2,75 @@
   "comments": [
     {
       "key": {
+        "uuid": "c08bc352_4b509c81",
+        "filename": "dci-downloader.spec",
+        "patchSetId": 17
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 526
+      },
+      "writtenOn": "2019-07-09T04:50:04Z",
+      "side": 1,
+      "message": "do we need this directory ?",
+      "range": {
+        "startLine": 26,
+        "startChar": 0,
+        "endLine": 26,
+        "endChar": 88
+      },
+      "revId": "4d89c24e65431ba12c333b8148b32f62a599d92e",
+      "serverId": "6c1dc8ef-8b94-40e4-bd83-c2359d45ecc0",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5ee23ca3_38242711",
+        "filename": "dci-downloader.spec",
+        "patchSetId": 17
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 526
+      },
+      "writtenOn": "2019-07-09T04:50:04Z",
+      "side": 1,
+      "message": "why do we create a user ? User are (most of the time) created for a service that require to run with low priv. In this case dci-downloader is more a tool than a service.\n\nIn case that this tool is used in conjunction with an agent, i guess that it will be executed by the user that runs the agent anyway.",
+      "range": {
+        "startLine": 31,
+        "startChar": 0,
+        "endLine": 33,
+        "endChar": 6
+      },
+      "revId": "4d89c24e65431ba12c333b8148b32f62a599d92e",
+      "serverId": "6c1dc8ef-8b94-40e4-bd83-c2359d45ecc0",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e69a02c2_a391e365",
+        "filename": "dci-downloader.spec",
+        "patchSetId": 17
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 526
+      },
+      "writtenOn": "2019-07-09T04:50:04Z",
+      "side": 1,
+      "message": "same comment as above",
+      "range": {
+        "startLine": 39,
+        "startChar": 0,
+        "endLine": 40,
+        "endChar": 28
+      },
+      "revId": "4d89c24e65431ba12c333b8148b32f62a599d92e",
+      "serverId": "6c1dc8ef-8b94-40e4-bd83-c2359d45ecc0",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fa0fd125_c06aa8d2",
         "filename": "dci_downloader/stats.py",
         "patchSetId": 17
