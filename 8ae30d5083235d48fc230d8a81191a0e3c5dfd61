@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "d673560d_3a9d0078",
+        "filename": "Dockerfile",
+        "patchSetId": 24
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 166
+      },
+      "writtenOn": "2019-07-09T13:59:44Z",
+      "side": 1,
+      "message": "ack",
+      "parentUuid": "fb01124c_89827b67",
+      "revId": "8ae30d5083235d48fc230d8a81191a0e3c5dfd61",
+      "serverId": "6c1dc8ef-8b94-40e4-bd83-c2359d45ecc0",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2e54a0a0_2f27303c",
         "filename": "bin/dci-downloader",
         "patchSetId": 24
@@ -72,6 +90,24 @@
     },
     {
       "key": {
+        "uuid": "6f5e3add_09e4dfea",
+        "filename": "bin/dci-downloader",
+        "patchSetId": 24
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 166
+      },
+      "writtenOn": "2019-07-09T13:59:44Z",
+      "side": 1,
+      "message": "It\u0027s a suggestion, not a blocker ;-)",
+      "parentUuid": "5dc4dfdc_6d1a98a8",
+      "revId": "8ae30d5083235d48fc230d8a81191a0e3c5dfd61",
+      "serverId": "6c1dc8ef-8b94-40e4-bd83-c2359d45ecc0",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1d1064f1_f8b216a8",
         "filename": "dci-downloader.spec",
         "patchSetId": 24
@@ -101,6 +137,24 @@
       "side": 1,
       "message": "dci-downloader is a tool for the agent\nNo systemd unit",
       "parentUuid": "1d1064f1_f8b216a8",
+      "revId": "8ae30d5083235d48fc230d8a81191a0e3c5dfd61",
+      "serverId": "6c1dc8ef-8b94-40e4-bd83-c2359d45ecc0",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a3997f18_2d33d8e7",
+        "filename": "dci-downloader.spec",
+        "patchSetId": 24
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 166
+      },
+      "writtenOn": "2019-07-09T13:59:44Z",
+      "side": 1,
+      "message": "\u003e dci-downloader is a tool for the agent\n \u003e No systemd unit\n\nGood point.",
+      "parentUuid": "88456cb5_728a984d",
       "revId": "8ae30d5083235d48fc230d8a81191a0e3c5dfd61",
       "serverId": "6c1dc8ef-8b94-40e4-bd83-c2359d45ecc0",
       "unresolved": false
