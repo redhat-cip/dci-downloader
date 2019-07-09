@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0dae5137_d6f86eed",
+        "filename": "Dockerfile",
+        "patchSetId": 24
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 166
+      },
+      "writtenOn": "2019-07-09T13:34:44Z",
+      "side": 1,
+      "message": "Is it necessary?",
+      "revId": "8ae30d5083235d48fc230d8a81191a0e3c5dfd61",
+      "serverId": "6c1dc8ef-8b94-40e4-bd83-c2359d45ecc0",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2e54a0a0_2f27303c",
+        "filename": "bin/dci-downloader",
+        "patchSetId": 24
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 166
+      },
+      "writtenOn": "2019-07-09T13:34:44Z",
+      "side": 1,
+      "message": "Not really found of downloading an image over the internet (even if it is cached).\nHow about building the container and ship it as an archive in the RPM?\npodman save/load should do the trick",
+      "revId": "8ae30d5083235d48fc230d8a81191a0e3c5dfd61",
+      "serverId": "6c1dc8ef-8b94-40e4-bd83-c2359d45ecc0",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1d1064f1_f8b216a8",
+        "filename": "dci-downloader.spec",
+        "patchSetId": 24
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 166
+      },
+      "writtenOn": "2019-07-09T13:34:44Z",
+      "side": 1,
+      "message": "Provide a systemd unit?",
+      "revId": "8ae30d5083235d48fc230d8a81191a0e3c5dfd61",
+      "serverId": "6c1dc8ef-8b94-40e4-bd83-c2359d45ecc0",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0ec58c87_10d04dba",
+        "filename": "dci_downloader/api.py",
+        "patchSetId": 24
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 166
+      },
+      "writtenOn": "2019-07-09T13:34:44Z",
+      "side": 1,
+      "message": "nitpick: use multiline strings here :)",
+      "revId": "8ae30d5083235d48fc230d8a81191a0e3c5dfd61",
+      "serverId": "6c1dc8ef-8b94-40e4-bd83-c2359d45ecc0",
+      "unresolved": false
+    }
+  ]
+}
