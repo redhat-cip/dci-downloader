@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "fb01124c_89827b67",
+        "filename": "Dockerfile",
+        "patchSetId": 24
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 405
+      },
+      "writtenOn": "2019-07-09T13:44:41Z",
+      "side": 1,
+      "message": "yes for python-pip",
+      "parentUuid": "0dae5137_d6f86eed",
+      "revId": "8ae30d5083235d48fc230d8a81191a0e3c5dfd61",
+      "serverId": "6c1dc8ef-8b94-40e4-bd83-c2359d45ecc0",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2e54a0a0_2f27303c",
         "filename": "bin/dci-downloader",
         "patchSetId": 24
@@ -36,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "5dc4dfdc_6d1a98a8",
+        "filename": "bin/dci-downloader",
+        "patchSetId": 24
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 405
+      },
+      "writtenOn": "2019-07-09T13:44:41Z",
+      "side": 1,
+      "message": "we do the same in dci-rhel-agent?\nWhy a raise 3 months after the beginning of the work",
+      "parentUuid": "2e54a0a0_2f27303c",
+      "revId": "8ae30d5083235d48fc230d8a81191a0e3c5dfd61",
+      "serverId": "6c1dc8ef-8b94-40e4-bd83-c2359d45ecc0",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1d1064f1_f8b216a8",
         "filename": "dci-downloader.spec",
         "patchSetId": 24
@@ -47,6 +83,24 @@
       "writtenOn": "2019-07-09T13:34:44Z",
       "side": 1,
       "message": "Provide a systemd unit?",
+      "revId": "8ae30d5083235d48fc230d8a81191a0e3c5dfd61",
+      "serverId": "6c1dc8ef-8b94-40e4-bd83-c2359d45ecc0",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "88456cb5_728a984d",
+        "filename": "dci-downloader.spec",
+        "patchSetId": 24
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 405
+      },
+      "writtenOn": "2019-07-09T13:44:41Z",
+      "side": 1,
+      "message": "dci-downloader is a tool for the agent\nNo systemd unit",
+      "parentUuid": "1d1064f1_f8b216a8",
       "revId": "8ae30d5083235d48fc230d8a81191a0e3c5dfd61",
       "serverId": "6c1dc8ef-8b94-40e4-bd83-c2359d45ecc0",
       "unresolved": false
