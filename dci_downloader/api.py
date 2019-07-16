@@ -2,9 +2,9 @@
 # -*- coding: utf-8 -*-
 import requests
 import shutil
+import time
 
-from requests.adapters import HTTPAdapter
-from requests.packages.urllib3.util.retry import Retry
+from functools import wraps
 
 from dciclient.v1.api.context import build_signature_context
 from dciclient.v1.api import topic as dci_topic
@@ -55,24 +55,29 @@ def get_files_list(base_url, cert, key):
     return r.json()
 
 
-def _requests_with_retry(
-    retries=3, backoff_factor=1, status_forcelist=(500, 502, 504), session=None
-):
-    session = session or requests.Session()
-    retry = Retry(
-        total=retries,
-        read=retries,
-        connect=retries,
-        backoff_factor=backoff_factor,
-        status_forcelist=status_forcelist,
-    )
-    adapter = HTTPAdapter(max_retries=retry)
-    session.mount("http://", adapter)
-    session.mount("https://", adapter)
-    return session
+def retry(tries=5, delay=2, multiplier=2):
+    def deco_retry(f):
+        @wraps(f)
+        def f_retry(*args, **kwargs):
+            _tries = tries
+            _delay = delay
+            while _tries > 1:
+                try:
+                    return f(*args, **kwargs)
+                except Exception as e:
+                    print("%s, Retrying in %d seconds..." % (str(e), _delay))
+                    time.sleep(_delay)
+                    _tries -= 1
+                    _delay *= multiplier
+            return f(*args, **kwargs)
+
+        return f_retry
+
+    return deco_retry
 
 
+@retry()
 def download_file(file, cert, key):
-    with _requests_with_retry().get(file["source"], stream=True, cert=(cert, key)) as r:
+    with requests.get(file["source"], stream=True, cert=(cert, key)) as r:
         with open(file["destination"], "wb") as f:
             shutil.copyfileobj(r.raw, f)
