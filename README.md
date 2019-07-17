@@ -8,7 +8,7 @@
 $ sudo yum -y install https://packages.distributed-ci.io/dci-release.el7.noarch.rpm
 $ sudo yum -y install dci-downloader
 $ source ~/dcirc.sh
-$ sudo --preserve-env dci-downloader --topic "RHEL-7.7"
+$ sudo --preserve-env dci-downloader --topic "RHEL-8.0"
 ```
 
 ## Table of Contents
@@ -47,7 +47,7 @@ The `dci-downloader` is packaged and available as a RPM files.
 
 ```console
 $ sudo yum -y install https://packages.distributed-ci.io/dci-release.el7.noarch.rpm
-$ sudo yum -y install dci-downloader
+$ sudo yum -y install dci-downloader python-dciclient
 ```
 
 ## Configuration
@@ -83,13 +83,14 @@ If you don't see any topic then **you should contact your EPM at Red Hat** which
 You can now download the latest version of a product using dci-downloader
 
 ```console
-$ sudo --preserve-env dci-downloader --topic "RHEL-7.7"
+$ sudo --preserve-env dci-downloader --topic "RHEL-8.0"
 ```
 
 Product will be downloaded in `/var/lib/dci`. You can customize this changing the `LOCAL_STORAGE_FOLDER` env variable
 
 ```console
-$ sudo LOCAL_STORAGE_FOLDER="/var/www/html" dci-downloader --topic "RHEL-7.7"
+$ export LOCAL_STORAGE_FOLDER="/var/www/html"
+$ sudo --preserve-env dci-downloader --topic "RHEL-8.0"
 ```
 
 ## Options
@@ -102,7 +103,7 @@ By default dci-downloader will download all variants for x86_64 architecture wit
 To download a specific architecture you can specify those using `--arch`
 
 ```console
-$ sudo --preserve-env dci-downloader --topic "RHEL-8.1" --arch "x86_64" --arch "ppc64le"
+$ sudo --preserve-env dci-downloader --topic "RHEL-8.0" --arch "x86_64" --arch "ppc64le"
 ```
 
 ### Specific variants
@@ -110,7 +111,7 @@ $ sudo --preserve-env dci-downloader --topic "RHEL-8.1" --arch "x86_64" --arch "
 To download only specific variants you can specify those using `--variant`
 
 ```console
-$ sudo --preserve-env dci-downloader --topic "RHEL-8.1" --variant "AppStream" --variant "BaseOS"
+$ sudo --preserve-env dci-downloader --topic "RHEL-8.0" --variant "AppStream" --variant "BaseOS"
 ```
 
 ### Debug RPMs
@@ -118,7 +119,7 @@ $ sudo --preserve-env dci-downloader --topic "RHEL-8.1" --variant "AppStream" --
 To download debug RPMs you can add the `--debug` flag
 
 ```console
-$ sudo --preserve-env dci-downloader --topic "RHEL-8.1" --debug
+$ sudo --preserve-env dci-downloader --topic "RHEL-8.0" --debug
 ```
 
 ## License
