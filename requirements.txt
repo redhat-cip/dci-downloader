@@ -1,2 +1,2 @@
-requests
-dciclient
+requests==2.6.0
+dciclient==0.5.1
