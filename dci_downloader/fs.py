@@ -9,6 +9,8 @@ def mkdir_p(path):
     except OSError as exc:
         if exc.errno == errno.EEXIST and os.path.isdir(path):
             pass
+        elif exc.errno in [errno.EPERM, errno.EACCES]:
+            print("Permission error on %s" % path)
         else:
             raise
 
