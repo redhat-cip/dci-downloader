@@ -1,6 +1,6 @@
 import os
 
-from dci_downloader.settings import (
+from dcidownloader.settings import (
     _read_settings_file,
     _create_retro_compatible_variables,
     get_settings,

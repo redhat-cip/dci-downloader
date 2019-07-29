@@ -1,4 +1,4 @@
-from dci_downloader.api import get_base_url
+from dcidownloader.api import get_base_url
 
 
 def test_get_base_url():

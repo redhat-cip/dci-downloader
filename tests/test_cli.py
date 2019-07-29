@@ -1,4 +1,4 @@
-from dci_downloader.cli import parse_arguments
+from dcidownloader.cli import parse_arguments
 
 
 def test_parsing_empty_arguments():
