@@ -2,9 +2,6 @@
 # -*- coding: utf-8 -*-
 import requests
 import shutil
-import time
-
-from functools import wraps
 
 from dciclient.v1.api.context import build_signature_context
 from dciclient.v1.api import topic as dci_topic
@@ -49,36 +46,18 @@ def get_base_url(topic, component):
 
 
 def get_files_list(base_url, cert, key):
+    print("Download DCI file list, it may take a few seconds")
     files_list_url = "%s/dci_files_list.json" % base_url
     r = requests.get(files_list_url, cert=(cert, key))
     r.raise_for_status()
     return r.json()
 
 
-def retry(tries=5, delay=2, multiplier=2):
-    def deco_retry(f):
-        @wraps(f)
-        def f_retry(*args, **kwargs):
-            _tries = tries
-            _delay = delay
-            while _tries > 1:
-                try:
-                    return f(*args, **kwargs)
-                except Exception as e:
-                    print("%s, Retrying in %d seconds..." % (str(e), _delay))
-                    time.sleep(_delay)
-                    _tries -= 1
-                    _delay *= multiplier
-            return f(*args, **kwargs)
-
-        return f_retry
-
-    return deco_retry
-
-
-@retry()
 def download_file(file, cert, key):
-    with requests.get(file["source"], stream=True, cert=(cert, key)) as r:
-        r.raise_for_status()
-        with open(file["destination"], "wb") as f:
-            shutil.copyfileobj(r.raw, f)
+    try:
+        with requests.get(file["source"], stream=True, cert=(cert, key)) as r:
+            r.raise_for_status()
+            with open(file["destination"], "wb") as f:
+                shutil.copyfileobj(r.raw, f)
+    except Exception as exc:
+        print(str(exc))
