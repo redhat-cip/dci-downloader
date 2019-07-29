@@ -25,9 +25,10 @@ def _create_retro_compatible_variables(settings):
 
 
 def get_settings(sys_args, env_variables):
+    remoteci_id = env_variables.get("DCI_CLIENT_ID")
     settings = {
-        "remoteci_id": env_variables["DCI_CLIENT_ID"].split("/")[1],
-        "local_storage_folder": env_variables["DCI_LOCAL_REPO"],
+        "remoteci_id": remoteci_id.split("/")[1] if remoteci_id else None,
+        "local_storage_folder": env_variables.get("DCI_LOCAL_REPO"),
     }
     settings.update(parse_arguments(sys_args))
     settings_file_path = settings["settings"]
