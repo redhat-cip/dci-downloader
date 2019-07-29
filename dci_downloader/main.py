@@ -17,15 +17,18 @@ def verify_env_variables_needed_are_setted():
         "DCI_CS_URL",
         "DCI_LOCAL_REPO",
     ]
+    has_error = False
     for env_variable in expected_env_variables:
         if env_variable not in os.environ:
-            print("Ensure %s variables are set" % ", ".join(expected_env_variables))
-            sys.exit(0)
+            has_error = True
+            print("Environment variable %s not set" % env_variable)
+    if has_error:
+        sys.exit(0)
 
 
 def main():
-    verify_env_variables_needed_are_setted()
     settings = get_settings(sys_args=sys.argv[1:], env_variables=dict(os.environ))
+    verify_env_variables_needed_are_setted()
     keys = get_keys(settings["remoteci_id"])
     if keys is None:
         print("Can't get certificate's keys, contact DCI administrator")
