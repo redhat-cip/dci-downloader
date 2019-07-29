@@ -8,7 +8,7 @@
 $ sudo yum -y install https://packages.distributed-ci.io/dci-release.el7.noarch.rpm
 $ sudo yum -y install dci-downloader
 $ source ~/dcirc.sh
-$ sudo --preserve-env dci-downloader --topic "RHEL-8.0"
+$ dci-downloader --topic "RHEL-8.0" --arch "x86_64"
 ```
 
 ## Table of Contents
@@ -83,14 +83,14 @@ If you don't see any topic then **you should contact your EPM at Red Hat** which
 You can now download the latest version of a product using dci-downloader
 
 ```console
-$ sudo --preserve-env dci-downloader --topic "RHEL-8.0"
+$ dci-downloader --topic "RHEL-8.0" --arch "x86_64"
 ```
 
 Product will be downloaded in `/var/lib/dci`. You can customize this changing the `DCI_LOCAL_REPO` env variable
 
 ```console
 $ export DCI_LOCAL_REPO="/var/www/html"
-$ sudo --preserve-env dci-downloader --topic "RHEL-8.0"
+$ dci-downloader --topic "RHEL-8.0" --arch "x86_64"
 ```
 
 ## Options
@@ -100,10 +100,10 @@ By default dci-downloader will download all variants for x86_64 architecture wit
 
 ### Download other architectures
 
-To download a specific architecture you can specify those using `--arch`
+To download a specific architecture you can specify those using `--arch` option
 
 ```console
-$ sudo --preserve-env dci-downloader --topic "RHEL-8.0" --arch "x86_64" --arch "ppc64le"
+$ dci-downloader --topic "RHEL-8.0" --arch "x86_64" --arch "ppc64le"
 ```
 
 ### Specific variants
@@ -111,7 +111,7 @@ $ sudo --preserve-env dci-downloader --topic "RHEL-8.0" --arch "x86_64" --arch "
 To download only specific variants you can specify those using `--variant`
 
 ```console
-$ sudo --preserve-env dci-downloader --topic "RHEL-8.0" --variant "AppStream" --variant "BaseOS"
+$ dci-downloader --topic "RHEL-8.0" --arch "x86_64" --variant "AppStream" --variant "BaseOS"
 ```
 
 ### Debug RPMs
@@ -119,7 +119,7 @@ $ sudo --preserve-env dci-downloader --topic "RHEL-8.0" --variant "AppStream" --
 To download debug RPMs you can add the `--debug` flag
 
 ```console
-$ sudo --preserve-env dci-downloader --topic "RHEL-8.0" --debug
+$ dci-downloader --topic "RHEL-8.0" --arch "x86_64" --debug
 ```
 
 ### Settings file
@@ -151,6 +151,16 @@ with_debug: false
 ## License
 
 Apache License, Version 2.0 (see [LICENSE](LICENSE) file)
+
+
+## Help
+
+If something is not working correctly, ensure you have the latest version installed
+
+```console
+$ dci-downloader --version
+$ dci-downloader --help
+```
 
 ## Contact
 

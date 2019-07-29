@@ -1,4 +1,4 @@
-from dci_downloader.stats import get_component_size
+from dcidownloader.stats import get_component_size
 
 
 def test_get_component_size():

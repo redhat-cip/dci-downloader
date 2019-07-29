@@ -1,4 +1,4 @@
-from dci_downloader.fs import build_destination_folder
+from dcidownloader.fs import build_destination_folder
 
 
 def test_get_base_url():

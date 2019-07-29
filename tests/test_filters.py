@@ -1,4 +1,4 @@
-from dci_downloader.filters import filter_files_list
+from dcidownloader.filters import filter_files_list
 
 
 def test_default_filter_files_list():

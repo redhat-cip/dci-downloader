@@ -1,6 +1,6 @@
 import os
 
-from dci_downloader.files_list import get_files_to_download, get_files_to_remove
+from dcidownloader.files_list import get_files_to_download, get_files_to_remove
 
 
 def test_get_files_to_download_remove_existing_files():
