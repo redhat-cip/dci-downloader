@@ -35,6 +35,12 @@ def test_default_filter_files_list():
                 "name": "PackageKit-command-not-found-debuginfo-1.1.12-2.el8.s390x.rpm",
                 "size": 29562,
             },
+            {
+                "path": "AppStream/x86_64/os",
+                "sha256": "6f48f0d285918e502035da74decf447c6bb29898206406a4ed6a92ece94d276a",
+                "name": ".treeinfo",
+                "size": 29562,
+            },
         ],
         "symlinks": [],
     }
@@ -64,6 +70,12 @@ def test_default_filter_files_list():
                 "sha256": "7949b18b6d359b435686f2f5781928675ec8b2872b96f0abf6ba10747f794694",
                 "name": "avahi-libs-0.7-19.el8.i686.rpm",
                 "size": 68920,
+            },
+            {
+                "path": "AppStream/x86_64/os",
+                "sha256": "6f48f0d285918e502035da74decf447c6bb29898206406a4ed6a92ece94d276a",
+                "name": ".treeinfo",
+                "size": 29562,
             },
         ],
         "symlinks": [],
