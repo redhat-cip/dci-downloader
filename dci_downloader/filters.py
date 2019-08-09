@@ -8,7 +8,7 @@ def _get_pattern(variants, archs, with_debug):
     archs = archs if archs else [".*"]
     regex = r"^(%s)\/(%s)/" % ("|".join(variants), "|".join(archs))
     if not with_debug:
-        regex += r"os\/"
+        regex += r"os"
     return re.compile(regex)
 
 
