@@ -1,0 +1,13 @@
+topic: RHEL-7
+local_repo_ip: 172.23.100.100
+dci_rhel_agent_cert: false
+download_only: false
+systems:
+  - labvm.local
+variants:
+  - AppStream
+  - BaseOS
+archs:
+  - x86_64
+  - ppc64le
+with_debug: false

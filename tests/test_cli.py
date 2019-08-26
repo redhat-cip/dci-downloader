@@ -7,6 +7,7 @@ def test_parsing_empty_arguments():
     assert args["archs"] == ["x86_64"]
     assert args["variants"] == []
     assert not args["with_debug"]
+    assert args["settings"] is None
 
 
 def test_parsing_download_all_argument():

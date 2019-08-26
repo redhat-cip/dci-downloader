@@ -38,8 +38,7 @@ def create_temp_file(content):
     return cert
 
 
-def build_destination_folder(topic, component):
-    destination_folder = os.getenv("LOCAL_STORAGE_FOLDER")
+def build_destination_folder(topic, component, destination_folder):
     topic_name = topic["name"].strip().replace(" ", "_")
     component_type = component["type"].strip().replace(" ", "_").lower()
     return os.path.join(destination_folder, topic_name, component_type)

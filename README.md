@@ -86,10 +86,10 @@ You can now download the latest version of a product using dci-downloader
 $ sudo --preserve-env dci-downloader --topic "RHEL-8.0"
 ```
 
-Product will be downloaded in `/var/lib/dci`. You can customize this changing the `LOCAL_STORAGE_FOLDER` env variable
+Product will be downloaded in `/var/lib/dci`. You can customize this changing the `DCI_LOCAL_REPO` env variable
 
 ```console
-$ export LOCAL_STORAGE_FOLDER="/var/www/html"
+$ export DCI_LOCAL_REPO="/var/www/html"
 $ sudo --preserve-env dci-downloader --topic "RHEL-8.0"
 ```
 
@@ -121,6 +121,35 @@ To download debug RPMs you can add the `--debug` flag
 ```console
 $ sudo --preserve-env dci-downloader --topic "RHEL-8.0" --debug
 ```
+
+### Settings file
+
+You can use a settings file to send parameters to configure dci-downloader.
+
+Use `--settings` parameter:
+
+```console
+$ sudo --preserve-env dci-downloader --settings "/etc/dci-rhel-agent/settings.yml"
+```
+
+All settings from settings.yml file will overwrite cli parameters.
+
+Examples of a settings file:
+
+```yaml
+topic: RHEL-7
+# topics:
+#   - RHEL-7
+#   - RHEL-8
+variants:
+  - AppStream
+  - BaseOS
+archs:
+  - x86_64
+  - ppc64le
+with_debug: false
+```
+
 
 ## License
 

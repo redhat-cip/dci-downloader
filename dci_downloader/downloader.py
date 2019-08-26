@@ -29,14 +29,16 @@ def clean_destination_folder(files_list, destination_folder):
         mkdir_p(dir_path)
 
 
-def download_component(topic, component, arguments, cert, key):
+def download_component(topic, component, settings, cert, key):
     print("Download component %s" % component["name"])
     base_url = get_base_url(topic, component)
     files_list = get_files_list(base_url, cert, key)
-    destination_folder = build_destination_folder(topic, component)
+    destination_folder = build_destination_folder(
+        topic, component, settings["local_storage_folder"]
+    )
     clean_destination_folder(files_list, destination_folder)
     if topic["name"].startswith("RHEL-8."):
-        files_list = filter_files_list(files_list, arguments)
+        files_list = filter_files_list(files_list, settings)
     check_destination_folder_size(files_list, destination_folder)
     files_to_download = get_files_to_download(base_url, destination_folder, files_list)
     nb_files = len(files_to_download)

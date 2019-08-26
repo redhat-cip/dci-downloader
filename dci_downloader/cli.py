@@ -55,6 +55,9 @@ def parse_arguments(arguments):
     parser.add_argument(
         "--arch", action="append", dest="archs", default=[], help="Architecture name"
     )
+    parser.add_argument(
+        "--settings", dest="settings", help="Settings file to overwrite settings"
+    )
     parsed_arguments = parser.parse_args(arguments)
     if not parsed_arguments.archs:
         parsed_arguments.archs = ["x86_64"]

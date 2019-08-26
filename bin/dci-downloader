@@ -19,9 +19,9 @@ if [[ -z "${DCI_CS_URL}" ]]; then
     exit 1
 fi
 
-LOCAL_STORAGE_FOLDER=${LOCAL_STORAGE_FOLDER:-"/var/lib/dci"}
-if [ ! -d "${LOCAL_STORAGE_FOLDER}" ]; then
-    mkdir -p ${LOCAL_STORAGE_FOLDER};
+DCI_LOCAL_REPO=${DCI_LOCAL_REPO:-"/var/lib/dci"}
+if [ ! -d "${DCI_LOCAL_REPO}" ]; then
+    mkdir -p ${DCI_LOCAL_REPO};
     if [ $? -ne 0 ] ; then
         exit 1
     fi
@@ -33,6 +33,6 @@ podman run \
     -e DCI_CLIENT_ID \
     -e DCI_API_SECRET \
     -e DCI_CS_URL \
-    -e LOCAL_STORAGE_FOLDER \
-    -v ${LOCAL_STORAGE_FOLDER}:${LOCAL_STORAGE_FOLDER}:Z \
+    -e DCI_LOCAL_REPO \
+    -v ${DCI_LOCAL_REPO}:${DCI_LOCAL_REPO}:Z \
     quay.io/distributedci/dci-downloader:stable "$@"
