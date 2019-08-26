@@ -27,7 +27,6 @@ if [ ! -d "${DCI_LOCAL_REPO}" ]; then
     fi
 fi
 
-podman pull quay.io/distributedci/dci-downloader:stable
 podman run \
     --rm \
     -e DCI_CLIENT_ID \
