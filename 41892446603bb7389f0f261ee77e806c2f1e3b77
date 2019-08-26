@@ -1,0 +1,8 @@
+Code-Review+2: Thomas Vassilian <tvassili@redhat.com>
+Workflow+1: Thomas Vassilian <tvassili@redhat.com>
+Verified+2: Zuul CI <zuul@softwarefactory-project.io>
+Submitted-by: Zuul CI <zuul@softwarefactory-project.io>
+Submitted-at: Mon, 26 Aug 2019 18:03:08 +0000
+Reviewed-on: https://softwarefactory-project.io/r/16138
+Project: dci-downloader
+Branch: refs/heads/master
