@@ -13,6 +13,10 @@ def mkdir_p(path):
             raise
 
 
+def create_parent_dir(path):
+    mkdir_p(os.path.dirname(path))
+
+
 def delete_all_symlink_in_path(path):
     for root, dirs, files in os.walk(path):
         for file in files:

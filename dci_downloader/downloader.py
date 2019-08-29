@@ -11,6 +11,7 @@ from fs import (
     delete_all_symlink_in_path,
     recreate_symlinks,
     build_destination_folder,
+    create_parent_dir,
 )
 
 
@@ -23,10 +24,6 @@ def clean_destination_folder(files_list, destination_folder):
         os.remove(file)
 
     delete_all_symlink_in_path(destination_folder)
-
-    for dir in files_list["directories"]:
-        dir_path = os.path.join(destination_folder, dir["path"], dir["name"])
-        mkdir_p(dir_path)
 
 
 def download_component(topic, component, settings, cert, key):
@@ -44,5 +41,6 @@ def download_component(topic, component, settings, cert, key):
     nb_files = len(files_to_download)
     for index, file in enumerate(files_to_download):
         print("(%d/%d): %s" % (index, nb_files, file["destination"]))
+        create_parent_dir(file["destination"])
         download_file(file, cert, key)
     recreate_symlinks(files_list["symlinks"], destination_folder)

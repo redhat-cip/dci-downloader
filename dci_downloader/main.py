@@ -19,7 +19,7 @@ def verify_env_variables_needed_are_setted():
     ]
     for env_variable in expected_env_variables:
         if env_variable not in os.environ:
-            print("Ensure %s variables are set" % ",".join(expected_env_variables))
+            print("Ensure %s variables are set" % ", ".join(expected_env_variables))
             sys.exit(0)
 
 

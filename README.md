@@ -138,9 +138,6 @@ Examples of a settings file:
 
 ```yaml
 topic: RHEL-7
-# topics:
-#   - RHEL-7
-#   - RHEL-8
 variants:
   - AppStream
   - BaseOS
