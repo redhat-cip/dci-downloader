@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3e8657dc_e67170b8",
+        "filename": "dci_downloader/main.py",
+        "patchSetId": 23
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 166
+      },
+      "writtenOn": "2019-08-30T14:10:17Z",
+      "side": 1,
+      "message": "130 for the win!",
+      "revId": "ea30d3747a16272a3f147b00978c474248889cee",
+      "serverId": "6c1dc8ef-8b94-40e4-bd83-c2359d45ecc0",
+      "unresolved": false
+    }
+  ]
+}
