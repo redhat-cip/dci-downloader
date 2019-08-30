@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0a481b4f_be09820f",
+        "filename": "dci_downloader/api.py",
+        "patchSetId": 18
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 166
+      },
+      "writtenOn": "2019-08-30T13:38:03Z",
+      "side": 1,
+      "message": "ack, intent is behavioural change: print traceback instead of blindly retrying.",
+      "revId": "a4cebad8c4f83924684c240bbed16c9060304817",
+      "serverId": "6c1dc8ef-8b94-40e4-bd83-c2359d45ecc0",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c644e125_9ca4a368",
+        "filename": "dci_downloader/main.py",
+        "patchSetId": 18
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 166
+      },
+      "writtenOn": "2019-08-30T13:38:03Z",
+      "side": 1,
+      "message": "I suggest using a non-zero return code so people using dci-downloader in a shell script can detect failure",
+      "revId": "a4cebad8c4f83924684c240bbed16c9060304817",
+      "serverId": "6c1dc8ef-8b94-40e4-bd83-c2359d45ecc0",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dde6b3d7_e299c1d8",
+        "filename": "setup.py",
+        "patchSetId": 18
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 166
+      },
+      "writtenOn": "2019-08-30T13:38:03Z",
+      "side": 1,
+      "message": "Yay :)",
+      "revId": "a4cebad8c4f83924684c240bbed16c9060304817",
+      "serverId": "6c1dc8ef-8b94-40e4-bd83-c2359d45ecc0",
+      "unresolved": false
+    }
+  ]
+}
