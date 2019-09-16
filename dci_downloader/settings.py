@@ -18,20 +18,25 @@ def _read_settings_file(settings_file_path):
 def _create_retro_compatible_variables(settings):
     new_settings = settings.copy()
     if "topic" in new_settings:
-        new_settings["topics_names"] = [new_settings["topic"]]
-    if "topics" in new_settings:
-        new_settings["topics_names"] = new_settings["topics"]
+        new_settings["topic_name"] = new_settings["topic"]
+    if "destination" in new_settings:
+        new_settings["destination_folder"] = new_settings["destination"]
     return new_settings
 
 
-def get_settings(sys_args, env_variables):
+def _get_settings_from_env_variables(env_variables):
     remoteci_id = env_variables.get("DCI_CLIENT_ID")
-    settings = {
-        "remoteci_id": remoteci_id.split("/")[1] if remoteci_id else None,
-        "local_storage_folder": env_variables.get("DCI_LOCAL_REPO"),
-    }
-    settings.update(parse_arguments(sys_args))
-    settings_file_path = settings["settings"]
+    settings = {"remoteci_id": remoteci_id.split("/")[1] if remoteci_id else None}
+    dci_local_repo = env_variables.get("DCI_LOCAL_REPO")
+    if dci_local_repo:
+        settings["destination_folder"] = dci_local_repo
+    return settings
+
+
+def get_settings(sys_args, env_variables):
+    settings = parse_arguments(sys_args)
+    settings.update(_get_settings_from_env_variables(env_variables))
+    settings_file_path = settings["settings_file_path"]
     if settings_file_path:
         settings.update(_read_settings_file(settings_file_path))
     return _create_retro_compatible_variables(settings)
