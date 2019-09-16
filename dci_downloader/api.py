@@ -2,6 +2,9 @@
 # -*- coding: utf-8 -*-
 import requests
 import shutil
+import time
+
+from functools import wraps
 
 from dciclient.v1.api.context import build_signature_context
 from dciclient.v1.api import topic as dci_topic
@@ -53,12 +56,32 @@ def get_files_list(base_url, cert, key):
     return r.json()
 
 
+def retry(tries=3, delay=2, multiplier=2):
+    def decorated_retry(f):
+        @wraps(f)
+        def f_retry(*args, **kwargs):
+            _tries = tries
+            _delay = delay
+            while _tries:
+                try:
+                    return f(*args, **kwargs)
+                except Exception as e:
+                    print("%s, retrying in %d seconds..." % (str(e), _delay))
+                    time.sleep(_delay)
+                    _tries -= 1
+                    if not _tries:
+                        raise
+                    _delay *= multiplier
+            return f(*args, **kwargs)
+
+        return f_retry
+
+    return decorated_retry
+
+
+@retry()
 def download_file(file, cert, key):
-    try:
-        r = requests.get(file["source"], stream=True, cert=(cert, key))
-        r.raise_for_status()
-        with open(file["destination"], "wb") as f:
-            shutil.copyfileobj(r.raw, f)
-    except Exception as exc:
-        print(str(exc))
-        raise
+    r = requests.get(file["source"], stream=True, cert=(cert, key))
+    r.raise_for_status()
+    with open(file["destination"], "wb") as f:
+        shutil.copyfileobj(r.raw, f)

@@ -1,19 +1,23 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import argparse
+import sys
 
 from version import __version__
 
 EXAMPLES = """
 examples:
-  # download topic RHEL-8.1
-  dci-downloader --topic "RHEL-8.1"
+  # download the latest RHEL-8 compose in /tmp/repo
+  dci-downloader RHEL-8 /tmp/repo
+
   # download specific arch
-  dci-downloader --topic "RHEL-8.1" --arch ppc64le
+  dci-downloader RHEL-8 /tmp/repo --arch ppc64le
+
   # download explicit variants
-  dci-downloader --topic "RHEL-8.1" --variant BaseOs  --variant AppStream
-  # download eveything
-  dci-downloader --all
+  dci-downloader RHEL-8 /tmp/repo --variant BaseOs --variant AppStream
+
+  # load options from settings file
+  dci-downloader --settings /home/dci/settings.yml
 """
 
 COPYRIGHT = """
@@ -25,41 +29,68 @@ copyright:
 
 def parse_arguments(arguments):
     parser = argparse.ArgumentParser(
-        usage="dci-downloader --topic [TOPIC_NAME] [OPTIONS]",
-        description="Downloader for Red Hat product",
+        usage="dci-downloader TOPIC DEST [OPTIONS]",
+        description="Download the latest RHEL compose easily:\n * source your credentials file\n * specify the topic name and the destination folder",
         epilog=EXAMPLES + COPYRIGHT,
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
-    parser.add_argument("-v", "--version", action="version", version=__version__)
     parser.add_argument(
-        "--debug", help="Add debug RPMs", dest="with_debug", action="store_true"
+        "topic_name",
+        metavar="TOPIC",
+        nargs="?",
+        help="topic name (i.e. RHEL-7.8, RHEL-8.1, etc...)",
+    )
+    parser.add_argument(
+        "destination_folder",
+        metavar="DEST",
+        nargs="?",
+        help="destination folder.",
+    )
+    parser.add_argument(
+        "--arch",
+        action="append",
+        metavar="ARCH",
+        dest="archs",
+        default=[],
+        help="download a specific architecture (default: x86_64)",
+    )
+    parser.add_argument(
+        "--variant",
+        action="append",
+        metavar="VARIANT",
+        dest="variants",
+        default=[],
+        help="download a specific variant (default: all variants)",
+    )
+    parser.add_argument(
+        "--debug", help="download debug RPMs", dest="with_debug", action="store_true"
     )
     parser.add_argument(
         "--all",
-        "--download-everything",
-        help="Download everything",
+        help="download all archs, all variants with debugs rpms",
         dest="download_everything",
         action="store_true",
     )
     parser.add_argument(
-        "-t",
-        "--topic",
-        action="append",
-        dest="topics_names",
-        default=[],
-        help="Topic name",
+        "--settings",
+        dest="settings_file_path",
+        metavar="FILE_PATH",
+        help="settings file to overwrite cli parameters",
     )
-    parser.add_argument(
-        "--variant", action="append", dest="variants", default=[], help="Variant name"
-    )
-    parser.add_argument(
-        "--arch", action="append", dest="archs", default=[], help="Architecture name"
-    )
-    parser.add_argument(
-        "--settings", dest="settings", help="Settings file to overwrite settings"
-    )
+    parser.add_argument("--version", action="version", version=__version__)
     parsed_arguments = parser.parse_args(arguments)
     if not parsed_arguments.archs:
         parsed_arguments.archs = ["x86_64"]
     parsed_arguments.archs = list(set(parsed_arguments.archs))
+
+    if parsed_arguments.settings_file_path is None:
+        topic_name = parsed_arguments.topic_name
+        destination_folder = parsed_arguments.destination_folder
+        if topic_name is None or destination_folder is None:
+            print(
+                "TOPIC and DEST arguments or --settings FILE_PATH are mutually exclusive"
+            )
+            print("Try 'dci-downloader --help' for more information.")
+            sys.exit(2)
+
     return vars(parsed_arguments)
