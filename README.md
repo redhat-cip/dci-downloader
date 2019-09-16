@@ -8,7 +8,7 @@
 $ sudo yum -y install https://packages.distributed-ci.io/dci-release.el7.noarch.rpm
 $ sudo yum -y install dci-downloader
 $ source ~/dcirc.sh
-$ dci-downloader --topic "RHEL-8.0" --arch "x86_64"
+$ dci-downloader RHEL-8 /tmp/repo
 ```
 
 ## Table of Contents
@@ -32,14 +32,11 @@ A remoteci is a Virtual Machine or a baremetal server running RHEL.
 You should check that your remoteci:
 
 - Is running the latest RHEL 7 release.
-- Has a static IPv4 address.
-- Has 160GB of free space in `/var`.
+- Has enough free space in the destination folder.
 - Should be able to reach:
   - `https://api.distributed-ci.io` (443).
-  - `https://packages.distributed-ci.io` (443).
-  - `https://registry.distributed-ci.io` (443).
-  - `https://quay.io` (443).
-  - RedHat CDN.
+  - `https://repo.distributed-ci.io` (443).
+
 
 ## Installation
 
@@ -47,7 +44,7 @@ The `dci-downloader` is packaged and available as a RPM files.
 
 ```console
 $ sudo yum -y install https://packages.distributed-ci.io/dci-release.el7.noarch.rpm
-$ sudo yum -y install dci-downloader python-dciclient
+$ sudo yum -y install dci-downloader
 ```
 
 ## Configuration
@@ -77,33 +74,28 @@ $ dcictl topic-list
 ```
 
 If you don't see any topic then **you should contact your EPM at Red Hat** which will give you access to the topic you need.
+/!\ Only RHEL topics are supported at the moment
 
 ## Usage
 
-You can now download the latest version of a product using dci-downloader
+You can now download the latest version of a product using dci-downloader.
+
+Example command to download the latest RHEL 8 compose into /tmp/repo folder.
 
 ```console
-$ dci-downloader --topic "RHEL-8.0" --arch "x86_64"
-```
-
-Product will be downloaded in `/var/lib/dci`. You can customize this changing the `DCI_LOCAL_REPO` env variable
-
-```console
-$ export DCI_LOCAL_REPO="/var/www/html"
-$ dci-downloader --topic "RHEL-8.0" --arch "x86_64"
+$ dci-downloader RHEL-8 /tmp/repo
 ```
 
 ## Options
 
 By default dci-downloader will download all variants for x86_64 architecture without debug RPMs.
 
-
 ### Download other architectures
 
 To download a specific architecture you can specify those using `--arch` option
 
 ```console
-$ dci-downloader --topic "RHEL-8.0" --arch "x86_64" --arch "ppc64le"
+$ dci-downloader RHEL-8 /tmp/repo --arch x86_64 --arch ppc64le
 ```
 
 ### Specific variants
@@ -111,7 +103,15 @@ $ dci-downloader --topic "RHEL-8.0" --arch "x86_64" --arch "ppc64le"
 To download only specific variants you can specify those using `--variant`
 
 ```console
-$ dci-downloader --topic "RHEL-8.0" --arch "x86_64" --variant "AppStream" --variant "BaseOS"
+$ dci-downloader RHEL-8 /tmp/repo --variant AppStream --variant BaseOS
+```
+
+### Download the whole component
+
+To download everything you can add the `--all` flag
+
+```console
+$ dci-downloader RHEL-8 /tmp/repo --all
 ```
 
 ### Debug RPMs
@@ -119,12 +119,12 @@ $ dci-downloader --topic "RHEL-8.0" --arch "x86_64" --variant "AppStream" --vari
 To download debug RPMs you can add the `--debug` flag
 
 ```console
-$ dci-downloader --topic "RHEL-8.0" --arch "x86_64" --debug
+$ dci-downloader RHEL-8 /tmp/repo --debug
 ```
 
 ### Settings file
 
-You can use a settings file to send parameters to configure dci-downloader.
+You can use a settings file to send parameters to parameterize dci-downloader.
 
 Use `--settings` parameter:
 
@@ -138,6 +138,7 @@ Examples of a settings file:
 
 ```yaml
 topic: RHEL-7
+destination: /tmp/repo
 variants:
   - AppStream
   - BaseOS
@@ -147,11 +148,9 @@ archs:
 with_debug: false
 ```
 
-
 ## License
 
 Apache License, Version 2.0 (see [LICENSE](LICENSE) file)
-
 
 ## Help
 
