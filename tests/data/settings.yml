@@ -1,9 +1,8 @@
-topic: RHEL-7
-local_repo_ip: 172.23.100.100
+topic: RHEL-7.6
+local_repo_ip: 192.168.1.1
 dci_rhel_agent_cert: false
-download_only: false
 systems:
-  - labvm.local
+  - dci-client
 variants:
   - AppStream
   - BaseOS
