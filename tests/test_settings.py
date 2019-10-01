@@ -1,9 +1,12 @@
 import os
+import pytest
+
 
 from dci_downloader.settings import (
     _read_settings_file,
     _create_retro_compatible_variables,
     get_settings,
+    exit_if_settings_invalid,
 )
 
 
@@ -123,3 +126,63 @@ def test_get_settings_from_env_variables_retro_compatibility_rhel_agent_settings
     assert not settings["with_debug"]
     assert settings["topic_name"] == "RHEL-7.6"
     assert settings["topic"] == "RHEL-7.6"
+
+
+def test_get_settings_add_env_variables():
+    settings = get_settings(
+        sys_args=["RHEL-8", "/var/www/html"],
+        env_variables={
+            "DCI_CLIENT_ID": "remoteci/9dd94b70-1707-46c5-a2bb-661e8d5d4212",
+            "DCI_API_SECRET": "jSbJwfCdIfq12gwHAAtg5JXSBTO3wj0xkG7oW3DlqyM7bXahPRrfZlqmSv3BhmAy",
+            "DCI_CS_URL": "https://distributed-ci.io",
+        },
+    )
+    assert settings["env_variables"] == {
+        "DCI_CLIENT_ID": "remoteci/9dd94b70-1707-46c5-a2bb-661e8d5d4212",
+        "DCI_API_SECRET": "jSbJwfCdIfq12gwHAAtg5JXSBTO3wj0xkG7oW3DlqyM7bXahPRrfZlqmSv3BhmAy",
+        "DCI_CS_URL": "https://distributed-ci.io",
+    }
+
+
+def test_exit_if_settings_invalid():
+    try:
+        exit_if_settings_invalid(
+            get_settings(
+                sys_args=["RHEL-8", "/var/www/html", "--variant", "BaseOS"],
+                env_variables={
+                    "DCI_CLIENT_ID": "remoteci/9dd94b70-1707-46c5-a2bb-661e8d5d4212",
+                    "DCI_API_SECRET": "jSbJwfCdIfq12gwHAAtg5JXSBTO3wj0xkG7oW3DlqyM7bXahPRrfZlqmSv3BhmAy",
+                    "DCI_CS_URL": "https://distributed-ci.io",
+                },
+            )
+        )
+    except SystemExit:
+        pytest.fail("exit_if_settings_invalid raise SystemExit but should not")
+
+
+def test_exit_if_settings_invalid_with_empty_env_variables():
+    with pytest.raises(SystemExit):
+        exit_if_settings_invalid(
+            get_settings(sys_args=["RHEL-8", "/var/www/html"], env_variables={})
+        )
+
+
+def test_exit_if_settings_invalid_with_bad_variants():
+    with pytest.raises(SystemExit):
+        exit_if_settings_invalid(
+            get_settings(
+                sys_args=[
+                    "RHEL-8",
+                    "/var/www/html",
+                    "--variant",
+                    "AppStream",
+                    "--variant",
+                    "Server",
+                ],
+                env_variables={
+                    "DCI_CLIENT_ID": "remoteci/9dd94b70-1707-46c5-a2bb-661e8d5d4212",
+                    "DCI_API_SECRET": "jSbJwfCdIfq12gwHAAtg5JXSBTO3wj0xkG7oW3DlqyM7bXahPRrfZlqmSv3BhmAy",
+                    "DCI_CS_URL": "https://distributed-ci.io",
+                },
+            )
+        )
