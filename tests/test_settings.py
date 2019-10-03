@@ -4,50 +4,70 @@ import pytest
 
 from dci_downloader.settings import (
     _read_settings_file,
-    _create_retro_compatible_variables,
     get_settings,
     exit_if_settings_invalid,
 )
 
 
-def test_reading_empty_settings_file():
+def _topic_equals(topic, expected_topic):
+    assert topic["name"] == expected_topic["name"]
+    assert topic["download_folder"] == expected_topic["download_folder"]
+    assert sorted(topic["archs"]) == sorted(expected_topic["archs"])
+    assert sorted(topic["variants"], key=lambda v: v["name"]) == sorted(
+        expected_topic["variants"], key=lambda v: v["name"]
+    )
+    assert topic["download_everything"] == expected_topic["download_everything"]
+
+
+def test_read_settings_file_v1():
     test_dir = os.path.dirname(os.path.abspath(__file__))
-    settings_file_path = os.path.join(test_dir, "data", "default_settings.yml")
+    settings_file_path = os.path.join(test_dir, "data", "settings_v1.yml")
     settings = _read_settings_file(settings_file_path)
     assert settings == {"topic": "RHEL-7"}
 
 
-def test_reading_settings_file():
+def test_read_settings_file_v2():
     test_dir = os.path.dirname(os.path.abspath(__file__))
-    settings_file_path = os.path.join(test_dir, "data", "settings.yml")
+    settings_file_path = os.path.join(test_dir, "data", "settings_v2.yml")
     settings = _read_settings_file(settings_file_path)
     assert settings == {
         "archs": ["x86_64", "ppc64le"],
         "dci_rhel_agent_cert": False,
         "local_repo_ip": "192.168.1.1",
         "systems": ["dci-client"],
-        "topic": "RHEL-7.6",
+        "topic": "RHEL-8.1",
         "variants": ["AppStream", "BaseOS"],
         "with_debug": False,
     }
 
 
-def test_create_retro_compatible_variables_with_topic():
-    settings = _create_retro_compatible_variables({"topic": "RHEL-7"})
-    assert settings == {"topic": "RHEL-7", "topic_name": "RHEL-7"}
-
-
-def test_create_retro_compatible_variables_with_destination():
-    settings = _create_retro_compatible_variables({"destination": "/var/www/html"})
+def test_read_settings_file_v3():
+    test_dir = os.path.dirname(os.path.abspath(__file__))
+    settings_file_path = os.path.join(test_dir, "data", "settings_v3.yml")
+    settings = _read_settings_file(settings_file_path)
     assert settings == {
-        "destination": "/var/www/html",
-        "destination_folder": "/var/www/html",
+        "jobs": [
+            {
+                "topic": "RHEL-7.6",
+                "archs": ["x86_64", "ppc64le"],
+                "variants": ["Server", "Server-SAP"],
+                "tags": ["my_tag_1", "my_tag_2"],
+                "tests": ["rhcert", "hardware_cert"],
+                "systems": ["SUT1", "SUT2", "SUT3"],
+            },
+            {
+                "topic": "RHEL-8.1",
+                "archs": ["x86_64"],
+                "variants": ["AppStream", {"name": "BaseOS", "with_debug": True}],
+                "systems": ["SUT4"],
+            },
+        ]
     }
 
 
-def test_get_settings_from_env_variables():
+def test_get_settings_set_remoteci_id_from_env_variable():
     settings = get_settings(
-        sys_args=["RHEL-8", "/var/www/html"],
+        sys_args=["RHEL-8", "/tmp/repo1"],
         env_variables={
             "DCI_CLIENT_ID": "remoteci/9dd94b70-1707-46c5-a2bb-661e8d5d4212",
             "DCI_API_SECRET": "",
@@ -55,82 +75,99 @@ def test_get_settings_from_env_variables():
         },
     )
     assert settings["remoteci_id"] == "9dd94b70-1707-46c5-a2bb-661e8d5d4212"
-    assert settings["destination_folder"] == "/var/www/html"
-
-
-def test_get_settings_transform_topic_in_topic_name():
-    test_dir = os.path.dirname(os.path.abspath(__file__))
-    settings_file_path = os.path.join(test_dir, "data", "default_settings.yml")
-    settings = get_settings(
-        sys_args=["--settings", settings_file_path],
-        env_variables={
-            "DCI_CLIENT_ID": "remoteci/9dd94b70-1707-46c5-a2bb-661e8d5d4212",
-            "DCI_API_SECRET": "",
-            "DCI_CS_URL": "",
-        },
-    )
-    assert settings["topic_name"] == "RHEL-7"
 
 
 def test_get_settings_read_arguments():
     settings = get_settings(
-        sys_args=["RHEL-8", "/var/www/html", "--arch", "ppc64le"],
-        env_variables={
-            "DCI_CLIENT_ID": "remoteci/9dd94b70-1707-46c5-a2bb-661e8d5d4212",
-            "DCI_API_SECRET": "",
-            "DCI_CS_URL": "",
+        sys_args=["RHEL-8", "/tmp/repo2", "--arch", "ppc64le", "--variant", "BaseOS"],
+        env_variables={"DCI_CLIENT_ID": "", "DCI_API_SECRET": "", "DCI_CS_URL": ""},
+    )
+    _topic_equals(
+        settings["topics"][0],
+        {
+            "download_everything": False,
+            "download_folder": "/tmp/repo2",
+            "name": "RHEL-8",
+            "archs": ["ppc64le"],
+            "variants": [{"name": "BaseOS", "with_debug": False}],
         },
     )
-    assert settings["archs"] == ["ppc64le"]
 
 
-def test_get_settings_from_env_variables_retro_compatibility():
+def test_get_settings_read_arguments_download_everything():
+    settings = get_settings(
+        sys_args=["RHEL-8", "/tmp/repo3", "--all"],
+        env_variables={"DCI_CLIENT_ID": "", "DCI_API_SECRET": "", "DCI_CS_URL": ""},
+    )
+    _topic_equals(
+        settings["topics"][0],
+        {
+            "download_everything": True,
+            "download_folder": "/tmp/repo3",
+            "name": "RHEL-8",
+            "archs": ["x86_64"],
+            "variants": [],
+        },
+    )
+
+
+def test_get_settings_from_settings_v1():
     test_dir = os.path.dirname(os.path.abspath(__file__))
-    settings_file_path = os.path.join(test_dir, "data", "default_settings.yml")
+    settings_file_path = os.path.join(test_dir, "data", "settings_v1.yml")
     settings = get_settings(
         sys_args=["--settings", settings_file_path],
         env_variables={
             "DCI_CLIENT_ID": "remoteci/9dd94b70-1707-46c5-a2bb-661e8d5d4212",
             "DCI_API_SECRET": "",
             "DCI_CS_URL": "",
-            "DCI_LOCAL_REPO": "/tmp/repo",
+            "DCI_LOCAL_REPO": "/tmp/repo4",
         },
     )
-    assert settings["destination_folder"] == "/tmp/repo"
-    assert settings["archs"] == ["x86_64"]
-    assert settings["variants"] == []
+
     assert settings["remoteci_id"] == "9dd94b70-1707-46c5-a2bb-661e8d5d4212"
-    assert not settings["download_everything"]
-    assert not settings["with_debug"]
-    assert settings["topic_name"] == "RHEL-7"
-    assert settings["topic"] == "RHEL-7"
+    _topic_equals(
+        settings["topics"][0],
+        {
+            "download_everything": False,
+            "download_folder": "/tmp/repo4",
+            "name": "RHEL-7",
+            "archs": ["x86_64"],
+            "variants": [],
+        },
+    )
 
 
-def test_get_settings_from_env_variables_retro_compatibility_rhel_agent_settings():
+def test_get_settings_from_settings_v2():
     test_dir = os.path.dirname(os.path.abspath(__file__))
-    settings_file_path = os.path.join(test_dir, "data", "settings.yml")
+    settings_file_path = os.path.join(test_dir, "data", "settings_v2.yml")
     settings = get_settings(
         sys_args=["--settings", settings_file_path],
         env_variables={
-            "DCI_CLIENT_ID": "remoteci/9dd94b70-46c5-1707-a2bb-661e8d5d4212",
+            "DCI_CLIENT_ID": "remoteci/66194b70-46c5-1707-a2bb-9dde8d5d4212",
             "DCI_API_SECRET": "",
             "DCI_CS_URL": "",
-            "DCI_LOCAL_REPO": "/tmp/repo2",
+            "DCI_LOCAL_REPO": "/tmp/repo5",
         },
     )
-    assert settings["destination_folder"] == "/tmp/repo2"
-    assert settings["archs"] == ["x86_64", "ppc64le"]
-    assert settings["variants"] == ["AppStream", "BaseOS"]
-    assert settings["remoteci_id"] == "9dd94b70-46c5-1707-a2bb-661e8d5d4212"
-    assert not settings["download_everything"]
-    assert not settings["with_debug"]
-    assert settings["topic_name"] == "RHEL-7.6"
-    assert settings["topic"] == "RHEL-7.6"
+    assert settings["remoteci_id"] == "66194b70-46c5-1707-a2bb-9dde8d5d4212"
+    _topic_equals(
+        settings["topics"][0],
+        {
+            "download_everything": False,
+            "download_folder": "/tmp/repo5",
+            "name": "RHEL-8.1",
+            "archs": ["x86_64", "ppc64le"],
+            "variants": [
+                {"name": "AppStream", "with_debug": False},
+                {"name": "BaseOS", "with_debug": False},
+            ],
+        },
+    )
 
 
 def test_get_settings_add_env_variables():
     settings = get_settings(
-        sys_args=["RHEL-8", "/var/www/html"],
+        sys_args=["RHEL-8", "/tmp/repo6"],
         env_variables={
             "DCI_CLIENT_ID": "remoteci/9dd94b70-1707-46c5-a2bb-661e8d5d4212",
             "DCI_API_SECRET": "jSbJwfCdIfq12gwHAAtg5JXSBTO3wj0xkG7oW3DlqyM7bXahPRrfZlqmSv3BhmAy",
@@ -148,7 +185,7 @@ def test_exit_if_settings_invalid():
     try:
         exit_if_settings_invalid(
             get_settings(
-                sys_args=["RHEL-8", "/var/www/html", "--variant", "BaseOS"],
+                sys_args=["RHEL-8", "/tmp/repo7", "--variant", "BaseOS"],
                 env_variables={
                     "DCI_CLIENT_ID": "remoteci/9dd94b70-1707-46c5-a2bb-661e8d5d4212",
                     "DCI_API_SECRET": "jSbJwfCdIfq12gwHAAtg5JXSBTO3wj0xkG7oW3DlqyM7bXahPRrfZlqmSv3BhmAy",
@@ -163,7 +200,7 @@ def test_exit_if_settings_invalid():
 def test_exit_if_settings_invalid_with_empty_env_variables():
     with pytest.raises(SystemExit):
         exit_if_settings_invalid(
-            get_settings(sys_args=["RHEL-8", "/var/www/html"], env_variables={})
+            get_settings(sys_args=["RHEL-8", "/tmp/repo8"], env_variables={})
         )
 
 
@@ -173,16 +210,72 @@ def test_exit_if_settings_invalid_with_bad_variants():
             get_settings(
                 sys_args=[
                     "RHEL-8",
-                    "/var/www/html",
+                    "/tmp/repo9",
                     "--variant",
                     "AppStream",
                     "--variant",
                     "Server",
                 ],
                 env_variables={
-                    "DCI_CLIENT_ID": "remoteci/9dd94b70-1707-46c5-a2bb-661e8d5d4212",
-                    "DCI_API_SECRET": "jSbJwfCdIfq12gwHAAtg5JXSBTO3wj0xkG7oW3DlqyM7bXahPRrfZlqmSv3BhmAy",
-                    "DCI_CS_URL": "https://distributed-ci.io",
+                    "DCI_CLIENT_ID": "",
+                    "DCI_API_SECRET": "",
+                    "DCI_CS_URL": "",
                 },
             )
         )
+
+
+def test_get_settings_from_settings_v3():
+    test_dir = os.path.dirname(os.path.abspath(__file__))
+    settings_file_path = os.path.join(test_dir, "data", "settings_v3.yml")
+    settings = get_settings(
+        sys_args=["--settings", settings_file_path],
+        env_variables={
+            "DCI_CLIENT_ID": "",
+            "DCI_API_SECRET": "",
+            "DCI_CS_URL": "",
+            "DCI_LOCAL_REPO": "/tmp/repo10",
+        },
+    )
+    _topic_equals(
+        settings["topics"][0],
+        {
+            "download_everything": False,
+            "download_folder": "/tmp/repo10",
+            "name": "RHEL-7.6",
+            "archs": ["x86_64", "ppc64le"],
+            "variants": [
+                {"name": "Server", "with_debug": False},
+                {"name": "Server-SAP", "with_debug": False},
+            ],
+        },
+    )
+    _topic_equals(
+        settings["topics"][1],
+        {
+            "download_everything": False,
+            "download_folder": "/tmp/repo10",
+            "name": "RHEL-8.1",
+            "archs": ["x86_64"],
+            "variants": [
+                {"name": "AppStream", "with_debug": False},
+                {"name": "BaseOS", "with_debug": True},
+            ],
+        },
+    )
+
+
+def test_get_settings_download_folder_overwrite_DCI_LOCAL_REPO():
+    test_dir = os.path.dirname(os.path.abspath(__file__))
+    settings_file_path = os.path.join(test_dir, "data", "documented_settings_file.yml")
+    settings = get_settings(
+        sys_args=["--settings", settings_file_path],
+        env_variables={
+            "DCI_CLIENT_ID": "",
+            "DCI_API_SECRET": "",
+            "DCI_CS_URL": "",
+            "DCI_LOCAL_REPO": "/tmp/repo4",
+        },
+    )
+    assert settings["download_folder"] == "/var/www/html"
+    assert len(settings["topics"]) == 2
