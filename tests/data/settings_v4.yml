@@ -1,0 +1,28 @@
+download_folder: /var/www/html
+topics:
+  - topic: RHEL-7.6
+    archs:
+      - x86_64
+      - ppc64le
+    variants:
+      - Server
+      - Server-SAP
+    tags:
+      - my_tag_1
+      - my_tag_2
+    tests:
+      - rhcert
+      - hardware_cert
+    systems:
+      - SUT1
+      - SUT2
+      - SUT3
+  - topic: RHEL-8.1
+    archs:
+      - x86_64
+    variants:
+      - AppStream
+      - name: BaseOS
+        with_debug: true
+    systems:
+      - SUT4

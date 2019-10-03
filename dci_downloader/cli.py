@@ -14,10 +14,10 @@ examples:
   dci-downloader RHEL-8 /tmp/repo --arch ppc64le
 
   # download explicit variants
-  dci-downloader RHEL-8 /tmp/repo --variant BaseOs --variant AppStream
+  dci-downloader RHEL-8 /tmp/repo --variant AppStream --variant BaseOS
 
-  # load options from settings file
-  dci-downloader --settings /home/dci/settings.yml
+  # load options from yaml settings file
+  dci-downloader --settings settings.yml
 """
 
 COPYRIGHT = """
@@ -35,16 +35,13 @@ def parse_arguments(arguments):
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
     parser.add_argument(
-        "topic_name",
+        "name",
         metavar="TOPIC",
         nargs="?",
         help="topic name (i.e. RHEL-7.8, RHEL-8.1, etc...)",
     )
     parser.add_argument(
-        "destination_folder",
-        metavar="DEST",
-        nargs="?",
-        help="destination folder.",
+        "download_folder", metavar="DEST", nargs="?", help="destination folder."
     )
     parser.add_argument(
         "--arch",
@@ -84,13 +81,16 @@ def parse_arguments(arguments):
     parsed_arguments.archs = list(set(parsed_arguments.archs))
 
     if parsed_arguments.settings_file_path is None:
-        topic_name = parsed_arguments.topic_name
-        destination_folder = parsed_arguments.destination_folder
-        if topic_name is None or destination_folder is None:
+        topic_name = parsed_arguments.name
+        download_folder = parsed_arguments.download_folder
+        if topic_name is None or download_folder is None:
             print(
                 "TOPIC and DEST arguments or --settings FILE_PATH are mutually exclusive"
             )
             print("Try 'dci-downloader --help' for more information.")
             sys.exit(2)
-
+    parsed_arguments.variants = [
+        {"name": v, "with_debug": parsed_arguments.with_debug}
+        for v in parsed_arguments.variants
+    ]
     return vars(parsed_arguments)

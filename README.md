@@ -119,7 +119,7 @@ $ dci-downloader RHEL-8 /tmp/repo --all
 To download debug RPMs you can add the `--debug` flag
 
 ```console
-$ dci-downloader RHEL-8 /tmp/repo --debug
+$ dci-downloader RHEL-8 /tmp/repo --variant AppStream --debug
 ```
 
 ### Settings file
@@ -137,15 +137,22 @@ All settings from settings.yml file will overwrite cli parameters.
 Examples of a settings file:
 
 ```yaml
-topic: RHEL-7
-destination: /tmp/repo
-variants:
-  - AppStream
-  - BaseOS
-archs:
-  - x86_64
-  - ppc64le
-with_debug: false
+download_folder: /tmp/repo
+topics:
+  - topic: RHEL-7.8
+    archs:
+      - x86_64
+      - ppc64le
+    variants:
+      - Server
+      - Server-SAP
+  - topic: RHEL-8.1
+    archs:
+      - x86_64
+    variants:
+      - AppStream
+      - name: BaseOS
+        with_debug: true
 ```
 
 ## License
