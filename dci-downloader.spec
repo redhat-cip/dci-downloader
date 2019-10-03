@@ -1,7 +1,7 @@
 %global srcname dci-downloader
 
 Name:             dci-downloader
-Version:          2.0.0
+Version:          2.1.0
 Release:          1.VERS%{?dist}
 Summary:          DCI Downloader
 License:          ASL 2.0
@@ -35,6 +35,8 @@ DCI downloader used to download Red Hat products
 %{_bindir}/%{srcname}
 
 %changelog
+* Tue Oct 03 2019 Guillaume Vincent <gvincent@redhat.com> - 2.1.0-1
+- Add multiple topics in settings file
 * Mon Sep 16 2019 Guillaume Vincent <gvincent@redhat.com> - 2.0.0-1
 - Change the API and simplify dci-downloader
 * Mon Jul 29 2019 Guillaume Vincent <gvincent@redhat.com> - 1.0.0-1

@@ -16,40 +16,79 @@ def _read_settings_file(settings_file_path):
             traceback.print_exc()
 
 
-def _create_retro_compatible_variables(settings):
+def _get_download_folder(cli_settings, env_variables):
+    dci_local_repo = env_variables.get("DCI_LOCAL_REPO")
+    if dci_local_repo:
+        return dci_local_repo
+    download_folder = cli_settings["download_folder"]
+    if download_folder:
+        return download_folder
+    return None
+
+
+def _clean_topic(topic):
+    name = topic["topic"] if "topic" in topic else topic["name"]
+    archs = topic["archs"] if "archs" in topic else ["x86_64"]
+    variants = topic["variants"] if "variants" in topic else []
+    variants = [
+        v if type(v) is dict else {"name": v, "with_debug": False} for v in variants
+    ]
+    all = topic["download_everything"] if "download_everything" in topic else False
+    return {
+        "name": name,
+        "archs": archs,
+        "variants": variants,
+        "download_everything": all,
+        "download_folder": topic["download_folder"],
+    }
+
+
+def _clean_settings(settings):
     new_settings = settings.copy()
-    if "topic" in new_settings:
-        new_settings["topic_name"] = new_settings["topic"]
-    if "destination" in new_settings:
-        new_settings["destination_folder"] = new_settings["destination"]
+    new_topics = []
+    for topic in settings["topics"]:
+        topic["download_folder"] = settings["download_folder"]
+        new_topics.append(_clean_topic(topic))
+    new_settings["topics"] = new_topics
     return new_settings
 
 
-def _get_settings_from_env_variables(env_variables):
-    remoteci_id = env_variables.get("DCI_CLIENT_ID")
-    settings = {"remoteci_id": remoteci_id.split("/")[1] if remoteci_id else None}
-    settings["env_variables"] = env_variables
-    dci_local_repo = env_variables.get("DCI_LOCAL_REPO")
-    if dci_local_repo:
-        settings["destination_folder"] = dci_local_repo
+def _keep_backward_compatibility(settings):
+    new_settings = {}
+    if "topic" in settings:
+        new_settings["topics"] = [settings]
+        return new_settings
+    if "download_folder" in settings:
+        new_settings["download_folder"] = settings["download_folder"]
+    if "jobs" in settings:
+        new_settings["topics"] = settings["jobs"]
+        return new_settings
     return settings
 
 
+def _get_remoteci_id(env_variables):
+    remoteci_id = env_variables.get("DCI_CLIENT_ID")
+    if remoteci_id:
+        return remoteci_id.split("/")[1]
+    return None
+
+
 def get_settings(sys_args, env_variables):
-    settings = parse_arguments(sys_args)
-    settings.update(_get_settings_from_env_variables(env_variables))
-    settings_file_path = settings["settings_file_path"]
+    cli_arguments = parse_arguments(sys_args)
+    settings = {
+        "remoteci_id": _get_remoteci_id(env_variables),
+        "env_variables": env_variables,
+        "topics": [cli_arguments],
+        "download_folder": _get_download_folder(cli_arguments, env_variables),
+    }
+    settings_file_path = cli_arguments["settings_file_path"]
     if settings_file_path:
-        settings.update(_read_settings_file(settings_file_path))
-    return _create_retro_compatible_variables(settings)
+        settings_from_file = _read_settings_file(settings_file_path)
+        settings.update(_keep_backward_compatibility(settings_from_file))
+    return _clean_settings(settings)
 
 
-def exit_if_settings_invalid(settings):
-    has_error = False
-    for env_variable in ["DCI_CLIENT_ID", "DCI_API_SECRET", "DCI_CS_URL"]:
-        if env_variable not in settings["env_variables"]:
-            has_error = True
-            print("Environment variable %s not set" % env_variable)
+def _check_variants_are_valid(topic):
     topic_variants = {
         "RHEL-7": [
             "Server-NFV",
@@ -74,18 +113,39 @@ def exit_if_settings_invalid(settings):
             "unified",
         ],
     }
-    for topic, variants in topic_variants.items():
-        topic_name = settings["topic_name"]
-        variants_not_allowed = set(settings["variants"]) - set(variants)
-        if topic_name.startswith(topic) and variants_not_allowed:
+    has_error = False
+    for topic_name, variants in topic_variants.items():
+        current_topic_name = topic["name"]
+        current_variants = [v["name"] for v in topic["variants"]]
+        variants_not_allowed = set(current_variants) - set(variants)
+        if current_topic_name.startswith(topic_name) and variants_not_allowed:
             has_error = True
             print(
                 "Variants %s for the %s topic are not valid"
-                % (", ".join(variants_not_allowed), topic_name)
+                % (", ".join(variants_not_allowed), current_topic_name)
             )
             print(
                 "The authorized variants for %s are %s."
-                % (topic_name, ", ".join(variants))
+                % (current_topic_name, ", ".join(variants))
             )
+            break
+    return has_error
+
+
+def exit_if_settings_invalid(settings):
+    has_error = False
+    for env_variable in ["DCI_CLIENT_ID", "DCI_API_SECRET", "DCI_CS_URL"]:
+        if env_variable not in settings["env_variables"]:
+            has_error = True
+            print("Environment variable %s not set" % env_variable)
+
+    if settings["download_folder"] is None:
+        has_error = True
+        print("The destination folder for the download is not specified.")
+
+    for topic in settings["topics"]:
+        if _check_variants_are_valid(topic):
+            has_error = True
+
     if has_error:
         sys.exit(1)
