@@ -16,11 +16,11 @@ def _file_clean(file_path, sha256):
     return _sha256_hexdigest_file(file_path) == sha256
 
 
-def get_files_to_download(base_url, destination_folder, files_list):
+def get_files_to_download(base_url, download_folder, files_list):
     files_to_download = []
     for file in files_list["files"]:
         relative_path = os.path.join(file["path"], file["name"])
-        file_path = os.path.join(destination_folder, relative_path)
+        file_path = os.path.join(download_folder, relative_path)
         if os.path.exists(file_path):
             continue
         files_to_download.append(
@@ -29,13 +29,13 @@ def get_files_to_download(base_url, destination_folder, files_list):
     return files_to_download
 
 
-def get_files_to_remove(files_list, destination_folder):
+def get_files_to_remove(files_list, download_folder):
     files_list_paths = {}
     for file in files_list["files"]:
-        file_path = os.path.join(destination_folder, file["path"], file["name"])
+        file_path = os.path.join(download_folder, file["path"], file["name"])
         files_list_paths[file_path] = file
     files_to_remove = []
-    for root, dirs, files in os.walk(destination_folder):
+    for root, dirs, files in os.walk(download_folder):
         for file in files:
             file_path = os.path.join(root, file)
             if os.path.islink(file_path):

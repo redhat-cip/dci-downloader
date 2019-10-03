@@ -1,4 +1,5 @@
 from dci_downloader.filters import filter_files_list
+from dci_downloader.settings import get_settings
 
 
 def test_default_filter_files_list():
@@ -44,12 +45,7 @@ def test_default_filter_files_list():
         ],
         "symlinks": [],
     }
-    arguments = {
-        "archs": ["x86_64"],
-        "variants": [],
-        "with_debug": False,
-        "download_everything": False,
-    }
+    settings = get_settings(sys_args=["RHEL-8", "/tmp"])["topics"][0]
     expected_files_list = {
         "directories": [],
         "files": [
@@ -80,7 +76,7 @@ def test_default_filter_files_list():
         ],
         "symlinks": [],
     }
-    assert filter_files_list(dci_files_list, arguments) == expected_files_list
+    assert filter_files_list(dci_files_list, settings) == expected_files_list
 
 
 def test_filter_files_list_with_debug():
@@ -102,12 +98,9 @@ def test_filter_files_list_with_debug():
         ],
         "symlinks": [],
     }
-    arguments = {
-        "archs": ["x86_64"],
-        "variants": ["AppStream", "BaseOS"],
-        "with_debug": True,
-        "download_everything": False,
-    }
+    settings = get_settings(
+        sys_args=["RHEL-8", "/tmp", "--variant", "AppStream", "--debug"]
+    )["topics"][0]
     expected_files_list = {
         "directories": [],
         "files": [
@@ -126,7 +119,7 @@ def test_filter_files_list_with_debug():
         ],
         "symlinks": [],
     }
-    assert filter_files_list(dci_files_list, arguments) == expected_files_list
+    assert filter_files_list(dci_files_list, settings) == expected_files_list
 
 
 def test_non_existing_variants_are_ignored():
@@ -166,12 +159,9 @@ def test_non_existing_variants_are_ignored():
         ],
         "symlinks": [],
     }
-    arguments = {
-        "archs": ["x86_64"],
-        "variants": ["Server"],
-        "with_debug": False,
-        "download_everything": False,
-    }
+    settings = get_settings(sys_args=["RHEL-8", "/tmp", "--variant", "Server"])[
+        "topics"
+    ][0]
     expected_files_list = {
         "directories": [],
         "files": [
@@ -184,7 +174,7 @@ def test_non_existing_variants_are_ignored():
         ],
         "symlinks": [],
     }
-    assert filter_files_list(dci_files_list, arguments) == expected_files_list
+    assert filter_files_list(dci_files_list, settings) == expected_files_list
 
 
 def test_filter_files_list_download_everything():
@@ -224,12 +214,7 @@ def test_filter_files_list_download_everything():
         ],
         "symlinks": [],
     }
-    arguments = {
-        "archs": ["x86_64"],
-        "variants": [],
-        "with_debug": False,
-        "download_everything": True,
-    }
+    settings = get_settings(sys_args=["RHEL-8", "/tmp", "--all"])["topics"][0]
     expected_files_list = {
         "directories": [],
         "files": [
@@ -266,4 +251,4 @@ def test_filter_files_list_download_everything():
         ],
         "symlinks": [],
     }
-    assert filter_files_list(dci_files_list, arguments) == expected_files_list
+    assert filter_files_list(dci_files_list, settings) == expected_files_list

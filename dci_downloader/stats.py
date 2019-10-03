@@ -21,6 +21,6 @@ def enough_space(files_list, local_path):
     return component_size < free_space
 
 
-def check_destination_folder_size(files_list, destination_folder):
-    if not enough_space(files_list, destination_folder):
-        raise Exception("Not enough space in %s" % destination_folder)
+def check_download_folder_size(files_list, download_folder):
+    if not enough_space(files_list, download_folder):
+        raise Exception("Not enough space in %s" % download_folder)

@@ -28,18 +28,19 @@ def main():
         sys.exit(0)
     cert = create_temp_file(keys["cert"]).name
     key = create_temp_file(keys["key"]).name
-    topic_name = settings["topic_name"]
     return_code = 0
-    try:
-        topic = get_topic(topic_name)
-        if topic is None:
-            raise ("Topic name %s not found" % topic_name)
-        for component in get_components(topic):
-            download_component(topic, component, settings, cert, key)
-    except Exception:
-        print("Exception when downloading components for %s" % topic_name)
-        traceback.print_exc()
-        return_code = 1
+    for topic_settings in settings["topics"]:
+        topic_name = topic_settings["name"]
+        try:
+            topic = get_topic(topic_name)
+            if topic is None:
+                raise ("Topic name %s not found" % topic_name)
+            for component in get_components(topic):
+                download_component(topic, component, topic_settings, cert, key)
+        except Exception:
+            print("Exception when downloading components for %s" % topic_name)
+            traceback.print_exc()
+            return_code = 1
     os.unlink(cert)
     os.unlink(key)
     sys.exit(return_code)
