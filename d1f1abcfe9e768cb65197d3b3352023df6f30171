@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b73c53c7_162380f3",
+        "filename": "dci_downloader/api.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 405
+      },
+      "writtenOn": "2019-10-09T09:42:55Z",
+      "side": 1,
+      "message": "move this in the for loop",
+      "range": {
+        "startLine": 28,
+        "startChar": 4,
+        "endLine": 28,
+        "endChar": 46
+      },
+      "revId": "d1f1abcfe9e768cb65197d3b3352023df6f30171",
+      "serverId": "6c1dc8ef-8b94-40e4-bd83-c2359d45ecc0",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5735b031_66c9df4a",
+        "filename": "dci_downloader/api.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 405
+      },
+      "writtenOn": "2019-10-09T09:42:55Z",
+      "side": 1,
+      "message": "topic[\"component_types\"]",
+      "range": {
+        "startLine": 31,
+        "startChar": 26,
+        "endLine": 31,
+        "endChar": 41
+      },
+      "revId": "d1f1abcfe9e768cb65197d3b3352023df6f30171",
+      "serverId": "6c1dc8ef-8b94-40e4-bd83-c2359d45ecc0",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9bffe7ff_566605a3",
+        "filename": "dci_downloader/api.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 405
+      },
+      "writtenOn": "2019-10-09T09:42:55Z",
+      "side": 1,
+      "message": "use components.extend() instead",
+      "range": {
+        "startLine": 40,
+        "startChar": 8,
+        "endLine": 41,
+        "endChar": 40
+      },
+      "revId": "d1f1abcfe9e768cb65197d3b3352023df6f30171",
+      "serverId": "6c1dc8ef-8b94-40e4-bd83-c2359d45ecc0",
+      "unresolved": false
+    }
+  ]
+}
