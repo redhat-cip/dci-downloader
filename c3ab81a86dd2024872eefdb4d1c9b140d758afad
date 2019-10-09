@@ -16,6 +16,29 @@
       "revId": "c3ab81a86dd2024872eefdb4d1c9b140d758afad",
       "serverId": "6c1dc8ef-8b94-40e4-bd83-c2359d45ecc0",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "81197ebf_602abaef",
+        "filename": "dci_downloader/api.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 405
+      },
+      "writtenOn": "2019-10-09T09:42:55Z",
+      "side": 1,
+      "message": "3 remarks\n\n1/\n\n\"component_types\" is already present in topic\nNo need for an extra request\n\n2/\n\nThen we want the last components only for every component type. So the limit 1 is important\n\nIf not, we are going to download every component type 3 times. This is not what we want.\n\n3/\n\nUse components.extend(res[\"components\"]) instead of the for loop append",
+      "range": {
+        "startLine": 26,
+        "startChar": 0,
+        "endLine": 44,
+        "endChar": 21
+      },
+      "revId": "c3ab81a86dd2024872eefdb4d1c9b140d758afad",
+      "serverId": "6c1dc8ef-8b94-40e4-bd83-c2359d45ecc0",
+      "unresolved": false
     }
   ]
 }
