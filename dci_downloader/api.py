@@ -25,10 +25,19 @@ def get_topic(topic_name):
 
 def get_components(topic):
     context = build_signature_context()
-    return context.session.post(
-        "%s/jobs/schedule" % context.dci_cs_api,
-        json={"topic_id": topic["id"], "dry_run": True},
-    ).json()["components"]
+
+    components = []
+    for component_type in topic["component_types"]:
+        res = dci_topic.list_components(context,
+                                        topic["id"],
+                                        limit=1,
+                                        sort="-created_at",
+                                        offset=0,
+                                        where="type:%s,state:active"
+                                        % component_type,
+                                        ).json()
+        components.extend(res["components"])
+    return components
 
 
 def get_keys(remoteci_id):
