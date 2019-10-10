@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a70bc326_1f1801ec",
+        "filename": "dci_downloader/fs.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 166
+      },
+      "writtenOn": "2019-10-10T09:54:31Z",
+      "side": 1,
+      "message": "I checked that the associated test do catch a TypeError if this line is not here.",
+      "revId": "e6179c6a4c0803ea284f1f13979896ce9ee2be98",
+      "serverId": "6c1dc8ef-8b94-40e4-bd83-c2359d45ecc0",
+      "unresolved": false
+    }
+  ]
+}
