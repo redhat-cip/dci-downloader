@@ -39,6 +39,7 @@ def recreate_symlinks(symlinks, destination_path):
 
 def create_temp_file(content):
     cert = NamedTemporaryFile(delete=False)
+    content = content if type(content) is bytes else content.encode()
     cert.write(content)
     cert.close()
     return cert
