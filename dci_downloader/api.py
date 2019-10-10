@@ -28,14 +28,14 @@ def get_components(topic):
 
     components = []
     for component_type in topic["component_types"]:
-        res = dci_topic.list_components(context,
-                                        topic["id"],
-                                        limit=1,
-                                        sort="-created_at",
-                                        offset=0,
-                                        where="type:%s,state:active"
-                                        % component_type,
-                                        ).json()
+        res = dci_topic.list_components(
+            context,
+            topic["id"],
+            limit=1,
+            sort="-created_at",
+            offset=0,
+            where="type:%s,state:active" % component_type,
+        ).json()
         components.extend(res["components"])
     return components
 

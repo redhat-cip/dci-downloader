@@ -37,7 +37,6 @@ You should check that your remoteci:
   - `https://api.distributed-ci.io` (443).
   - `https://repo.distributed-ci.io` (443).
 
-
 ## Installation
 
 The `dci-downloader` is packaged and available as a RPM files.
@@ -46,6 +45,10 @@ The `dci-downloader` is packaged and available as a RPM files.
 $ sudo yum -y install https://packages.distributed-ci.io/dci-release.el7.noarch.rpm
 $ sudo yum -y install dci-downloader
 ```
+
+## Limitation
+
+At the moment it is not possible to perform two parallel downloads in two different processes. If you use a configuration file with multiple topics, the download is done syncronously topic after topic.
 
 ## Configuration
 
