@@ -5,10 +5,10 @@ import sys
 import signal
 import traceback
 
-from api import get_topic, get_components, get_keys
-from settings import get_settings, exit_if_settings_invalid
-from downloader import download_component
-from fs import create_temp_file
+from .api import get_topic, get_components, get_keys
+from .settings import get_settings, exit_if_settings_invalid
+from .downloader import download_component
+from .fs import create_temp_file
 
 
 def signal_handler(sig, frame):

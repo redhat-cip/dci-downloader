@@ -4,7 +4,7 @@ import traceback
 import yaml
 import sys
 
-from cli import parse_arguments
+from .cli import parse_arguments
 
 
 def _read_settings_file(settings_file_path):

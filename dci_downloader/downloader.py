@@ -2,11 +2,11 @@
 # -*- coding: utf-8 -*-
 import os
 
-from api import get_files_list, get_base_url, download_file
-from stats import check_download_folder_size
-from filters import filter_files_list
-from files_list import get_files_to_download, get_files_to_remove
-from fs import (
+from .api import get_files_list, get_base_url, download_file
+from .stats import check_download_folder_size
+from .filters import filter_files_list
+from .files_list import get_files_to_download, get_files_to_remove
+from .fs import (
     mkdir_p,
     delete_all_symlink_in_path,
     recreate_symlinks,
