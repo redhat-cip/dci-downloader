@@ -5,7 +5,7 @@ import sys
 import signal
 import traceback
 
-from dci_downloader.api import get_topic, get_components, get_keys
+from dci_downloader.api import get_topic, get_components, get_keys, create_job, create_jobstate, create_tag
 from dci_downloader.settings import get_settings, exit_if_settings_invalid
 from dci_downloader.downloader import download_component
 from dci_downloader.fs import create_temp_file
@@ -30,16 +30,21 @@ def main():
     cert = create_temp_file(keys["cert"]).name
     key = create_temp_file(keys["key"]).name
     return_code = 0
+
     for topic_settings in settings["topics"]:
         topic_name = topic_settings["name"]
         try:
             topic = get_topic(topic_name)
             if topic is None:
                 raise ("Topic name %s not found" % topic_name)
+            job = create_job(topic["id"])
+            create_tag(job["id"], "download")
             for component in get_components(topic):
                 download_component(topic, component, topic_settings, cert, key)
+            create_jobstate(job["id"], "success")
         except Exception:
             print("Exception when downloading components for %s" % topic_name)
+            create_jobstate(job["id"], "failure")
             traceback.print_exc()
             return_code = 1
     os.unlink(cert)
