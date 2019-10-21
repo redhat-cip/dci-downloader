@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b0ad8ef3_6ebdcedc",
+        "filename": "dci_downloader/main.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 405
+      },
+      "writtenOn": "2019-10-21T13:14:53Z",
+      "side": 1,
+      "message": "create_jobstate(job[\"id\"], \"success\")",
+      "range": {
+        "startLine": 43,
+        "startChar": 12,
+        "endLine": 43,
+        "endChar": 50
+      },
+      "revId": "816206c2b12b08209a76d92e895b30d9a9055ddb",
+      "serverId": "6c1dc8ef-8b94-40e4-bd83-c2359d45ecc0",
+      "unresolved": true
+    }
+  ]
+}
