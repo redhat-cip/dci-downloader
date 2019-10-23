@@ -1,7 +1,7 @@
 %global srcname dci-downloader
 
 Name:             dci-downloader
-Version:          2.1.1
+Version:          2.1.2
 Release:          1.VERS%{?dist}
 Summary:          DCI Downloader
 License:          ASL 2.0
@@ -13,8 +13,10 @@ BuildRequires:    python2-devel
 BuildRequires:    python2-setuptools
 BuildRequires:    python-requests
 BuildRequires:    python-dciclient
+BuildRequires:    PyYAML
 Requires:         python-requests
 Requires:         python-dciclient
+Requires:         PyYAML
 
 %description
 DCI downloader used to download Red Hat products
@@ -35,6 +37,8 @@ DCI downloader used to download Red Hat products
 %{_bindir}/%{srcname}
 
 %changelog
+* Wed Oct 23 2019 Guillaume Vincent <gvincent@redhat.com> - 2.1.2-1
+- Explicitly require PyYAML
 * Thu Oct 10 2019 Haïkel Guémar <hguemar@redhat.com> - 2.1.1-1
 - Fix compatibility with python3
 * Tue Oct 03 2019 Guillaume Vincent <gvincent@redhat.com> - 2.1.0-1
