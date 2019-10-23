@@ -10,6 +10,7 @@ from dciclient.v1.api.context import build_signature_context
 from dciclient.v1.api import topic as dci_topic
 from dciclient.v1.api import remoteci as dci_remoteci
 
+from dci_downloader.fs import create_parent_dir
 
 def get_topic(topic_name):
     context = build_signature_context()
@@ -94,3 +95,16 @@ def download_file(file, cert, key):
     r.raise_for_status()
     with open(file["destination"], "wb") as f:
         shutil.copyfileobj(r.raw, f)
+
+def download_files(files_to_download, cert, key):
+    session = requests.Session()
+    adapter = requests.adapters.HTTPAdapter(pool_connections=100, pool_maxsize=100, max_retries=20)
+    session.mount('https://', adapter)
+    nb_files = len(files_to_download)
+    for index, file in enumerate(files_to_download):
+        print("(%d/%d): %s" % (index, nb_files, file["destination"]))
+        create_parent_dir(file["destination"])
+        r = session.get(file["source"], stream=True, cert=(cert, key))
+        r.raise_for_status()
+        with open(file["destination"], "wb") as f:
+            shutil.copyfileobj(r.raw, f)
