@@ -89,8 +89,8 @@ def retry(tries=3, delay=2, multiplier=2):
 
 
 @retry()
-def download_file(file, cert, key):
-    r = requests.get(file["source"], stream=True, cert=(cert, key))
+def download_file(session, file, cert, key):
+    r = session.get(file["source"], stream=True, cert=(cert, key))
     r.raise_for_status()
     with open(file["destination"], "wb") as f:
         shutil.copyfileobj(r.raw, f)

@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import os
+import requests
 
 from dci_downloader.api import get_files_list, get_base_url, download_file
 from dci_downloader.stats import check_download_folder_size
@@ -38,8 +39,11 @@ def download_component(topic, component, settings, cert, key):
     check_download_folder_size(files_list, download_folder)
     files_to_download = get_files_to_download(base_url, download_folder, files_list)
     nb_files = len(files_to_download)
+    session = requests.Session()
+    adapter = requests.adapters.HTTPAdapter(pool_connections=100, pool_maxsize=100, max_retries=20)
+    session.mount('https://', adapter)
     for index, file in enumerate(files_to_download):
         print("(%d/%d): %s" % (index, nb_files, file["destination"]))
         create_parent_dir(file["destination"])
-        download_file(file, cert, key)
+        download_file(session, file, cert, key)
     recreate_symlinks(files_list["symlinks"], download_folder)
