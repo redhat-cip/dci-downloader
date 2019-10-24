@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "40ed540e_c4bda5b6",
+        "filename": "dci_downloader/downloader.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 405
+      },
+      "writtenOn": "2019-10-24T13:43:54Z",
+      "side": 1,
+      "message": "it\u0027s better if you delegate the download to a method in the api.py file\n\ndownload_files(files_to_download)",
+      "range": {
+        "startLine": 42,
+        "startChar": 0,
+        "endLine": 48,
+        "endChar": 47
+      },
+      "revId": "bad3f19832fdbaeb6780ac18e6b15552233b1af6",
+      "serverId": "6c1dc8ef-8b94-40e4-bd83-c2359d45ecc0",
+      "unresolved": false
+    }
+  ]
+}
