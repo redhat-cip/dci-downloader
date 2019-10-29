@@ -57,13 +57,11 @@ def _keep_backward_compatibility(settings):
     new_settings = {}
     if "topic" in settings:
         new_settings["topics"] = [settings]
-        return new_settings
     if "download_folder" in settings:
         new_settings["download_folder"] = settings["download_folder"]
     if "jobs" in settings:
         new_settings["topics"] = settings["jobs"]
-        return new_settings
-    return settings
+    return new_settings
 
 
 def _get_remoteci_id(env_variables):
