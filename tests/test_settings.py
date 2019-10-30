@@ -46,6 +46,7 @@ def test_read_settings_file_v3():
     settings_file_path = os.path.join(test_dir, "data", "settings_v3.yml")
     settings = _read_settings_file(settings_file_path)
     assert settings == {
+        "download_folder": "/tmp/repo10",
         "jobs": [
             {
                 "topic": "RHEL-7.6",
@@ -61,7 +62,7 @@ def test_read_settings_file_v3():
                 "variants": ["AppStream", {"name": "BaseOS", "with_debug": True}],
                 "systems": ["SUT4"],
             },
-        ]
+        ],
     }
 
 
@@ -111,7 +112,7 @@ def test_get_settings_read_arguments_download_everything():
     )
 
 
-def test_get_settings_from_settings_v1():
+def test_get_settings_from_dci_rhel_agent_settings_file_with_only_topic_key():
     test_dir = os.path.dirname(os.path.abspath(__file__))
     settings_file_path = os.path.join(test_dir, "data", "settings_v1.yml")
     settings = get_settings(
@@ -137,7 +138,7 @@ def test_get_settings_from_settings_v1():
     )
 
 
-def test_get_settings_from_settings_v2():
+def test_get_settings_from_first_dci_rhel_agent_settings_file():
     test_dir = os.path.dirname(os.path.abspath(__file__))
     settings_file_path = os.path.join(test_dir, "data", "settings_v2.yml")
     settings = get_settings(
@@ -241,17 +242,12 @@ def test_exit_if_settings_invalid_with_bad_variants():
         )
 
 
-def test_get_settings_from_settings_v3():
+def test_get_settings_with_jobs_key():
     test_dir = os.path.dirname(os.path.abspath(__file__))
     settings_file_path = os.path.join(test_dir, "data", "settings_v3.yml")
     settings = get_settings(
         sys_args=["--settings", settings_file_path],
-        env_variables={
-            "DCI_CLIENT_ID": "",
-            "DCI_API_SECRET": "",
-            "DCI_CS_URL": "",
-            "DCI_LOCAL_REPO": "/tmp/repo10",
-        },
+        env_variables={"DCI_CLIENT_ID": "", "DCI_API_SECRET": "", "DCI_CS_URL": ""},
     )
     _topic_equals(
         settings["topics"][0],
@@ -295,3 +291,39 @@ def test_get_settings_download_folder_overwrite_DCI_LOCAL_REPO():
     )
     assert settings["topics"][0]["download_folder"] == "/var/www/html"
     assert settings["topics"][1]["download_folder"] == "/var/www/html"
+
+
+def test_get_settings_local_repo_added_to_an_old_settings_file():
+    test_dir = os.path.dirname(os.path.abspath(__file__))
+    settings_file_path = os.path.join(test_dir, "data", "settings_v4.yml")
+    settings = get_settings(
+        sys_args=["--settings", settings_file_path],
+        env_variables={
+            "DCI_CLIENT_ID": "",
+            "DCI_API_SECRET": "",
+            "DCI_CS_URL": "",
+            "DCI_LOCAL_REPO": "/tmp/repo4",
+        },
+    )
+    assert settings == {
+        "remoteci_id": None,
+        "env_variables": {
+            "DCI_LOCAL_REPO": "/tmp/repo4",
+            "DCI_API_SECRET": "",
+            "DCI_CS_URL": "",
+            "DCI_CLIENT_ID": "",
+        },
+        "download_folder": "/tmp/repo5",
+        "topics": [
+            {
+                "name": "RHEL-8.2",
+                "archs": ["x86_64", "ppc64le"],
+                "download_folder": "/tmp/repo5",
+                "variants": [
+                    {"name": "AppStream", "with_debug": False},
+                    {"name": "BaseOS", "with_debug": False},
+                ],
+                "download_everything": False,
+            }
+        ],
+    }

@@ -1,3 +1,4 @@
+download_folder: /tmp/repo10
 jobs:
   - topic: RHEL-7.6
     archs:
