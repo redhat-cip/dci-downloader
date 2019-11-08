@@ -54,17 +54,12 @@ def _clean_settings(settings):
 
 
 def _keep_backward_compatibility(settings):
-    new_settings = {}
-    if "download_folder" in settings:
-        new_settings["download_folder"] = settings["download_folder"]
     if "local_repo" in settings:
-        new_settings["download_folder"] = settings["local_repo"]
+        settings["download_folder"] = settings["local_repo"]
     if "topic" in settings:
-        new_settings["topics"] = [settings]
-        return new_settings
+        settings["topics"] = [settings]
     if "jobs" in settings:
-        new_settings["topics"] = settings["jobs"]
-        return new_settings
+        settings["topics"] = settings["jobs"]
     return settings
 
 

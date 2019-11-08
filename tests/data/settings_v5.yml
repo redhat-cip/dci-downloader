@@ -1,0 +1,4 @@
+local_repo: /tmp/repo6
+topics:
+  - topic: RHEL-7.6
+  - topic: RHEL-8.1

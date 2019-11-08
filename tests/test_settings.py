@@ -305,25 +305,45 @@ def test_get_settings_local_repo_added_to_an_old_settings_file():
             "DCI_LOCAL_REPO": "/tmp/repo4",
         },
     )
-    assert settings == {
-        "remoteci_id": None,
-        "env_variables": {
-            "DCI_LOCAL_REPO": "/tmp/repo4",
-            "DCI_API_SECRET": "",
-            "DCI_CS_URL": "",
-            "DCI_CLIENT_ID": "",
+    _topic_equals(
+        settings["topics"][0],
+        {
+            "download_everything": False,
+            "download_folder": "/tmp/repo5",
+            "name": "RHEL-8.2",
+            "archs": ["x86_64", "ppc64le"],
+            "variants": [
+                {"name": "AppStream", "with_debug": False},
+                {"name": "BaseOS", "with_debug": False},
+            ],
         },
-        "download_folder": "/tmp/repo5",
-        "topics": [
-            {
-                "name": "RHEL-8.2",
-                "archs": ["x86_64", "ppc64le"],
-                "download_folder": "/tmp/repo5",
-                "variants": [
-                    {"name": "AppStream", "with_debug": False},
-                    {"name": "BaseOS", "with_debug": False},
-                ],
-                "download_everything": False,
-            }
-        ],
-    }
+    )
+
+
+def test_get_settings_local_repo_with_multiple_topics():
+    test_dir = os.path.dirname(os.path.abspath(__file__))
+    settings_file_path = os.path.join(test_dir, "data", "settings_v5.yml")
+    settings = get_settings(
+        sys_args=["--settings", settings_file_path],
+        env_variables={"DCI_CLIENT_ID": "", "DCI_API_SECRET": "", "DCI_CS_URL": ""},
+    )
+    _topic_equals(
+        settings["topics"][0],
+        {
+            "download_everything": False,
+            "download_folder": "/tmp/repo6",
+            "name": "RHEL-7.6",
+            "archs": ["x86_64"],
+            "variants": [],
+        },
+    )
+    _topic_equals(
+        settings["topics"][1],
+        {
+            "download_everything": False,
+            "download_folder": "/tmp/repo6",
+            "name": "RHEL-8.1",
+            "archs": ["x86_64"],
+            "variants": [],
+        },
+    )
