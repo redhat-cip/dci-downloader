@@ -28,6 +28,7 @@ def _get_download_folder(cli_settings, env_variables):
 
 def _clean_topic(topic):
     name = topic["topic"] if "topic" in topic else topic["name"]
+    components = topic["components"] if "components" in topic else []
     archs = topic["archs"] if "archs" in topic else ["x86_64"]
     variants = topic["variants"] if "variants" in topic else []
     variants = [
@@ -36,6 +37,7 @@ def _clean_topic(topic):
     all = topic["download_everything"] if "download_everything" in topic else False
     return {
         "name": name,
+        "components": components,
         "archs": archs,
         "variants": variants,
         "download_everything": all,
