@@ -37,6 +37,25 @@ def test_parsing_name():
     assert args["name"] == "RHEL-7.6"
 
 
+def test_parsing_no_components():
+    args = parse_arguments(["RHEL-8", "/var/www/"])
+    assert args["component_id"] is None
+
+
+def test_parsing_component_id():
+    args = parse_arguments(
+        [
+            "RHEL-8",
+            "/var/www/html",
+            "--component-id",
+            "27bbcd7d-021b-4f0a-b04e-e64f1be386f7",
+        ]
+    )
+    assert args["name"] == "RHEL-8"
+    assert args["download_folder"] == "/var/www/html"
+    assert args["component_id"] == "27bbcd7d-021b-4f0a-b04e-e64f1be386f7"
+
+
 def test_parsing_1_variant():
     args = parse_arguments(["RHEL-8", "/var/www/html", "--variant", "BaseOS"])
     assert args["variants"] == [{"name": "BaseOS", "with_debug": False}]

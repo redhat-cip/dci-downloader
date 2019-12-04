@@ -95,6 +95,14 @@ def test_get_settings_read_arguments():
     )
 
 
+def test_get_settings_read_arguments_with_component_id():
+    settings = get_settings(
+        sys_args=["RHEL-8", "/tmp/repo12", "--component-id", "c1"],
+        env_variables={"DCI_CLIENT_ID": "", "DCI_API_SECRET": "", "DCI_CS_URL": ""},
+    )
+    assert settings["topics"][0]["component_id"] == "c1"
+
+
 def test_get_settings_read_arguments_download_everything():
     settings = get_settings(
         sys_args=["RHEL-8", "/tmp/repo3", "--all"],
