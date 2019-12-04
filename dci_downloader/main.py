@@ -7,6 +7,7 @@ import traceback
 
 from dci_downloader.api import (
     get_topic,
+    get_component,
     get_components,
     get_keys,
     create_job,
@@ -47,7 +48,9 @@ def main():
                 raise ("Topic name %s not found" % topic_name)
             job = create_job(topic["id"])
             create_tag(job["id"], "download")
-            for component in get_components(topic):
+            components = [get_component(x) for x in topic_settings["components"]]
+            components = components if components else get_components(topic)
+            for component in components:
                 download_component(topic, component, topic_settings, cert, key)
             create_jobstate(job["id"], "success")
         except Exception:
