@@ -27,6 +27,18 @@ signal.signal(signal.SIGINT, signal_handler)
 signal.signal(signal.SIGTERM, signal_handler)
 
 
+def _filter_components(components_to_dl, components_from_topic):
+    return (
+        [
+            component
+            for component in components_from_topic
+            if set([component["id"], component["name"]]).issubset(components_to_dl)
+        ]
+        if components_to_dl
+        else components_from_topic
+    )
+
+
 def main():
     settings = get_settings(sys_args=sys.argv[1:], env_variables=dict(os.environ))
     exit_if_settings_invalid(settings)
@@ -40,13 +52,16 @@ def main():
 
     for topic_settings in settings["topics"]:
         topic_name = topic_settings["name"]
+        components_to_dl = topic_settings["components"]
         try:
             topic = get_topic(topic_name)
             if topic is None:
                 raise ("Topic name %s not found" % topic_name)
             job = create_job(topic["id"])
             create_tag(job["id"], "download")
-            for component in get_components(topic):
+            components_from_topic = get_components(topic)
+            components = _filter_components(components_to_dl, components_from_topic)
+            for component in components:
                 download_component(topic, component, topic_settings, cert, key)
             create_jobstate(job["id"], "success")
         except Exception:

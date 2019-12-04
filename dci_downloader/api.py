@@ -62,8 +62,7 @@ def create_job(topic_id):
 
 def create_jobstate(job_id, status):
     context = build_signature_context()
-    res = dci_jobstate.create(
-        context, status, "download from dci-downloader", job_id)
+    res = dci_jobstate.create(context, status, "download from dci-downloader", job_id)
     if res.status_code == 201:
         return res.json()["jobstate"]
 
