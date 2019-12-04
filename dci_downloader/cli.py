@@ -44,6 +44,14 @@ def parse_arguments(arguments):
         "download_folder", metavar="DEST", nargs="?", help="destination folder."
     )
     parser.add_argument(
+        "--component-id",
+        action="append",
+        metavar="COMPONENTS",
+        dest="components",
+        default=[],
+        help="download a specific component by id",
+    )
+    parser.add_argument(
         "--arch",
         action="append",
         metavar="ARCH",
