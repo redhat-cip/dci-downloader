@@ -44,6 +44,12 @@ def parse_arguments(arguments):
         "download_folder", metavar="DEST", nargs="?", help="destination folder."
     )
     parser.add_argument(
+        "--component-id",
+        metavar="COMPONENT_ID",
+        dest="component_id",
+        help="download a specific component by id",
+    )
+    parser.add_argument(
         "--arch",
         action="append",
         metavar="ARCH",
@@ -81,14 +87,18 @@ def parse_arguments(arguments):
     parsed_arguments.archs = list(set(parsed_arguments.archs))
 
     if parsed_arguments.settings_file_path is None:
-        topic_name = parsed_arguments.name
         download_folder = parsed_arguments.download_folder
-        if topic_name is None or download_folder is None:
-            print(
-                "TOPIC and DEST arguments or --settings FILE_PATH are mutually exclusive"
-            )
+        if download_folder is None:
+            print("download folder is required")
             print("Try 'dci-downloader --help' for more information.")
             sys.exit(2)
+        topic_name = parsed_arguments.name
+        component_id = parsed_arguments.component_id
+        if not topic_name and not component_id:
+            print("TOPIC or --component-id is required")
+            print("Try 'dci-downloader --help' for more information.")
+            sys.exit(2)
+
     parsed_arguments.variants = [
         {"name": v, "with_debug": parsed_arguments.with_debug}
         for v in parsed_arguments.variants

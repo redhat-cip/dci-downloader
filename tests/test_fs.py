@@ -18,5 +18,7 @@ def test_create_temp_file_with_non_bytes_input():
         cert = create_temp_file(content)
         os.remove(cert.name)
     except TypeError:
-        pytest.fail("test_create_temp_file_with_non_bytes_input "
-                    "raise TypeError but should not")
+        pytest.fail(
+            "test_create_temp_file_with_non_bytes_input "
+            "raise TypeError but should not"
+        )
