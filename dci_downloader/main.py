@@ -7,6 +7,7 @@ import traceback
 
 from dci_downloader.api import (
     get_topic,
+    get_component,
     get_components,
     get_keys,
     create_job,
@@ -40,13 +41,15 @@ def main():
 
     for topic_settings in settings["topics"]:
         topic_name = topic_settings["name"]
+        components = [get_component(x) for x in topic_settings["components"]]
         try:
             topic = get_topic(topic_name)
             if topic is None:
                 raise ("Topic name %s not found" % topic_name)
             job = create_job(topic["id"])
             create_tag(job["id"], "download")
-            for component in get_components(topic):
+            components = components if components else get_components(topic)
+            for component in components:
                 download_component(topic, component, topic_settings, cert, key)
             create_jobstate(job["id"], "success")
         except Exception:
@@ -54,6 +57,7 @@ def main():
             create_jobstate(job["id"], "failure")
             traceback.print_exc()
             return_code = 1
+
     os.unlink(cert)
     os.unlink(key)
     sys.exit(return_code)

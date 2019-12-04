@@ -7,6 +7,7 @@ import time
 from functools import wraps
 
 from dciclient.v1.api.context import build_signature_context
+from dciclient.v1.api import component as dci_component
 from dciclient.v1.api import job as dci_job
 from dciclient.v1.api import jobstate as dci_jobstate
 from dciclient.v1.api import tag as dci_tag
@@ -24,6 +25,17 @@ def get_topic(topic_name):
         print("Contact your EPM for more information.")
         return
     return topics[0]
+
+
+def get_component(component_id):
+    context = build_signature_context()
+    c = dci_component.get(context, component_id)
+    component = c.json()["component"]
+    if len(component) == 0:
+        print("Ensure that component %s exists or that you have access" % component_id)
+        print("Contact your EPM for more information.")
+        return
+    return component
 
 
 def get_components(topic):
@@ -62,8 +74,7 @@ def create_job(topic_id):
 
 def create_jobstate(job_id, status):
     context = build_signature_context()
-    res = dci_jobstate.create(
-        context, status, "download from dci-downloader", job_id)
+    res = dci_jobstate.create(context, status, "download from dci-downloader", job_id)
     if res.status_code == 201:
         return res.json()["jobstate"]
 
