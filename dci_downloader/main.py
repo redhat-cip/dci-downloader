@@ -5,16 +5,15 @@ import sys
 import signal
 import traceback
 
+from dci_downloader import api
+from dci_downloader import downloader
 from dci_downloader.api import (
-    get_topic,
-    get_components,
     get_keys,
     create_job,
     create_jobstate,
     create_tag,
 )
 from dci_downloader.settings import get_settings, exit_if_settings_invalid
-from dci_downloader.downloader import download_component
 from dci_downloader.fs import create_temp_file
 
 
@@ -25,6 +24,23 @@ def signal_handler(sig, frame):
 
 signal.signal(signal.SIGINT, signal_handler)
 signal.signal(signal.SIGTERM, signal_handler)
+
+
+def download_components(settings, api, downloader, cert, key):
+    topic = api.get_topic(settings["name"])
+    components = api.get_components(topic)
+    if "component_id" in settings and settings["component_id"]:
+        component_id = settings["component_id"]
+        component = api.get_component_by_id(component_id)
+        print(component["topic_id"], topic["id"])
+        components = [component] if component["topic_id"] == topic["id"] else []
+        if len(components) == 0:
+            raise Exception(
+                "component id %s does not belong to topic %s"
+                % (component_id, topic["name"])
+            )
+    for component in components:
+        downloader.download_component(topic, component, settings, cert, key)
 
 
 def main():
@@ -42,13 +58,12 @@ def main():
         topic_name = topic_settings["name"]
         job = None
         try:
-            topic = get_topic(topic_name)
+            topic = api.get_topic(topic_name)
             if topic is None:
                 raise ("Topic name %s not found" % topic_name)
             job = create_job(topic["id"])
             create_tag(job["id"], "download")
-            for component in get_components(topic):
-                download_component(topic, component, topic_settings, cert, key)
+            download_components(topic_settings, api, downloader, cert, key)
             create_jobstate(job["id"], "success")
         except Exception:
             print("Exception when downloading components for %s" % topic_name)
