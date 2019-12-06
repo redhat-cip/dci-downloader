@@ -45,6 +45,30 @@
       "revId": "886563153048846230405eb3f0ded913a876e799",
       "serverId": "6c1dc8ef-8b94-40e4-bd83-c2359d45ecc0",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2e68fc86_e33ba8eb",
+        "filename": "dci_downloader/main.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 166
+      },
+      "writtenOn": "2019-12-06T09:14:54Z",
+      "side": 1,
+      "message": "ack, I\u0027ll extract that method.\nAs for get_components, it only gets called once but with the method extraction, it will appear once too.",
+      "parentUuid": "83e1b6b2_52d285e5",
+      "range": {
+        "startLine": 50,
+        "startChar": 0,
+        "endLine": 55,
+        "endChar": 40
+      },
+      "revId": "886563153048846230405eb3f0ded913a876e799",
+      "serverId": "6c1dc8ef-8b94-40e4-bd83-c2359d45ecc0",
+      "unresolved": false
     }
   ]
 }
