@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "5609b43c_8f7702a9",
+        "filename": "dci_downloader/cli.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 166
+      },
+      "writtenOn": "2019-12-09T11:56:53Z",
+      "side": 1,
+      "message": "One can provide multiple components.\nE.g: --component \u003cid1\u003e --component \u003cid2\u003e\nI\u0027m waiting on fc feedback to keep or drop that feature.",
+      "parentUuid": "a5546e6f_dc2a7482",
+      "range": {
+        "startLine": 49,
+        "startChar": 8,
+        "endLine": 51,
+        "endChar": 19
+      },
+      "revId": "66d330a8aee41c46f3c5f1e1b1ffee0aa26e18e6",
+      "serverId": "6c1dc8ef-8b94-40e4-bd83-c2359d45ecc0",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1de78001_ac89e719",
         "filename": "dci_downloader/main.py",
         "patchSetId": 3
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "ab159075_f36f5acd",
+        "filename": "dci_downloader/main.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 166
+      },
+      "writtenOn": "2019-12-09T11:56:53Z",
+      "side": 1,
+      "message": "ack",
+      "parentUuid": "1de78001_ac89e719",
+      "range": {
+        "startLine": 30,
+        "startChar": 4,
+        "endLine": 30,
+        "endChar": 22
+      },
+      "revId": "66d330a8aee41c46f3c5f1e1b1ffee0aa26e18e6",
+      "serverId": "6c1dc8ef-8b94-40e4-bd83-c2359d45ecc0",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "cdbc365e_a0b15ab4",
         "filename": "dci_downloader/main.py",
         "patchSetId": 3
@@ -59,6 +107,30 @@
       "writtenOn": "2019-12-09T09:22:34Z",
       "side": 1,
       "message": "this won\u0027t work neither.\n\nget_components(topic) returns the latest component for a topic.\n\nYou need to differentiate the download from the settings file with multiple topic and the download of one component using the cli. Those are different things.\n\nSo if we have a component in topic_settings[\u0027component\u0027], we get the topic and download the component by id else we iterate over the topics and we download every components.",
+      "range": {
+        "startLine": 62,
+        "startChar": 12,
+        "endLine": 64,
+        "endChar": 40
+      },
+      "revId": "66d330a8aee41c46f3c5f1e1b1ffee0aa26e18e6",
+      "serverId": "6c1dc8ef-8b94-40e4-bd83-c2359d45ecc0",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa82b2f5_7bacf47d",
+        "filename": "dci_downloader/main.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 166
+      },
+      "writtenOn": "2019-12-09T11:56:53Z",
+      "side": 1,
+      "message": "ack",
+      "parentUuid": "cdbc365e_a0b15ab4",
       "range": {
         "startLine": 62,
         "startChar": 12,
