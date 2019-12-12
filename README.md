@@ -158,6 +158,11 @@ topics:
         with_debug: true
 ```
 
+# Proxy
+
+If you are using a proxy, just add `HTTP_PROXY` or `HTTPS_PROXY` env variable pointing to your proxy.
+
+
 ## License
 
 Apache License, Version 2.0 (see [LICENSE](LICENSE) file)
