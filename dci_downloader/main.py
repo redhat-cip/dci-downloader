@@ -40,6 +40,7 @@ def main():
 
     for topic_settings in settings["topics"]:
         topic_name = topic_settings["name"]
+        job = None
         try:
             topic = get_topic(topic_name)
             if topic is None:
@@ -51,7 +52,8 @@ def main():
             create_jobstate(job["id"], "success")
         except Exception:
             print("Exception when downloading components for %s" % topic_name)
-            create_jobstate(job["id"], "failure")
+            if job is not None:
+                create_jobstate(job["id"], "failure")
             traceback.print_exc()
             return_code = 1
     os.unlink(cert)
