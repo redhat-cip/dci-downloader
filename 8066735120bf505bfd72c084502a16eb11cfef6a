@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "78d74004_8cd2087e",
+        "filename": "dci_downloader/api.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 29
+      },
+      "writtenOn": "2020-01-07T00:28:27Z",
+      "side": 1,
+      "message": "looks like a c.raise_for_status() missing ?",
+      "revId": "8066735120bf505bfd72c084502a16eb11cfef6a",
+      "serverId": "6c1dc8ef-8b94-40e4-bd83-c2359d45ecc0",
+      "unresolved": false
+    }
+  ]
+}
