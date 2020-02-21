@@ -1,19 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-import hashlib
 import os
-
-
-def _sha256_hexdigest_file(filepath):
-    m = hashlib.sha256()
-    with open(filepath, mode="rb") as fd:
-        for data in fd:
-            m.update(data)
-    return m.hexdigest()
-
-
-def _file_clean(file_path, sha256):
-    return _sha256_hexdigest_file(file_path) == sha256
 
 
 def get_files_to_download(base_url, download_folder, files_list):
@@ -40,8 +27,9 @@ def get_files_to_remove(files_list, download_folder):
             file_path = os.path.join(root, file)
             if os.path.islink(file_path):
                 continue
-            if file_path not in files_list_paths or not _file_clean(
-                file_path, files_list_paths[file_path]["sha256"]
+            if (
+                file_path not in files_list_paths
+                or os.path.getsize(file_path) != files_list_paths[file_path]["size"]
             ):
                 files_to_remove.append(file_path)
     return files_to_remove

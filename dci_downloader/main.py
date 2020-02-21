@@ -62,6 +62,10 @@ def main():
             create_tag(job["id"], "download")
             download_components(topic_settings, api, downloader, cert, key)
             create_jobstate(job["id"], "success")
+            print(
+                "Success, all components for %s have been successfully downloaded"
+                % topic_name
+            )
         except Exception:
             print("Exception when downloading components for %s" % topic_name)
             if job is not None:
