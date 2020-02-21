@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import os
+import hashlib
 
 
 def get_component_size(files_list):
@@ -24,3 +25,9 @@ def enough_space(files_list, local_path):
 def check_download_folder_size(files_list, download_folder):
     if not enough_space(files_list, download_folder):
         raise Exception("Not enough space in %s" % download_folder)
+
+
+def get_sha256(file_path):
+    with open(file_path) as f:
+        content = f.read().encode("utf-8")
+        return hashlib.sha256(content).hexdigest()
