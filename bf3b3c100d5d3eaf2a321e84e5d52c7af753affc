@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f35c3642_e44209b4",
+        "filename": "dci_downloader/api.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 122,
+      "author": {
+        "id": 28
+      },
+      "writtenOn": "2020-02-21T11:00:21Z",
+      "side": 1,
+      "message": "Do you really want to raise an exception here ? (there will be a bunch of components without checksum for now).\n\nJust skipping \u0026 downloading the dci_files_list.json when no checksum file exists could work also ?",
+      "revId": "bf3b3c100d5d3eaf2a321e84e5d52c7af753affc",
+      "serverId": "6c1dc8ef-8b94-40e4-bd83-c2359d45ecc0",
+      "unresolved": false
+    }
+  ]
+}
