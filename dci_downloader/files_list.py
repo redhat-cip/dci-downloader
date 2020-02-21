@@ -17,7 +17,12 @@ def _file_clean(file_path, sha256):
 
 
 def get_files_to_download(base_url, download_folder, files_list):
-    files_to_download = []
+    files_to_download = [
+        {
+            "source": os.path.join(base_url, "dci_files_list.json"),
+            "destination": os.path.join(download_folder, "dci_files_list.json"),
+        }
+    ]
     for file in files_list["files"]:
         relative_path = os.path.join(file["path"], file["name"])
         file_path = os.path.join(download_folder, relative_path)

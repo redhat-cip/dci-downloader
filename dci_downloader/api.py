@@ -3,9 +3,11 @@
 import requests
 import shutil
 import time
+import json
 
 from functools import wraps
 
+from dci_downloader.stats import get_sha256
 from dciclient.v1.api.context import build_signature_context
 from dciclient.v1.api import component as dci_component
 from dciclient.v1.api import job as dci_job
@@ -105,12 +107,32 @@ def get_base_url(topic, component):
     )
 
 
-def get_files_list(base_url, cert, key):
+def _download_files_list(base_url, cert, key):
     print("Download DCI file list, it may take a few seconds")
     files_list_url = "%s/dci_files_list.json" % base_url
     r = requests.get(files_list_url, cert=(cert, key))
     r.raise_for_status()
     return r.json()
+
+
+def _download_files_list_checksum(base_url, cert, key):
+    print("Download DCI file list, it may take a few seconds")
+    files_list_url = "%s/dci_files_list.sha256" % base_url
+    r = requests.get(files_list_url, cert=(cert, key))
+    r.raise_for_status()
+    return r.content
+
+
+def get_files_list(download_folder, base_url, cert=None, key=None):
+    try:
+        dci_files_list = "%s/dci_files_list.json" % download_folder
+        checksum = get_sha256(dci_files_list)
+        if _download_files_list_checksum() == checksum:
+            return json.loads(open(dci_files_list).read())
+    except Exception:
+        pass
+
+    return _download_files_list(base_url, cert, key)
 
 
 def retry(tries=3, delay=2, multiplier=2):

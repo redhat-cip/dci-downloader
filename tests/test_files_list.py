@@ -31,7 +31,11 @@ def test_get_files_to_download_remove_existing_files():
     test_dir = os.path.dirname(os.path.abspath(__file__))
     path = os.path.join(test_dir, "data", "repo")
     expected_files_to_download = [
-        {"source": "http://example.org/c", "destination": os.path.join(path, "c")}
+        {
+            "source": "http://example.org/dci_files_list.json",
+            "destination": os.path.join(path, "dci_files_list.json"),
+        },
+        {"source": "http://example.org/c", "destination": os.path.join(path, "c")},
     ]
     files_to_download = get_files_to_download(
         "http://example.org", path, dci_files_list

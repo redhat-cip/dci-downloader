@@ -45,7 +45,7 @@ def create_temp_file(content):
     return cert
 
 
-def build_download_folder(topic, component, download_folder):
+def build_download_folder(download_folder, topic, component):
     topic_name = topic["name"].strip().replace(" ", "_")
     component_type = component["type"].strip().replace(" ", "_").lower()
     return os.path.join(download_folder, topic_name, component_type)
