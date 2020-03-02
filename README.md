@@ -7,7 +7,7 @@
 ```console
 $ sudo yum -y install https://packages.distributed-ci.io/dci-release.el7.noarch.rpm
 $ sudo yum -y install dci-downloader
-$ source ~/dcirc.sh
+$ source /etc/dci-rhel-agent/dcirc.sh
 $ dci-downloader RHEL-8 /tmp/repo
 ```
 
