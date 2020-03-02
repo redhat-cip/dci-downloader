@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "aa4917f7_89ae1552",
+        "filename": "README.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 526
+      },
+      "writtenOn": "2020-03-02T18:13:55Z",
+      "side": 1,
+      "message": "This is true only when used along dci-rhel-agent.\nThe tool might be used along an other agent or standalone.",
+      "range": {
+        "startLine": 10,
+        "startChar": 2,
+        "endLine": 10,
+        "endChar": 37
+      },
+      "revId": "78dd0e2128b167aae2fe064d257d28f95d4a035a",
+      "serverId": "6c1dc8ef-8b94-40e4-bd83-c2359d45ecc0",
+      "unresolved": false
+    }
+  ]
+}
