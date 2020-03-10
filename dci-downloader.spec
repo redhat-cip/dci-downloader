@@ -1,7 +1,7 @@
 %global srcname dci-downloader
 
 Name:             dci-downloader
-Version:          2.1.2
+Version:          2.1.3
 Release:          1.VERS%{?dist}
 Summary:          DCI Downloader
 License:          ASL 2.0
@@ -37,6 +37,8 @@ DCI downloader used to download Red Hat products
 %{_bindir}/%{srcname}
 
 %changelog
+* Tue Mar 10 2020 Guillaume Vincent <gvincent@redhat.com> - 2.1.3-1
+- Fixed disk space check 
 * Wed Oct 23 2019 Guillaume Vincent <gvincent@redhat.com> - 2.1.2-1
 - Explicitly require PyYAML
 * Thu Oct 10 2019 Haïkel Guémar <hguemar@redhat.com> - 2.1.1-1
