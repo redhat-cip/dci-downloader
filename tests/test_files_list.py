@@ -30,9 +30,20 @@ def test_get_files_to_download_remove_existing_files():
     }
     test_dir = os.path.dirname(os.path.abspath(__file__))
     path = os.path.join(test_dir, "data", "repo")
-    expected_files_to_download = [
-        {"source": "http://example.org/c", "destination": os.path.join(path, "c")}
-    ]
+    expected_files_to_download = {
+        "directories": [],
+        "files": [
+            {
+                "name": "c",
+                "path": "",
+                "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                "size": 0,
+                "source": "http://example.org/c",
+                "destination": os.path.join(path, "c")
+            },
+        ],
+        "symlinks": [],
+    }
     files_to_download = get_files_to_download(
         "http://example.org", path, dci_files_list
     )

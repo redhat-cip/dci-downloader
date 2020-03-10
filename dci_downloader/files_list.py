@@ -23,10 +23,12 @@ def get_files_to_download(base_url, download_folder, files_list):
         file_path = os.path.join(download_folder, relative_path)
         if os.path.exists(file_path):
             continue
-        files_to_download.append(
+        file.update(
             {"source": os.path.join(base_url, relative_path), "destination": file_path}
         )
-    return files_to_download
+        files_to_download.append(file)
+    files_list["files"] = files_to_download
+    return files_list
 
 
 def get_files_to_remove(files_list, download_folder):

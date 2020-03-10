@@ -35,10 +35,10 @@ def download_component(topic, component, settings, cert, key):
     )
     clean_download_folder(files_list, download_folder)
     files_list = filter_files_list(files_list, settings)
-    check_download_folder_size(files_list, download_folder)
     files_to_download = get_files_to_download(base_url, download_folder, files_list)
-    nb_files = len(files_to_download)
-    for index, file in enumerate(files_to_download):
+    check_download_folder_size(files_to_download, download_folder)
+    nb_files = len(files_to_download['files'])
+    for index, file in enumerate(files_to_download['files']):
         print("(%d/%d): %s" % (index, nb_files, file["destination"]))
         create_parent_dir(file["destination"])
         download_file(file, cert, key)
