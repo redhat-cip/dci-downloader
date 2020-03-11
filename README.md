@@ -2,20 +2,28 @@
 
 `dci-downloader` is a useful tool for downloading the latest versions of Red Hat products
 
-## TLDR
+## Standalone / DCI Agent Quickstart
 
 ```console
 $ sudo yum -y install https://packages.distributed-ci.io/dci-release.el7.noarch.rpm
 $ sudo yum -y install dci-downloader
-```
-If you are using the DCI RHEL Agent, you will source dcirc.sh with this command:
-```
-$ source /etc/dci-rhel-agent/dcirc.sh
-```
-If you are using a different agent or using dci-downloader in a standalone fashion, you will source dcirc.sh with this command:
-```
 $ source ~/dcirc.sh
 ```
+
+Then you can run dci-downloader like such:
+
+```
+$ dci-downloader RHEL-8 /tmp/repo
+```
+
+## DCI RHEL Agent Quickstart
+
+```console
+$ sudo yum -y install https://packages.distributed-ci.io/dci-release.el7.noarch.rpm
+$ sudo yum -y install dci-downloader
+$ source /etc/dci-rhel-agent/dcirc.sh
+```
+
 Then you can run dci-downloader like such:
 
 ```
