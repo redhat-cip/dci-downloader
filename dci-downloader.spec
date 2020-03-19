@@ -1,7 +1,7 @@
 %global srcname dci-downloader
 
 Name:             dci-downloader
-Version:          2.1.3
+Version:          2.1.4
 Release:          1.VERS%{?dist}
 Summary:          DCI Downloader
 License:          ASL 2.0
@@ -12,10 +12,8 @@ Source0:          %{srcname}-%{version}.tar.gz
 BuildRequires:    python2-devel
 BuildRequires:    python2-setuptools
 BuildRequires:    python-requests
-BuildRequires:    python-dciclient
 BuildRequires:    PyYAML
 Requires:         python-requests
-Requires:         python-dciclient
 Requires:         PyYAML
 
 %description
@@ -37,6 +35,8 @@ DCI downloader used to download Red Hat products
 %{_bindir}/%{srcname}
 
 %changelog
+* Fri Mar 20 2020 Guillaume Vincent <gvincent@redhat.com> - 2.1.4-1
+- Remove EPEL dependency
 * Tue Mar 10 2020 Guillaume Vincent <gvincent@redhat.com> - 2.1.3-1
 - Fixed disk space check
 * Wed Oct 23 2019 Guillaume Vincent <gvincent@redhat.com> - 2.1.2-1
