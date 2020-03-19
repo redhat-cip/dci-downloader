@@ -12,10 +12,8 @@ Source0:          %{srcname}-%{version}.tar.gz
 BuildRequires:    python2-devel
 BuildRequires:    python2-setuptools
 BuildRequires:    python-requests
-BuildRequires:    python-dciclient
 BuildRequires:    PyYAML
 Requires:         python-requests
-Requires:         python-dciclient
 Requires:         PyYAML
 
 %description
