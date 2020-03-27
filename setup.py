@@ -21,6 +21,8 @@ from dci_downloader import version
 
 root_dir = os.path.dirname(os.path.abspath(__file__))
 readme = open(os.path.join(root_dir, "README.md")).read()
+requirements = open(os.path.join(root_dir, "requirements.txt")).read()
+install_requires = [r.split("==")[0] for r in requirements.split("\n")]
 
 setuptools.setup(
     name="dci-downloader",
@@ -30,7 +32,8 @@ setuptools.setup(
     author_email="distributed-ci@redhat.com",
     description="DCI downloader module",
     long_description=readme,
-    install_requires=["requests"],
+    long_description_content_type="text/markdown",
+    install_requires=install_requires,
     url="https://github.com/redhat-cip/dci-downloader",
     license="Apache v2.0",
     classifiers=[
