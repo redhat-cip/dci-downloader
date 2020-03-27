@@ -1,7 +1,7 @@
 %global srcname dci-downloader
 
 Name:             dci-downloader
-Version:          2.1.4
+Version:          2.1.5
 Release:          1.VERS%{?dist}
 Summary:          DCI Downloader
 License:          ASL 2.0
@@ -35,6 +35,8 @@ DCI downloader used to download Red Hat products
 %{_bindir}/%{srcname}
 
 %changelog
+* Fri Mar 27 2020 Guillaume Vincent <gvincent@redhat.com> - 2.1.5-1
+- Fix pypi upload issue
 * Fri Mar 20 2020 Guillaume Vincent <gvincent@redhat.com> - 2.1.4-1
 - Remove EPEL dependency
 * Tue Mar 10 2020 Guillaume Vincent <gvincent@redhat.com> - 2.1.3-1

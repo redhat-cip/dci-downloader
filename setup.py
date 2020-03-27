@@ -30,7 +30,8 @@ setuptools.setup(
     author_email="distributed-ci@redhat.com",
     description="DCI downloader module",
     long_description=readme,
-    install_requires=["requests"],
+    long_description_content_type="text/markdown",
+    install_requires=["requests", "pyyaml"],
     url="https://github.com/redhat-cip/dci-downloader",
     license="Apache v2.0",
     classifiers=[
