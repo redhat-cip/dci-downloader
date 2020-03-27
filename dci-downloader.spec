@@ -1,7 +1,7 @@
 %global srcname dci-downloader
 
 Name:             dci-downloader
-Version:          2.1.5
+Version:          2.1.6
 Release:          1.VERS%{?dist}
 Summary:          DCI Downloader
 License:          ASL 2.0
@@ -12,8 +12,10 @@ Source0:          %{srcname}-%{version}.tar.gz
 BuildRequires:    python2-devel
 BuildRequires:    python2-setuptools
 BuildRequires:    python-requests
+BuildRequires:    python-dciauth
 BuildRequires:    PyYAML
 Requires:         python-requests
+Requires:         python-dciauth
 Requires:         PyYAML
 
 %description
@@ -35,6 +37,8 @@ DCI downloader used to download Red Hat products
 %{_bindir}/%{srcname}
 
 %changelog
+* Fri Mar 27 2020 Guillaume Vincent <gvincent@redhat.com> - 2.1.6-1
+- Add missing dciauth
 * Fri Mar 27 2020 Guillaume Vincent <gvincent@redhat.com> - 2.1.5-1
 - Fix pypi upload issue
 * Fri Mar 20 2020 Guillaume Vincent <gvincent@redhat.com> - 2.1.4-1
