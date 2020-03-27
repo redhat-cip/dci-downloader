@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d95a6374_6daced1c",
+        "filename": "setup.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 166
+      },
+      "writtenOn": "2020-03-27T11:22:47Z",
+      "side": 1,
+      "message": "Missing requirements.txt file",
+      "revId": "bdd35730822d6e1d4e5572e1a9e4a1ee635d182d",
+      "serverId": "6c1dc8ef-8b94-40e4-bd83-c2359d45ecc0",
+      "unresolved": false
+    }
+  ]
+}
