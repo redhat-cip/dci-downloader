@@ -34,7 +34,8 @@ def download_component(topic, component, settings, cert, key):
         topic, component, settings["download_folder"]
     )
     clean_download_folder(files_list, download_folder)
-    files_list = filter_files_list(files_list, settings)
+    if component["type"] == "Compose":
+        files_list = filter_files_list(files_list, settings)
     files_to_download = get_files_to_download(base_url, download_folder, files_list)
     check_download_folder_size(files_to_download, download_folder)
     nb_files = len(files_to_download['files'])
