@@ -3,9 +3,11 @@
 import re
 
 
-def _get_patterns(variants, archs):
+def _get_patterns(variants, archs, component_type):
     patterns = []
     archs = archs if archs else [".*"]
+    if component_type == "puddle_osp":
+        patterns.append(re.compile(r"^Packages"))
     if not variants:
         patterns.append(re.compile(r"^(.*)\/(%s)/os" % "|".join(archs)))
     for variant in variants:
@@ -27,13 +29,13 @@ def _match_pattern(string, patterns):
     return match
 
 
-def filter_files_list(files_list, filters):
+def filter_files_list(files_list, filters, component_type):
     if filters["download_everything"]:
         return files_list
     new_files_list = {"directories": [], "files": [], "symlinks": []}
     variants = filters["variants"]
     archs = filters["archs"]
-    patterns = _get_patterns(variants, archs)
+    patterns = _get_patterns(variants, archs, component_type)
     for file in files_list["files"]:
         file_path = file["path"]
         if not file["path"]:

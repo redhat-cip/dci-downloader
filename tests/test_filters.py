@@ -76,7 +76,7 @@ def test_default_filter_files_list():
         ],
         "symlinks": [],
     }
-    assert filter_files_list(dci_files_list, settings) == expected_files_list
+    assert filter_files_list(dci_files_list, settings, "Compose") == expected_files_list
 
 
 def test_filter_files_list_with_debug():
@@ -119,7 +119,7 @@ def test_filter_files_list_with_debug():
         ],
         "symlinks": [],
     }
-    assert filter_files_list(dci_files_list, settings) == expected_files_list
+    assert filter_files_list(dci_files_list, settings, "Compose") == expected_files_list
 
 
 def test_non_existing_variants_are_ignored():
@@ -174,7 +174,7 @@ def test_non_existing_variants_are_ignored():
         ],
         "symlinks": [],
     }
-    assert filter_files_list(dci_files_list, settings) == expected_files_list
+    assert filter_files_list(dci_files_list, settings, "Compose") == expected_files_list
 
 
 def test_filter_files_list_download_everything():
@@ -251,4 +251,47 @@ def test_filter_files_list_download_everything():
         ],
         "symlinks": [],
     }
-    assert filter_files_list(dci_files_list, settings) == expected_files_list
+    assert filter_files_list(dci_files_list, settings, "Compose") == expected_files_list
+
+
+def test_filter_files_list_puddle_osp():
+    dci_files_list = {
+        "directories": [],
+        "files": [
+            {
+                'name': 'python2-neutronclient-6.7.0-1.el7ost.noarch.rpm',
+                'path': 'Packages',
+                'sha256': '0f134434384c4183e652a9512246b9556982e5d0c7a24a6e42b3c37dd403ea9c',
+                'size': 312248
+            },
+            {
+                'name': 'python2-novaclient-10.1.1-1.el7ost.noarch.rpm',
+                'path': 'Packages',
+                'sha256': 'd730fbe079207b66ba54b52a7f6f682d44edf826f5bd9a11d425d6cc978701a2',
+                'size': 208632
+            },
+        ],
+        "symlinks": [],
+    }
+    settings = get_settings(
+        sys_args=["OSP13", "/tmp"]
+    )["topics"][0]
+    expected_files_list = {
+        "directories": [],
+        "files": [
+            {
+                'name': 'python2-neutronclient-6.7.0-1.el7ost.noarch.rpm',
+                'path': 'Packages',
+                'sha256': '0f134434384c4183e652a9512246b9556982e5d0c7a24a6e42b3c37dd403ea9c',
+                'size': 312248
+            },
+            {
+                'name': 'python2-novaclient-10.1.1-1.el7ost.noarch.rpm',
+                'path': 'Packages',
+                'sha256': 'd730fbe079207b66ba54b52a7f6f682d44edf826f5bd9a11d425d6cc978701a2',
+                'size': 208632
+            },
+        ],
+        "symlinks": [],
+    }
+    assert filter_files_list(dci_files_list, settings, "puddle_osp") == expected_files_list
