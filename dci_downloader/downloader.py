@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 import os
 
-from dci_downloader.api import get_files_list, get_repo_base_url, download_file
+from dci_downloader.api import get_files_list, get_base_url, download_file
 from dci_downloader.stats import check_download_folder_size
 from dci_downloader.filters import filter_files_list
 from dci_downloader.files_list import get_files_to_download, get_files_to_remove
@@ -28,7 +28,7 @@ def clean_download_folder(files_list, download_folder):
 
 def download_component(topic, component, settings, cert, key):
     print("Download component %s" % component["name"])
-    base_url = get_repo_base_url(topic, component)
+    base_url = get_base_url(topic, component)
     files_list = get_files_list(base_url, cert, key)
     download_folder = build_download_folder(
         topic, component, settings["download_folder"]
