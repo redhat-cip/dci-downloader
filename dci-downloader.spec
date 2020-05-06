@@ -1,7 +1,7 @@
 %global srcname dci-downloader
 
 Name:             dci-downloader
-Version:          2.1.6
+Version:          2.2.0
 Release:          1.VERS%{?dist}
 Summary:          DCI Downloader
 License:          ASL 2.0
@@ -12,10 +12,10 @@ Source0:          %{srcname}-%{version}.tar.gz
 BuildRequires:    python2-devel
 BuildRequires:    python2-setuptools
 BuildRequires:    python-requests
-BuildRequires:    python-dciauth
+BuildRequires:    python-dciclient
 BuildRequires:    PyYAML
 Requires:         python-requests
-Requires:         python-dciauth
+Requires:         python-dciclient
 Requires:         PyYAML
 
 %description
@@ -37,6 +37,9 @@ DCI downloader used to download Red Hat products
 %{_bindir}/%{srcname}
 
 %changelog
+* Wed May 6 2020 Guillaume Vincent <gvincent@redhat.com> - 2.2.0-1
+- Rollback Remove EPEL dependency because dciclient doesnt requires
+  EPEL anymore
 * Fri Mar 27 2020 Guillaume Vincent <gvincent@redhat.com> - 2.1.6-1
 - Add missing dciauth
 * Fri Mar 27 2020 Guillaume Vincent <gvincent@redhat.com> - 2.1.5-1
