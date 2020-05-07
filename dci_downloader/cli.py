@@ -7,14 +7,14 @@ from dci_downloader.version import __version__
 
 EXAMPLES = """
 examples:
-  # download the latest RHEL-8 compose in /tmp/repo
-  dci-downloader RHEL-8 /tmp/repo
+  # download the latest RHEL-8-milestone compose in /tmp/repo
+  dci-downloader RHEL-8-milestone /tmp/repo
 
   # download specific arch
-  dci-downloader RHEL-8 /tmp/repo --arch ppc64le
+  dci-downloader RHEL-8-milestone /tmp/repo --arch ppc64le
 
   # download explicit variants
-  dci-downloader RHEL-8 /tmp/repo --variant AppStream --variant BaseOS
+  dci-downloader RHEL-8-milestone /tmp/repo --variant AppStream --variant BaseOS
 
   # load options from yaml settings file
   dci-downloader --settings settings.yml
@@ -30,7 +30,7 @@ copyright:
 def parse_arguments(arguments):
     parser = argparse.ArgumentParser(
         usage="dci-downloader TOPIC DEST [OPTIONS]",
-        description="Download the latest RHEL compose easily:\n * source your credentials file\n * specify the topic name and the destination folder",
+        description="Download the latest DCI components easily:\n * source your credentials file\n * specify the topic name and the destination folder",
         epilog=EXAMPLES + COPYRIGHT,
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
@@ -38,7 +38,7 @@ def parse_arguments(arguments):
         "name",
         metavar="TOPIC",
         nargs="?",
-        help="topic name (i.e. RHEL-7.8, RHEL-8.1, etc...)",
+        help="topic name (i.e. RHEL-8-nightly, RHEL-8-milestone, RHEL-8.2-milestone, etc...)",
     )
     parser.add_argument(
         "download_folder", metavar="DEST", nargs="?", help="destination folder."
