@@ -74,6 +74,10 @@ def _get_remoteci_id(env_variables):
     return None
 
 
+def _get_dci_cert_file(env_variables):
+    return env_variables.get("DCI_CERT_FILE", "/etc/dci-downloader/ssl/dci.pem")
+
+
 def get_settings(sys_args, env_variables={}):
     cli_arguments = parse_arguments(sys_args)
     settings = {
@@ -81,6 +85,7 @@ def get_settings(sys_args, env_variables={}):
         "env_variables": env_variables,
         "topics": [cli_arguments],
         "download_folder": _get_download_folder(cli_arguments, env_variables),
+        "dci_cert_file": _get_dci_cert_file(env_variables)
     }
     settings_file_path = cli_arguments["settings_file_path"]
     if settings_file_path:
