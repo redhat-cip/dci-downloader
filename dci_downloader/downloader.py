@@ -26,10 +26,10 @@ def clean_download_folder(files_list, download_folder):
     delete_all_symlink_in_path(download_folder)
 
 
-def download_component(topic, component, settings, cert, key):
+def download_component(topic, component, settings):
     print("Download component %s" % component["name"])
     base_url = get_base_url(topic, component)
-    files_list = get_files_list(base_url, cert, key)
+    files_list = get_files_list(base_url, settings)
     download_folder = build_download_folder(
         topic, component, settings["download_folder"]
     )
@@ -37,9 +37,9 @@ def download_component(topic, component, settings, cert, key):
     files_list = filter_files_list(files_list, settings)
     files_to_download = get_files_to_download(base_url, download_folder, files_list)
     check_download_folder_size(files_to_download, download_folder)
-    nb_files = len(files_to_download['files'])
-    for index, file in enumerate(files_to_download['files']):
+    nb_files = len(files_to_download["files"])
+    for index, file in enumerate(files_to_download["files"]):
         print("(%d/%d): %s" % (index, nb_files, file["destination"]))
         create_parent_dir(file["destination"])
-        download_file(file, cert, key)
+        download_file(file, settings)
     recreate_symlinks(files_list["symlinks"], download_folder)

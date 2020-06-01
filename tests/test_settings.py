@@ -355,3 +355,33 @@ def test_get_settings_local_repo_with_multiple_topics():
             "variants": [],
         },
     )
+
+
+def test_get_settings_set_DCI_CERT_FILE_to_default_if_not_setted():
+    settings = get_settings(
+        sys_args=["RHEL-8", "/tmp/repo1"],
+        env_variables={
+            "DCI_CLIENT_ID": "remoteci/9dd94b70-1707-46c5-a2bb-661e8d5d4212",
+            "DCI_API_SECRET": "",
+            "DCI_CS_URL": "",
+            "XDG_DATA_HOME": "/home/dci/.local/share",
+        },
+    )
+    topic = settings["topics"][0]
+    assert topic["dci_cert_file"] == "/home/dci/.local/share/dci-downloader/dci.crt"
+    assert topic["dci_key_file"] == "/home/dci/.local/share/dci-downloader/dci.key"
+
+
+def test_get_settings_use_DCI_CERT_FILE_from_env():
+    settings = get_settings(
+        sys_args=["RHEL-8", "/tmp/repo1"],
+        env_variables={
+            "DCI_CLIENT_ID": "remoteci/9dd94b70-1707-46c5-a2bb-661e8d5d4212",
+            "DCI_API_SECRET": "",
+            "DCI_CS_URL": "",
+            "DCI_CERT_FILE": "/etc/dci-rhel-agent/dci.pem",
+        },
+    )
+    topic = settings["topics"][0]
+    assert topic["dci_key_file"] == "/etc/dci-rhel-agent/dci.pem"
+    assert topic["dci_cert_file"] == "/etc/dci-rhel-agent/dci.pem"

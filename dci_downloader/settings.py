@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+import os
 import traceback
 import yaml
 import sys
@@ -43,6 +44,8 @@ def _clean_topic(topic):
         "variants": variants,
         "download_everything": all,
         "download_folder": topic["download_folder"],
+        "dci_key_file": topic["dci_key_file"],
+        "dci_cert_file": topic["dci_cert_file"],
         "component_id": component_id,
     }
 
@@ -52,6 +55,8 @@ def _clean_settings(settings):
     new_topics = []
     for topic in settings["topics"]:
         topic["download_folder"] = settings["download_folder"]
+        topic["dci_key_file"] = settings["dci_key_file"]
+        topic["dci_cert_file"] = settings["dci_cert_file"]
         new_topics.append(_clean_topic(topic))
     new_settings["topics"] = new_topics
     return new_settings
@@ -74,6 +79,13 @@ def _get_remoteci_id(env_variables):
     return None
 
 
+def _get_config_file_path(env_variables, filename):
+    DEFAULT_XDG_DATA_HOME = os.path.join(os.path.expanduser("~"), ".local", "share")
+    data_home_path = env_variables.get("XDG_DATA_HOME", DEFAULT_XDG_DATA_HOME)
+    default_dci_cert_file = os.path.join(data_home_path, "dci-downloader", filename)
+    return env_variables.get("DCI_CERT_FILE", default_dci_cert_file)
+
+
 def get_settings(sys_args, env_variables={}):
     cli_arguments = parse_arguments(sys_args)
     settings = {
@@ -81,6 +93,8 @@ def get_settings(sys_args, env_variables={}):
         "env_variables": env_variables,
         "topics": [cli_arguments],
         "download_folder": _get_download_folder(cli_arguments, env_variables),
+        "dci_cert_file": _get_config_file_path(env_variables, "dci.crt"),
+        "dci_key_file": _get_config_file_path(env_variables, "dci.key"),
     }
     settings_file_path = cli_arguments["settings_file_path"]
     if settings_file_path:
