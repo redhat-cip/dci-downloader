@@ -1,6 +1,5 @@
 import errno
 import os
-from tempfile import NamedTemporaryFile
 
 
 def mkdir_p(path):
@@ -35,14 +34,6 @@ def recreate_symlinks(symlinks, destination_path):
     for symlink in symlinks:
         link_path = os.path.join(destination_path, symlink["path"], symlink["name"])
         os.symlink(symlink["destination"], link_path)
-
-
-def create_temp_file(content):
-    cert = NamedTemporaryFile(delete=False)
-    content = content if type(content) is bytes else content.encode()
-    cert.write(content)
-    cert.close()
-    return cert
 
 
 def build_download_folder(topic, component, download_folder):

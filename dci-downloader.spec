@@ -1,7 +1,7 @@
 %global srcname dci-downloader
 
 Name:             dci-downloader
-Version:          2.2.0
+Version:          2.3.0
 Release:          1.VERS%{?dist}
 Summary:          DCI Downloader
 License:          ASL 2.0
@@ -37,6 +37,8 @@ DCI downloader used to download Red Hat products
 %{_bindir}/%{srcname}
 
 %changelog
+* Wed Jun 3 2020 Guillaume Vincent <gvincent@redhat.com> - 2.3.0-1
+- Allow parallel downloads
 * Wed May 6 2020 Guillaume Vincent <gvincent@redhat.com> - 2.2.0-1
 - Rollback Remove EPEL dependency because dciclient doesnt requires
   EPEL anymore
