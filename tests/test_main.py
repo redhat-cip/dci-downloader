@@ -15,14 +15,12 @@ def test_download_components_if_no_component_id():
         "name": "RHEL-8",
         "download_folder": "/var/www/html",
     }
-    cert = "/tmp/cert"
-    key = "/tmp/key"
-    download_components(settings, api, downloader, cert, key)
+    download_components(settings, api, downloader)
     api.get_topic.assert_called_once_with("RHEL-8")
     downloader.download_component.assert_has_calls(
         [
-            mock.call(topic, component1, settings, cert, key),
-            mock.call(topic, component2, settings, cert, key),
+            mock.call(topic, component1, settings),
+            mock.call(topic, component2, settings),
         ]
     )
 
@@ -38,11 +36,7 @@ def test_download_one_component_if_component_id():
         "component_id": "c1",
         "download_folder": "/var/www/html",
     }
-    cert = "/tmp/cert"
-    key = "/tmp/key"
-    download_components(settings, api, downloader, cert, key)
+    download_components(settings, api, downloader)
     api.get_component_by_id.assert_called_once_with(component["id"])
     api.get_topic_by_id.assert_called_once_with(topic["id"])
-    downloader.download_component.assert_called_once_with(
-        topic, component, settings, cert, key
-    )
+    downloader.download_component.assert_called_once_with(topic, component, settings)
