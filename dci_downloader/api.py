@@ -74,6 +74,18 @@ def get_keys(remoteci_id):
         return res.json()["keys"]
 
 
+def cert_is_valid(cert_file):
+    try:
+        context = build_signature_context()
+        with open(cert_file, "r") as f:
+            cert = f.read()
+            uri = "%s/certs/check" % context.dci_cs_api
+            r = context.session.post(uri, json={"cert": cert})
+            return r.status_code == 204
+    except Exception:
+        return False
+
+
 def get_base_url(topic, component):
     return "https://repo.distributed-ci.io/%s/%s/%s" % (
         topic["product_id"],
@@ -82,9 +94,11 @@ def get_base_url(topic, component):
     )
 
 
-def get_files_list(base_url, cert, key):
+def get_files_list(base_url, settings):
     print("Download DCI file list, it may take a few seconds")
     files_list_url = "%s/dci_files_list.json" % base_url
+    key = settings["dci_key_file"]
+    cert = settings["dci_cert_file"]
     r = requests.get(files_list_url, cert=(cert, key))
     r.raise_for_status()
     return r.json()
@@ -129,8 +143,10 @@ def download_file_unpack(args):
     download_file(*args)
 
 
-def download_files(files, cert, key):
+def download_files(files, settings):
     nb_files = len(files)
+    cert = settings["dci_cert_file"]
+    key = settings["dci_key_file"]
     enhanced_files = [[f, cert, key, i + 1, nb_files] for i, f in enumerate(files)]
     with closing(Pool(processes=4)) as executor:
         executor.map(download_file_unpack, enhanced_files, chunksize=1)
