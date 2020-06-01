@@ -13,12 +13,12 @@ def test_parsing_no_options():
 
 
 def test_parsing_settings_file():
-    args = parse_arguments(["--settings", "/etc/dci-downloader/settings.yml"])
+    args = parse_arguments(["--settings", "/etc/dci-rhel-agent/settings.yml"])
     assert args["name"] is None
     assert args["archs"] == ["x86_64"]
     assert args["variants"] == []
     assert not args["with_debug"]
-    assert args["settings_file_path"] == "/etc/dci-downloader/settings.yml"
+    assert args["settings_file_path"] == "/etc/dci-rhel-agent/settings.yml"
     assert args["download_folder"] is None
 
 
