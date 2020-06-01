@@ -105,10 +105,10 @@ def get_base_url(topic, component):
     )
 
 
-def get_files_list(base_url, cert, key):
+def get_files_list(base_url):
     print("Download DCI file list, it may take a few seconds")
     files_list_url = "%s/dci_files_list.json" % base_url
-    r = requests.get(files_list_url, cert=(cert, key))
+    r = requests.get(files_list_url)
     r.raise_for_status()
     return r.json()
 
@@ -137,8 +137,8 @@ def retry(tries=3, delay=2, multiplier=2):
 
 
 @retry()
-def download_file(file, cert, key):
-    r = requests.get(file["source"], stream=True, cert=(cert, key))
+def download_file(file):
+    r = requests.get(file["source"], stream=True)
     r.raise_for_status()
     with open(file["destination"], "wb") as f:
         shutil.copyfileobj(r.raw, f)
