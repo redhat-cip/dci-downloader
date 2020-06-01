@@ -6,7 +6,7 @@
 %global srcname dci-downloader
 
 Name:             dci-downloader
-Version:          2.3.1
+Version:          2.4.0
 Release:          2.VERS%{?dist}
 Summary:          DCI Downloader
 License:          ASL 2.0
@@ -68,6 +68,8 @@ DCI downloader used to download Red Hat products
 %{_bindir}/%{srcname}
 
 %changelog
+* Tue Aug 25 2020 Guillaume Vincent <gvincent@redhat.com> - 2.4.0-1
+- Stop refreshing SSL certificates
 * Thu Jul 30 2020 Guillaume Vincent <gvincent@redhat.com> - 2.3.1-1
 - Fix bad exception raised
 * Mon Jun 22 2020 Guillaume Vincent <gvincent@redhat.com> - 2.3.0-1
