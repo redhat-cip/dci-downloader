@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+import os
 import traceback
 import yaml
 import sys
@@ -43,6 +44,8 @@ def _clean_topic(topic):
         "variants": variants,
         "download_everything": all,
         "download_folder": topic["download_folder"],
+        "dci_key_file": topic["dci_key_file"],
+        "dci_cert_file": topic["dci_cert_file"],
         "component_id": component_id,
     }
 
@@ -52,6 +55,8 @@ def _clean_settings(settings):
     new_topics = []
     for topic in settings["topics"]:
         topic["download_folder"] = settings["download_folder"]
+        topic["dci_key_file"] = settings["dci_key_file"]
+        topic["dci_cert_file"] = settings["dci_cert_file"]
         new_topics.append(_clean_topic(topic))
     new_settings["topics"] = new_topics
     return new_settings
@@ -64,6 +69,10 @@ def _keep_backward_compatibility(settings):
         settings["topics"] = [settings]
     if "jobs" in settings:
         settings["topics"] = settings["jobs"]
+    if "download_key_file" in settings:
+        settings["dci_key_file"] = settings["download_key_file"]
+    if "download_crt_file" in settings:
+        settings["dci_cert_file"] = settings["download_crt_file"]
     return settings
 
 
@@ -74,18 +83,30 @@ def _get_remoteci_id(env_variables):
     return None
 
 
+def _get_dci_downloader_home_folder(env_variables):
+    DEFAULT_XDG_DATA_HOME = os.path.join(os.path.expanduser("~"), ".local", "share")
+    data_home_path = env_variables.get("XDG_DATA_HOME", DEFAULT_XDG_DATA_HOME)
+    return os.path.join(data_home_path, "dci-downloader")
+
+
 def get_settings(sys_args, env_variables={}):
     cli_arguments = parse_arguments(sys_args)
+    dci_home_path = _get_dci_downloader_home_folder(env_variables)
+    key = env_variables.get("DCI_KEY_FILE", os.path.join(dci_home_path, "dci.key"))
+    crt = env_variables.get("DCI_CERT_FILE", os.path.join(dci_home_path, "dci.crt"))
     settings = {
         "remoteci_id": _get_remoteci_id(env_variables),
         "env_variables": env_variables,
         "topics": [cli_arguments],
         "download_folder": _get_download_folder(cli_arguments, env_variables),
+        "dci_key_file": key,
+        "dci_cert_file": crt,
     }
     settings_file_path = cli_arguments["settings_file_path"]
     if settings_file_path:
         settings_from_file = _read_settings_file(settings_file_path)
         settings.update(_keep_backward_compatibility(settings_from_file))
+        print(settings)
     return _clean_settings(settings)
 
 
