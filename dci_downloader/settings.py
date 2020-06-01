@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+import os
 import traceback
 import yaml
 import sys
@@ -74,6 +75,14 @@ def _get_remoteci_id(env_variables):
     return None
 
 
+def _get_dci_cert_file(env_variables):
+    DEFAULT_XDG_DATA_HOME = os.path.join(os.path.expanduser("~"), ".local", "share")
+    data_home_path = env_variables.get("XDG_DATA_HOME", DEFAULT_XDG_DATA_HOME)
+    print(data_home_path)
+    default_dci_cert_file = os.path.join(data_home_path, "dci-downloader", "dci.pem")
+    return env_variables.get("DCI_CERT_FILE", default_dci_cert_file)
+
+
 def get_settings(sys_args, env_variables={}):
     cli_arguments = parse_arguments(sys_args)
     settings = {
@@ -81,6 +90,7 @@ def get_settings(sys_args, env_variables={}):
         "env_variables": env_variables,
         "topics": [cli_arguments],
         "download_folder": _get_download_folder(cli_arguments, env_variables),
+        "dci_cert_file": _get_dci_cert_file(env_variables),
     }
     settings_file_path = cli_arguments["settings_file_path"]
     if settings_file_path:
