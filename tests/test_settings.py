@@ -355,3 +355,28 @@ def test_get_settings_local_repo_with_multiple_topics():
             "variants": [],
         },
     )
+
+
+def test_get_settings_set_DCI_CERT_FILE_to_default_if_not_setted():
+    settings = get_settings(
+        sys_args=["RHEL-8", "/tmp/repo1"],
+        env_variables={
+            "DCI_CLIENT_ID": "remoteci/9dd94b70-1707-46c5-a2bb-661e8d5d4212",
+            "DCI_API_SECRET": "",
+            "DCI_CS_URL": "",
+        },
+    )
+    assert settings["dci_cert_file"] == "/etc/pki/tls/private/dci.pem"
+
+
+def test_get_settings_use_DCI_CERT_FILE_from_env():
+    settings = get_settings(
+        sys_args=["RHEL-8", "/tmp/repo1"],
+        env_variables={
+            "DCI_CLIENT_ID": "remoteci/9dd94b70-1707-46c5-a2bb-661e8d5d4212",
+            "DCI_API_SECRET": "",
+            "DCI_CS_URL": "",
+            "DCI_CERT_FILE": "/etc/dci-rhel-agent/dci.pem",
+        },
+    )
+    assert settings["dci_cert_file"] == "/etc/dci-rhel-agent/dci.pem"
