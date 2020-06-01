@@ -158,7 +158,18 @@ topics:
         with_debug: true
 ```
 
-# Proxy
+## SSL certificates
+
+dci-downloader downloads SSL certificates prior the download phase. To customize the CRT and KEY path you can change `DCI_KEY_FILE` and `DCI_CERT_FILE` env variables.
+
+If you are using `settings.yml` file change
+
+```
+dci_key_file: /etc/dci-rhel-agent/dci.key
+dci_cert_file: /etc/dci-rhel-agent/dci.crt
+```
+
+## Proxy
 
 If you are using a proxy, just add `HTTP_PROXY` or `HTTPS_PROXY` env variable pointing to your proxy.
 
