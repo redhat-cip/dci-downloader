@@ -1,14 +1,20 @@
+%if 0%{?rhel} && 0%{?rhel} < 8
+%global with_python2 1
+%else
+%global with_python3 1
+%endif
 %global srcname dci-downloader
 
 Name:             dci-downloader
 Version:          2.2.0
-Release:          1.VERS%{?dist}
+Release:          2.VERS%{?dist}
 Summary:          DCI Downloader
 License:          ASL 2.0
 URL:              https://github.com/redhat-cip/%{srcname}
 BuildArch:        noarch
 Source0:          %{srcname}-%{version}.tar.gz
 
+%if 0%{?with_python2}
 BuildRequires:    python2-devel
 BuildRequires:    python2-setuptools
 BuildRequires:    python-requests
@@ -17,6 +23,17 @@ BuildRequires:    PyYAML
 Requires:         python-requests
 Requires:         python-dciclient
 Requires:         PyYAML
+%endif
+
+%if 0%{?with_python3}
+BuildRequires:  python3-devel
+BuildRequires:  python3-setuptools
+BuildRequires:  python3-requests
+BuildRequires:  python3-PyYAML
+Requires:       python3-PyYAML
+Requires:       python3-requests
+Requires:       python3-dciclient
+%endif
 
 %description
 DCI downloader used to download Red Hat products
@@ -25,18 +42,34 @@ DCI downloader used to download Red Hat products
 %autosetup -n %{srcname}-%{version}
 
 %build
+%if 0%{?with_python2}
 %py2_build
+%endif
+%if 0%{?with_python3}
+%py3_build
+%endif
 
 %install
+%if 0%{?with_python2}
 %py2_install
+%endif
+%if 0%{?with_python3}
+%py3_install
+%endif
 
 %files
 %license LICENSE
 %doc README.md
-%{python_sitelib}/*
+%if 0%{?with_python2}
+%{python2_sitelib}/*
+%else
+%{python3_sitelib}/*
+%endif
 %{_bindir}/%{srcname}
 
 %changelog
+* Fri Jun 05 2020 Bill Peck <bpeck@redhat.com> - 2.2.0-2
+- Rebuild for RHEL-8
 * Wed May 6 2020 Guillaume Vincent <gvincent@redhat.com> - 2.2.0-1
 - Rollback Remove EPEL dependency because dciclient doesnt requires
   EPEL anymore
