@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "aab78f17_49c0e712",
+        "filename": "dci_downloader/api.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 160,
+      "author": {
+        "id": 28
+      },
+      "writtenOn": "2020-06-22T16:06:06Z",
+      "side": 1,
+      "message": "download_file is already called in download_file_unpack\nbut you need to move create_parent_dir in download_file()",
+      "range": {
+        "startLine": 159,
+        "startChar": 0,
+        "endLine": 160,
+        "endChar": 39
+      },
+      "revId": "7b95055eea71f9c446f4e1f79ab91e8b16a49636",
+      "serverId": "6c1dc8ef-8b94-40e4-bd83-c2359d45ecc0",
+      "unresolved": false
+    }
+  ]
+}
