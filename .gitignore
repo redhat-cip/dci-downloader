@@ -5,3 +5,4 @@ build
 .tox
 dist
 dcirc.sh
+venv

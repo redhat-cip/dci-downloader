@@ -5,7 +5,9 @@ import shutil
 import time
 
 from functools import wraps
+from multiprocessing import Pool
 
+from dci_downloader.fs import create_parent_dir
 from dciclient.v1.api.context import build_signature_context
 from dciclient.v1.api import component as dci_component
 from dciclient.v1.api import job as dci_job
@@ -137,8 +139,23 @@ def retry(tries=3, delay=2, multiplier=2):
 
 
 @retry()
-def download_file(file, cert, key):
-    r = requests.get(file["source"], stream=True, cert=(cert, key))
+def download_file(_file, cert, key, file_index, nb_files):
+    destination = _file["destination"]
+    print("(%d/%d): %s" % (file_index, nb_files, destination))
+    create_parent_dir(destination)
+    r = requests.get(_file["source"], stream=True, cert=(cert, key))
     r.raise_for_status()
-    with open(file["destination"], "wb") as f:
+    with open(destination, "wb") as f:
         shutil.copyfileobj(r.raw, f)
+    return _file
+
+
+def download_file_unpack(args):
+    download_file(*args)
+
+
+def download_files(files, cert, key):
+    nb_files = len(files)
+    enhanced_files = [[f, cert, key, i + 1, nb_files] for i, f in enumerate(files)]
+    with Pool() as executor:
+        executor.map(download_file_unpack, enhanced_files, chunksize=1)
