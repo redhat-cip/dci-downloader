@@ -6,6 +6,7 @@ from dci_downloader.settings import (
     _read_settings_file,
     get_settings,
     exit_if_settings_invalid,
+    _variants_are_invalid,
 )
 
 
@@ -354,4 +355,15 @@ def test_get_settings_local_repo_with_multiple_topics():
             "archs": ["x86_64"],
             "variants": [],
         },
+    )
+
+
+def test_backward_compatibility_test_variants_are_invalid_with_metadata():
+    assert (
+        _variants_are_invalid({"name": "RHEL-7", "variants": [{"name": "metadata"}]})
+        is False
+    )
+    assert (
+        _variants_are_invalid({"name": "RHEL-8", "variants": [{"name": "metadata"}]})
+        is False
     )

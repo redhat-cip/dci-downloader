@@ -89,7 +89,7 @@ def get_settings(sys_args, env_variables={}):
     return _clean_settings(settings)
 
 
-def _check_variants_are_valid(topic):
+def _variants_are_invalid(topic):
     topic_variants = {
         "RHEL-7": [
             "Server-NFV",
@@ -98,7 +98,6 @@ def _check_variants_are_valid(topic):
             "Server-SAPHANA",
             "Server-optional",
             "Server",
-            "metadata",
         ],
         "RHEL-8": [
             "AppStream",
@@ -110,17 +109,17 @@ def _check_variants_are_valid(topic):
             "ResilientStorage",
             "SAP",
             "SAPHANA",
-            "metadata",
             "unified",
         ],
     }
-    has_error = False
+    invalid = False
     for topic_name, variants in topic_variants.items():
         current_topic_name = topic["name"]
         current_variants = [v["name"] for v in topic["variants"]]
+        variants += ['metadata']
         variants_not_allowed = set(current_variants) - set(variants)
         if current_topic_name.startswith(topic_name) and variants_not_allowed:
-            has_error = True
+            invalid = True
             print(
                 "Variants %s for the %s topic are not valid"
                 % (", ".join(variants_not_allowed), current_topic_name)
@@ -130,7 +129,7 @@ def _check_variants_are_valid(topic):
                 % (current_topic_name, ", ".join(variants))
             )
             break
-    return has_error
+    return invalid
 
 
 def exit_if_settings_invalid(settings):
@@ -145,7 +144,7 @@ def exit_if_settings_invalid(settings):
         print("The destination folder for the download is not specified.")
 
     for topic in settings["topics"]:
-        if _check_variants_are_valid(topic):
+        if _variants_are_invalid(topic):
             has_error = True
 
     if has_error:
