@@ -252,3 +252,34 @@ def test_filter_files_list_download_everything():
         "symlinks": [],
     }
     assert filter_files_list(dci_files_list, settings) == expected_files_list
+
+
+def test_nrt_always_download_metadata():
+    dci_files_list = {
+        "directories": [],
+        "files": [
+            {
+                "path": "metadata",
+                "sha256": "6f48f0d285918e502035da74decf447c6bb29898206406a4ed6a92ece94d276a",
+                "name": "rpms.json",
+                "size": 45052,
+            },
+        ],
+        "symlinks": [],
+    }
+    settings = get_settings(
+        sys_args=["RHEL-8", "/tmp", "--variant", "AppStream"]
+    )["topics"][0]
+    expected_files_list = {
+        "directories": [],
+        "files": [
+            {
+                "path": "metadata",
+                "sha256": "6f48f0d285918e502035da74decf447c6bb29898206406a4ed6a92ece94d276a",
+                "name": "rpms.json",
+                "size": 45052,
+            },
+        ],
+        "symlinks": [],
+    }
+    assert filter_files_list(dci_files_list, settings) == expected_files_list
