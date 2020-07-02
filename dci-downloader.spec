@@ -6,7 +6,7 @@
 %global srcname dci-downloader
 
 Name:             dci-downloader
-Version:          2.2.0
+Version:          2.3.0
 Release:          2.VERS%{?dist}
 Summary:          DCI Downloader
 License:          ASL 2.0
@@ -68,6 +68,8 @@ DCI downloader used to download Red Hat products
 %{_bindir}/%{srcname}
 
 %changelog
+* Mon Jun 22 2020 Guillaume Vincent <gvincent@redhat.com> - 2.3.0-1
+- Introduce parallel downloads to increase download speed
 * Fri Jun 05 2020 Bill Peck <bpeck@redhat.com> - 2.2.0-2
 - Rebuild for RHEL-8
 * Wed May 6 2020 Guillaume Vincent <gvincent@redhat.com> - 2.2.0-1
