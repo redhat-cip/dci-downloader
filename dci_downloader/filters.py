@@ -5,6 +5,7 @@ import re
 
 def _get_patterns(variants, archs):
     patterns = []
+    patterns.append(re.compile(r"^metadata"))
     archs = archs if archs else [".*"]
     if not variants:
         patterns.append(re.compile(r"^(.*)\/(%s)/os" % "|".join(archs)))
