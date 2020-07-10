@@ -65,7 +65,7 @@ def main():
         except Exception:
             print("Exception when downloading components for %s" % topic_name)
             if job is not None:
-                create_jobstate(job["id"], "failure")
+                create_jobstate(job["id"], "error")
             traceback.print_exc()
             return_code = 1
     os.unlink(cert)
