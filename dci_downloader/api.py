@@ -8,9 +8,6 @@ from functools import wraps
 
 from dciclient.v1.api.context import build_signature_context
 from dciclient.v1.api import component as dci_component
-from dciclient.v1.api import job as dci_job
-from dciclient.v1.api import jobstate as dci_jobstate
-from dciclient.v1.api import tag as dci_tag
 from dciclient.v1.api import topic as dci_topic
 from dciclient.v1.api import remoteci as dci_remoteci
 
@@ -72,29 +69,6 @@ def get_keys(remoteci_id):
 
     if res.status_code == 201:
         return res.json()["keys"]
-
-
-def create_job(topic_id):
-    context = build_signature_context()
-    res = dci_job.schedule(context, topic_id)
-
-    if res.status_code == 201:
-        return res.json()["job"]
-
-
-def create_jobstate(job_id, status):
-    context = build_signature_context()
-    res = dci_jobstate.create(context, status, "download from dci-downloader", job_id)
-    if res.status_code == 201:
-        return res.json()["jobstate"]
-
-
-def create_tag(job_id, name):
-    context = build_signature_context()
-    dci_tag.create(context, name)
-    res = dci_job.add_tag(context, job_id, name)
-    if res.status_code == 201:
-        return res.json()
 
 
 def get_base_url(topic, component):
