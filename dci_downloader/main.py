@@ -49,7 +49,7 @@ def main():
         try:
             topic = api.get_topic(topic_name)
             if topic is None:
-                raise ("Topic name %s not found" % topic_name)
+                raise Exception("Topic name %s not found" % topic_name)
             download_components(topic_settings, api, downloader, cert, key)
         except Exception:
             print("Exception when downloading components for %s" % topic_name)
