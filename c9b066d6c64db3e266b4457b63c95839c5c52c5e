@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4d010470_e693de05",
+        "filename": "dci_downloader/certificates.py",
+        "patchSetId": 19
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 28
+      },
+      "writtenOn": "2020-08-25T09:30:23Z",
+      "side": 1,
+      "message": "It would be nice to verify if the certificates are still valid and renew them if they\u0027re not.\n\n- validity check\n\n- functionality check that it can get something from repo.distributed-ci.io (or have an api endpoint to verify if the cert is still valid) in case it has been replaced by another download tool",
+      "range": {
+        "startLine": 10,
+        "startChar": 4,
+        "endLine": 11,
+        "endChar": 77
+      },
+      "revId": "c9b066d6c64db3e266b4457b63c95839c5c52c5e",
+      "serverId": "6c1dc8ef-8b94-40e4-bd83-c2359d45ecc0",
+      "unresolved": false
+    }
+  ]
+}
