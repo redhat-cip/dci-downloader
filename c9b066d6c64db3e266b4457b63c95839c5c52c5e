@@ -46,6 +46,30 @@
       "revId": "c9b066d6c64db3e266b4457b63c95839c5c52c5e",
       "serverId": "6c1dc8ef-8b94-40e4-bd83-c2359d45ecc0",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "052dc185_3c5d0d85",
+        "filename": "dci_downloader/certificates.py",
+        "patchSetId": 19
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 28
+      },
+      "writtenOn": "2020-08-25T13:39:34Z",
+      "side": 1,
+      "message": "sending HEAD/GET to a shorter version of https://github.com/redhat-cip/dci-control-server/blob/master/dci/api/v1/certs.py#L36 should be enough to validate that the certificate is fine (withou product/topic/… verification)\n\nThe certificates are passed as files to python-requests, if the file changes between two requests python-requests should have the new files automatically.",
+      "parentUuid": "4a7991f3_0c14f20c",
+      "range": {
+        "startLine": 10,
+        "startChar": 4,
+        "endLine": 11,
+        "endChar": 77
+      },
+      "revId": "c9b066d6c64db3e266b4457b63c95839c5c52c5e",
+      "serverId": "6c1dc8ef-8b94-40e4-bd83-c2359d45ecc0",
+      "unresolved": false
     }
   ]
 }
