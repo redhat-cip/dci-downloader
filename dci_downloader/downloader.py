@@ -10,7 +10,7 @@ from dci_downloader.fs import (
     mkdir_p,
     delete_all_symlink_in_path,
     recreate_symlinks,
-    build_download_folder,
+    get_component_folder,
 )
 
 
@@ -29,9 +29,7 @@ def download_component(topic, component, settings):
     print("Download component %s" % component["name"])
     base_url = get_base_url(topic, component)
     files_list = get_files_list(base_url, settings)
-    download_folder = build_download_folder(
-        topic, component, settings["download_folder"]
-    )
+    download_folder = get_component_folder(settings, component)
     clean_download_folder(files_list, download_folder)
     files_list = filter_files_list(files_list, settings)
     files_to_download = get_files_to_download(base_url, download_folder, files_list)
