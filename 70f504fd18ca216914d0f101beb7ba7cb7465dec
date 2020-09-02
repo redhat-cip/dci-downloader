@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "dc3a6d1a_ae3a687c",
+        "filename": "dci_downloader/main.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 586
+      },
+      "writtenOn": "2020-09-02T17:34:51Z",
+      "side": 1,
+      "message": "This loop will not exit until the 10 hour timeout :)",
+      "revId": "70f504fd18ca216914d0f101beb7ba7cb7465dec",
+      "serverId": "6c1dc8ef-8b94-40e4-bd83-c2359d45ecc0",
+      "unresolved": false
+    }
+  ]
+}
