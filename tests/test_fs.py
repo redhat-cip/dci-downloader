@@ -1,9 +1,13 @@
-from dci_downloader.fs import build_download_folder
+from dci_downloader.fs import get_component_folder, get_topic_folder
 
 
-def test_build_download_folder():
-    topic = {"id": "t1", "name": "topic 1"}
+def test_get_component_folder():
+    settings = {"name": "topic 1", "download_folder": "/var/www/html"}
     component = {"id": "c1", "type": "Compose"}
-    download_folder = build_download_folder(topic, component, "/var/www/html")
-    expected_download_folder = "/var/www/html/topic_1/compose"
-    assert download_folder == expected_download_folder
+    download_folder = get_component_folder(settings, component)
+    assert download_folder == "/var/www/html/topic_1/compose"
+
+
+def test_get_topic_folder():
+    settings = {"name": "topic 1", "download_folder": "/var/www/html"}
+    assert get_topic_folder(settings) == "/var/www/html/topic_1"
