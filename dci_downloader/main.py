@@ -50,7 +50,7 @@ def download_topic(settings):
     count = 0
     ten_hours = 10 * 60 * 60
     sleep = 30
-    while not_finished or count < (ten_hours / sleep):
+    while not_finished and count < (ten_hours / sleep):
         try:
             topic_path = get_topic_folder(settings)
             lock_file = os.path.join(topic_path, '.lock')
