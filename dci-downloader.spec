@@ -6,7 +6,7 @@
 %global srcname dci-downloader
 
 Name:             dci-downloader
-Version:          2.4.1
+Version:          2.4.2
 Release:          1.VERS%{?dist}
 Summary:          DCI Downloader
 License:          ASL 2.0
@@ -68,6 +68,8 @@ DCI downloader used to download Red Hat products
 %{_bindir}/%{srcname}
 
 %changelog
+* Thu Sep 03 2020 Guillaume Vincent <gvincent@redhat.com> - 2.4.2-1
+- Create topic folder if doesn't exists
 * Wed Sep 02 2020 Guillaume Vincent <gvincent@redhat.com> - 2.4.1-1
 - Add a file lock per topic to avoid race condition during the download
 * Tue Aug 25 2020 Guillaume Vincent <gvincent@redhat.com> - 2.4.0-1
