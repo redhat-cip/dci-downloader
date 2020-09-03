@@ -8,7 +8,7 @@ import time
 
 from dci_downloader import api
 from dci_downloader import downloader
-from dci_downloader.fs import file_lock, get_topic_folder
+from dci_downloader.fs import file_lock, get_topic_folder, create_parent_dir
 from dci_downloader.certificates import configure_ssl_certificates
 from dci_downloader.settings import get_settings, exit_if_settings_invalid
 
@@ -50,10 +50,11 @@ def download_topic(settings):
     count = 0
     ten_hours = 10 * 60 * 60
     sleep = 30
-    while not_finished or count < (ten_hours / sleep):
+    while not_finished and count < (ten_hours / sleep):
         try:
             topic_path = get_topic_folder(settings)
-            lock_file = os.path.join(topic_path, '.lock')
+            lock_file = os.path.join(topic_path, ".lock")
+            create_parent_dir(lock_file)
             with file_lock(lock_file):
                 download_components(settings)
                 not_finished = False
