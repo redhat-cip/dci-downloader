@@ -51,7 +51,7 @@ def get_component_folder(settings, component):
 
 class file_lock(object):
     def __init__(self, file_path):
-        self.lock_fd = open(file_path, "a")
+        self.lock_fd = open(file_path, "w+")
         fcntl.flock(self.lock_fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
 
     def __enter__(self):
