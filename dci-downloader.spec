@@ -6,7 +6,7 @@
 %global srcname dci-downloader
 
 Name:             dci-downloader
-Version:          2.4.3
+Version:          2.4.4
 Release:          1.VERS%{?dist}
 Summary:          DCI Downloader
 License:          ASL 2.0
@@ -68,6 +68,9 @@ DCI downloader used to download Red Hat products
 %{_bindir}/%{srcname}
 
 %changelog
+* Mon Sep 08 2020 Guillaume Vincent <gvincent@redhat.com> - 2.4.4-1
+- Improve locking mechanism
+- Improve Pool Executor closing
 * Thu Sep 03 2020 Guillaume Vincent <gvincent@redhat.com> - 2.4.3-1
 - Change open mode for file lock to w+
 * Thu Sep 03 2020 Guillaume Vincent <gvincent@redhat.com> - 2.4.2-1
