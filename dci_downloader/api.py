@@ -4,7 +4,6 @@ import requests
 import shutil
 import time
 
-from contextlib import closing
 from functools import wraps
 from multiprocessing import Pool
 
@@ -148,6 +147,13 @@ def download_files(files, settings):
     cert = settings["dci_cert_file"]
     key = settings["dci_key_file"]
     enhanced_files = [[f, cert, key, i + 1, nb_files] for i, f in enumerate(files)]
-    with closing(Pool(processes=4)) as executor:
+    executor = Pool(processes=4)
+    try:
         executor.map(download_file_unpack, enhanced_files, chunksize=1)
+        executor.close()
+    except Exception:
         executor.terminate()
+        raise
+    finally:
+        executor.join()
+        del(executor)
