@@ -1,0 +1,153 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b1b6ee15_f5cdb088",
+        "filename": "dci_downloader/lock.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 28
+      },
+      "writtenOn": "2020-09-08T15:45:08Z",
+      "side": 1,
+      "message": "maybe \"file_lock.__init__\" to be clearer",
+      "range": {
+        "startLine": 20,
+        "startChar": 15,
+        "endLine": 20,
+        "endChar": 22
+      },
+      "revId": "ac6079e74dd9d9b8c71a71ac47dba38e90a24077",
+      "serverId": "6c1dc8ef-8b94-40e4-bd83-c2359d45ecc0",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e934ab72_296bc7e0",
+        "filename": "dci_downloader/lock.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 28
+      },
+      "writtenOn": "2020-09-08T15:45:08Z",
+      "side": 1,
+      "message": "This looks useless as we\u0027re supposed to remove the file each time we\u0027re done. Opening with \"a+\" directly should be enough (unless there\u0027s a good explanation)",
+      "range": {
+        "startLine": 22,
+        "startChar": 0,
+        "endLine": 26,
+        "endChar": 43
+      },
+      "revId": "ac6079e74dd9d9b8c71a71ac47dba38e90a24077",
+      "serverId": "6c1dc8ef-8b94-40e4-bd83-c2359d45ecc0",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fad330c8_267fd456",
+        "filename": "dci_downloader/lock.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 28
+      },
+      "writtenOn": "2020-09-08T15:45:08Z",
+      "side": 1,
+      "message": "callin flush() without writing anything into the file is useless also.",
+      "range": {
+        "startLine": 39,
+        "startChar": 0,
+        "endLine": 40,
+        "endChar": 23
+      },
+      "revId": "ac6079e74dd9d9b8c71a71ac47dba38e90a24077",
+      "serverId": "6c1dc8ef-8b94-40e4-bd83-c2359d45ecc0",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ff2e8c03_1cd6d9bc",
+        "filename": "dci_downloader/lock.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 28
+      },
+      "writtenOn": "2020-09-08T15:45:08Z",
+      "side": 1,
+      "message": "maybe \"file_lock.__enter__\" to be clearer",
+      "revId": "ac6079e74dd9d9b8c71a71ac47dba38e90a24077",
+      "serverId": "6c1dc8ef-8b94-40e4-bd83-c2359d45ecc0",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7b820f0c_eab7069b",
+        "filename": "dci_downloader/lock.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 28
+      },
+      "writtenOn": "2020-09-08T15:45:08Z",
+      "side": 1,
+      "message": "Could you use these values to add some logging in case of error and return True/False depending if there\u0027s an error or not ?\n\n(see https://docs.python.org/2/library/stdtypes.html#contextmanager.__exit__ )",
+      "range": {
+        "startLine": 46,
+        "startChar": 23,
+        "endLine": 46,
+        "endChar": 45
+      },
+      "revId": "ac6079e74dd9d9b8c71a71ac47dba38e90a24077",
+      "serverId": "6c1dc8ef-8b94-40e4-bd83-c2359d45ecc0",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "061bc74a_2b545022",
+        "filename": "dci_downloader/lock.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 28
+      },
+      "writtenOn": "2020-09-08T15:45:08Z",
+      "side": 1,
+      "message": "maybe \"file_lock.__exit__\" to be clearer",
+      "revId": "ac6079e74dd9d9b8c71a71ac47dba38e90a24077",
+      "serverId": "6c1dc8ef-8b94-40e4-bd83-c2359d45ecc0",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ec843db4_d160aa5f",
+        "filename": "dci_downloader/lock.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 28
+      },
+      "writtenOn": "2020-09-08T15:45:08Z",
+      "side": 1,
+      "message": "I\u0027d prefer to raise an exception or something like this if self.lock_fd is None.\nIt is not supposed to be None and entering __exit__() multiple times should be treated as an error.",
+      "range": {
+        "startLine": 48,
+        "startChar": 9,
+        "endLine": 48,
+        "endChar": 36
+      },
+      "revId": "ac6079e74dd9d9b8c71a71ac47dba38e90a24077",
+      "serverId": "6c1dc8ef-8b94-40e4-bd83-c2359d45ecc0",
+      "unresolved": false
+    }
+  ]
+}
