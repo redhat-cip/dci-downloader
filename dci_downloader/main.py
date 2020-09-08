@@ -8,15 +8,10 @@ import time
 
 from dci_downloader import api
 from dci_downloader import downloader
-from dci_downloader.fs import file_lock, get_topic_folder, create_parent_dir
+from dci_downloader.lock import file_lock, LockError
+from dci_downloader.fs import get_topic_folder, create_parent_dir
 from dci_downloader.certificates import configure_ssl_certificates
 from dci_downloader.settings import get_settings, exit_if_settings_invalid
-
-
-if sys.version_info[0] == 3:
-    LOCK_IO_ERROR = BlockingIOError  # noqa: F821
-else:
-    LOCK_IO_ERROR = IOError
 
 
 def signal_handler(sig, frame):
@@ -58,7 +53,7 @@ def download_topic(settings):
             with file_lock(lock_file):
                 download_components(settings)
                 not_finished = False
-        except LOCK_IO_ERROR:
+        except LockError:
             time.sleep(sleep)
             count += 1
 
