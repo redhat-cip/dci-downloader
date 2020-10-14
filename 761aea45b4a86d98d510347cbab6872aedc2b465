@@ -1,0 +1,9 @@
+Code-Review+1: Michael Burke <miburke@redhat.com>
+Code-Review+2: François Charlier <francois.charlier@redhat.com>
+Workflow+1: François Charlier <francois.charlier@redhat.com>
+Verified+2: Zuul CI <zuul@softwarefactory-project.io>
+Submitted-by: Zuul CI <zuul@softwarefactory-project.io>
+Submitted-at: Wed, 14 Oct 2020 12:49:41 +0000
+Reviewed-on: https://softwarefactory-project.io/r/19808
+Project: dci-downloader
+Branch: refs/heads/master
