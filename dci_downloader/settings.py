@@ -34,7 +34,7 @@ def _clean_topic(topic):
     archs = topic["archs"] if "archs" in topic else ["x86_64"]
     variants = topic["variants"] if "variants" in topic else []
     variants = [
-        v if type(v) is dict else {"name": v, "with_debug": False} for v in variants
+        v if type(v) is dict else {"name": v, "with_debug": False, "with_iso": False} for v in variants
     ]
     all = topic["download_everything"] if "download_everything" in topic else False
     return {

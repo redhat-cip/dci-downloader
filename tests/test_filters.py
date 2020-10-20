@@ -31,6 +31,12 @@ def test_default_filter_files_list():
                 "size": 68920,
             },
             {
+                "path": "BaseOS/x86_64/iso",
+                "sha256": "06fd27c0279d5b42078f7de66d056c7875d025d1eb89a29dd2777240459c1026",
+                "name": "RHEL-8.4.0-20201020.n.2-BaseOS-x86_64-boot.iso",
+                "size": 731906048,
+            },
+            {
                 "path": "AppStream/s390x/os/Packages",
                 "sha256": "6f48f0d285918e502035da74decf447c6bb29898206406a4ed6a92ece94d276a",
                 "name": "PackageKit-command-not-found-debuginfo-1.1.12-2.el8.s390x.rpm",
@@ -109,6 +115,55 @@ def test_filter_files_list_with_debug():
                 "sha256": "6f48f0d285918e502035da74decf447c6bb29898206406a4ed6a92ece94d276a",
                 "name": "PackageKit-command-not-found-debuginfo-1.1.12-2.el8.x86_64.rpm",
                 "size": 45052,
+            },
+            {
+                "path": "AppStream/x86_64/os/Packages",
+                "sha256": "8fe293470f677bfc6eb04204c47b5e1a0e5d15431ef7ed9dbb269aaea386ed9f",
+                "name": "PackageKit-command-not-found-1.1.12-2.el8.x86_64.rpm",
+                "size": 28616,
+            },
+        ],
+        "symlinks": [],
+    }
+    assert filter_files_list(dci_files_list, settings) == expected_files_list
+
+
+def test_filter_files_list_with_iso():
+    dci_files_list = {
+        "directories": [],
+        "files": [
+            {
+                "path": "AppStream/x86_64/debug/tree/Packages",
+                "sha256": "6f48f0d285918e502035da74decf447c6bb29898206406a4ed6a92ece94d276a",
+                "name": "PackageKit-command-not-found-debuginfo-1.1.12-2.el8.x86_64.rpm",
+                "size": 45052,
+            },
+            {
+                "path": "AppStream/x86_64/iso",
+                "sha256": "06fd27c0279d5b42078f7de66d056c7875d025d1eb89a29dd2777240459c1026",
+                "name": "RHEL-8.4.0-20201020.n.2-AppStream-x86_64-boot.iso",
+                "size": 731906048,
+            },
+            {
+                "path": "AppStream/x86_64/os/Packages",
+                "sha256": "8fe293470f677bfc6eb04204c47b5e1a0e5d15431ef7ed9dbb269aaea386ed9f",
+                "name": "PackageKit-command-not-found-1.1.12-2.el8.x86_64.rpm",
+                "size": 28616,
+            },
+        ],
+        "symlinks": [],
+    }
+    settings = get_settings(
+        sys_args=["RHEL-8", "/tmp", "--variant", "AppStream", "--iso"]
+    )["topics"][0]
+    expected_files_list = {
+        "directories": [],
+        "files": [
+            {
+                "path": "AppStream/x86_64/iso",
+                "sha256": "06fd27c0279d5b42078f7de66d056c7875d025d1eb89a29dd2777240459c1026",
+                "name": "RHEL-8.4.0-20201020.n.2-AppStream-x86_64-boot.iso",
+                "size": 731906048,
             },
             {
                 "path": "AppStream/x86_64/os/Packages",
@@ -206,6 +261,12 @@ def test_filter_files_list_download_everything():
                 "size": 68920,
             },
             {
+                "path": "BaseOS/x86_64/iso",
+                "sha256": "06fd27c0279d5b42078f7de66d056c7875d025d1eb89a29dd2777240459c1026",
+                "name": "RHEL-8.4.0-20201020.n.2-BaseOS-x86_64-boot.iso",
+                "size": 731906048,
+            },
+            {
                 "path": "AppStream/s390x/os/Packages",
                 "sha256": "6f48f0d285918e502035da74decf447c6bb29898206406a4ed6a92ece94d276a",
                 "name": "PackageKit-command-not-found-debuginfo-1.1.12-2.el8.s390x.rpm",
@@ -241,6 +302,12 @@ def test_filter_files_list_download_everything():
                 "sha256": "7949b18b6d359b435686f2f5781928675ec8b2872b96f0abf6ba10747f794694",
                 "name": "avahi-libs-0.7-19.el8.i686.rpm",
                 "size": 68920,
+            },
+            {
+                "path": "BaseOS/x86_64/iso",
+                "sha256": "06fd27c0279d5b42078f7de66d056c7875d025d1eb89a29dd2777240459c1026",
+                "name": "RHEL-8.4.0-20201020.n.2-BaseOS-x86_64-boot.iso",
+                "size": 731906048,
             },
             {
                 "path": "AppStream/s390x/os/Packages",

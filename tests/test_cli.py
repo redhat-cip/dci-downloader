@@ -8,6 +8,7 @@ def test_parsing_no_options():
     assert args["archs"] == ["x86_64"]
     assert args["variants"] == []
     assert not args["with_debug"]
+    assert not args["with_iso"]
     assert args["settings_file_path"] is None
     assert args["download_folder"] == "/var/www/html"
 
@@ -18,6 +19,7 @@ def test_parsing_settings_file():
     assert args["archs"] == ["x86_64"]
     assert args["variants"] == []
     assert not args["with_debug"]
+    assert not args["with_iso"]
     assert args["settings_file_path"] == "/etc/dci-downloader/settings.yml"
     assert args["download_folder"] is None
 
@@ -30,6 +32,11 @@ def test_parsing_no_option_raise_exception():
 def test_parsing_with_debug():
     args = parse_arguments(["RHEL-8", "/var/www/html", "--debug"])
     assert args["with_debug"]
+
+
+def test_parsing_with_iso():
+    args = parse_arguments(["RHEL-8", "/var/www/html", "--iso"])
+    assert args["with_iso"]
 
 
 def test_parsing_name():
@@ -58,7 +65,7 @@ def test_parsing_component_id():
 
 def test_parsing_1_variant():
     args = parse_arguments(["RHEL-8", "/var/www/html", "--variant", "BaseOS"])
-    assert args["variants"] == [{"name": "BaseOS", "with_debug": False}]
+    assert args["variants"] == [{"name": "BaseOS", "with_debug": False, "with_iso": False}]
 
 
 def test_parsing_2_variants():
@@ -66,8 +73,8 @@ def test_parsing_2_variants():
         ["RHEL-8", "/var/www/html", "--variant", "BaseOS", "--variant", "AppStream"]
     )
     assert sorted(args["variants"], key=lambda v: v["name"]) == [
-        {"name": "AppStream", "with_debug": False},
-        {"name": "BaseOS", "with_debug": False},
+        {"name": "AppStream", "with_debug": False, "with_iso": False},
+        {"name": "BaseOS", "with_debug": False, "with_iso": False},
     ]
 
 
@@ -100,10 +107,11 @@ def test_parsing_combined_arguments():
     assert args["download_folder"] == "/var/www/html"
     assert args["archs"] == ["ppc64le"]
     assert sorted(args["variants"], key=lambda v: v["name"]) == [
-        {"name": "AppStream", "with_debug": False},
-        {"name": "BaseOS", "with_debug": False},
+        {"name": "AppStream", "with_debug": False, "with_iso": False},
+        {"name": "BaseOS", "with_debug": False, "with_iso": False},
     ]
     assert not args["with_debug"]
+    assert not args["with_iso"]
 
 
 def test_parsing_combined_arguments_different_order():
@@ -123,10 +131,11 @@ def test_parsing_combined_arguments_different_order():
     assert args["download_folder"] == "/home/dci/repo"
     assert args["archs"] == ["x86_64"]
     assert sorted(args["variants"], key=lambda v: v["name"]) == [
-        {"name": "AppStream", "with_debug": False},
-        {"name": "BaseOS", "with_debug": False},
+        {"name": "AppStream", "with_debug": False, "with_iso": False},
+        {"name": "BaseOS", "with_debug": False, "with_iso": False},
     ]
     assert not args["with_debug"]
+    assert not args["with_iso"]
 
 
 def test_parsing_combined_arguments_with_equals_signs():
@@ -143,10 +152,11 @@ def test_parsing_combined_arguments_with_equals_signs():
     assert args["download_folder"] == "/tmp/repo"
     assert args["archs"] == ["x86_64"]
     assert sorted(args["variants"], key=lambda v: v["name"]) == [
-        {"name": "AppStream", "with_debug": False},
-        {"name": "BaseOS", "with_debug": False},
+        {"name": "AppStream", "with_debug": False, "with_iso": False},
+        {"name": "BaseOS", "with_debug": False, "with_iso": False},
     ]
     assert not args["with_debug"]
+    assert not args["with_iso"]
 
 
 def test_parsing_variants_with_debug():
@@ -164,7 +174,28 @@ def test_parsing_variants_with_debug():
     assert args["download_folder"] == "/tmp/repo"
     assert args["archs"] == ["x86_64"]
     assert sorted(args["variants"], key=lambda v: v["name"]) == [
-        {"name": "AppStream", "with_debug": True},
-        {"name": "BaseOS", "with_debug": True},
+        {"name": "AppStream", "with_debug": True, "with_iso": False},
+        {"name": "BaseOS", "with_debug": True, "with_iso": False},
     ]
     assert args["with_debug"]
+
+
+def test_parsing_variants_with_iso():
+    args = parse_arguments(
+        [
+            "--variant=BaseOS",
+            "--arch=x86_64",
+            "--variant=AppStream",
+            "--iso",
+            "RHEL-8",
+            "/tmp/repo",
+        ]
+    )
+    assert args["name"] == "RHEL-8"
+    assert args["download_folder"] == "/tmp/repo"
+    assert args["archs"] == ["x86_64"]
+    assert sorted(args["variants"], key=lambda v: v["name"]) == [
+        {"name": "AppStream", "with_debug": False, "with_iso": True},
+        {"name": "BaseOS", "with_debug": False, "with_iso": True},
+    ]
+    assert args["with_iso"]

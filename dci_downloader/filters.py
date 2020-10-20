@@ -12,10 +12,15 @@ def _get_patterns(variants, archs):
     for variant in variants:
         variant_name = variant["name"]
         with_debug = variant["with_debug"]
-        regex = r"^(%s)\/(%s)/" % (variant_name, "|".join(archs))
-        if not with_debug:
-            regex += r"os"
+        with_iso = variant["with_iso"]
+        regex = r"^(%s)\/(%s)/os" % (variant_name, "|".join(archs))
         patterns.append(re.compile(regex))
+        if with_debug:
+            regex = r"^(%s)\/(%s)/debug" % (variant_name, "|".join(archs))
+            patterns.append(re.compile(regex))
+        if with_iso:
+            regex = r"^(%s)\/(%s)/iso" % (variant_name, "|".join(archs))
+            patterns.append(re.compile(regex))
     return patterns
 
 
