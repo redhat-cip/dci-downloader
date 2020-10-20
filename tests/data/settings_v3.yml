@@ -24,5 +24,6 @@ jobs:
       - AppStream
       - name: BaseOS
         with_debug: true
+        with_iso: false
     systems:
       - SUT4

@@ -156,6 +156,7 @@ topics:
       - AppStream
       - name: BaseOS
         with_debug: true
+        with_iso: false
 ```
 
 ## SSL certificates

@@ -10,3 +10,4 @@ archs:
   - x86_64
   - ppc64le
 with_debug: false
+with_iso: false

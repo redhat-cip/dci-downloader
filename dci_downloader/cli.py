@@ -58,6 +58,12 @@ def parse_arguments(arguments):
         help="download a specific architecture (default: x86_64)",
     )
     parser.add_argument(
+        "--iso",
+        help="download ISO images (default: false)",
+        dest="with_iso",
+        action="store_true",
+    )
+    parser.add_argument(
         "--variant",
         action="append",
         metavar="VARIANT",
@@ -100,7 +106,7 @@ def parse_arguments(arguments):
             sys.exit(2)
 
     parsed_arguments.variants = [
-        {"name": v, "with_debug": parsed_arguments.with_debug}
+        {"name": v, "with_debug": parsed_arguments.with_debug, "with_iso": parsed_arguments.with_iso}
         for v in parsed_arguments.variants
     ]
     return vars(parsed_arguments)
