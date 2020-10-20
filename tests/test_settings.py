@@ -39,6 +39,7 @@ def test_read_settings_file_v2():
         "topic": "RHEL-8.1",
         "variants": ["AppStream", "BaseOS"],
         "with_debug": False,
+        "with_iso": False,
     }
 
 
@@ -60,7 +61,7 @@ def test_read_settings_file_v3():
             {
                 "topic": "RHEL-8.1",
                 "archs": ["x86_64"],
-                "variants": ["AppStream", {"name": "BaseOS", "with_debug": True}],
+                "variants": ["AppStream", {"name": "BaseOS", "with_debug": True, "with_iso": False}],
                 "systems": ["SUT4"],
             },
         ],
@@ -91,7 +92,7 @@ def test_get_settings_read_arguments():
             "download_folder": "/tmp/repo2",
             "name": "RHEL-8",
             "archs": ["ppc64le"],
-            "variants": [{"name": "BaseOS", "with_debug": False}],
+            "variants": [{"name": "BaseOS", "with_debug": False, "with_iso": False}],
         },
     )
 
@@ -168,8 +169,8 @@ def test_get_settings_from_first_dci_rhel_agent_settings_file():
             "name": "RHEL-8.1",
             "archs": ["x86_64", "ppc64le"],
             "variants": [
-                {"name": "AppStream", "with_debug": False},
-                {"name": "BaseOS", "with_debug": False},
+                {"name": "AppStream", "with_debug": False, "with_iso": False},
+                {"name": "BaseOS", "with_debug": False, "with_iso": False},
             ],
         },
     )
@@ -266,8 +267,8 @@ def test_get_settings_with_jobs_key():
             "name": "RHEL-7.6",
             "archs": ["x86_64", "ppc64le"],
             "variants": [
-                {"name": "Server", "with_debug": False},
-                {"name": "Server-SAP", "with_debug": False},
+                {"name": "Server", "with_debug": False, "with_iso": False},
+                {"name": "Server-SAP", "with_debug": False, "with_iso": False},
             ],
         },
     )
@@ -279,8 +280,8 @@ def test_get_settings_with_jobs_key():
             "name": "RHEL-8.1",
             "archs": ["x86_64"],
             "variants": [
-                {"name": "AppStream", "with_debug": False},
-                {"name": "BaseOS", "with_debug": True},
+                {"name": "AppStream", "with_debug": False, "with_iso": False},
+                {"name": "BaseOS", "with_debug": True, "with_iso": False},
             ],
         },
     )
@@ -322,8 +323,8 @@ def test_get_settings_local_repo_added_to_an_old_settings_file():
             "name": "RHEL-8.2",
             "archs": ["x86_64", "ppc64le"],
             "variants": [
-                {"name": "AppStream", "with_debug": False},
-                {"name": "BaseOS", "with_debug": False},
+                {"name": "AppStream", "with_debug": False, "with_iso": False},
+                {"name": "BaseOS", "with_debug": False, "with_iso": False},
             ],
         },
     )
