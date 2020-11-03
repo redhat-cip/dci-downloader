@@ -1,7 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+import os
 import requests
 import shutil
+import sys
 import time
 
 from functools import wraps
@@ -12,6 +14,20 @@ from dciclient.v1.api.context import build_signature_context
 from dciclient.v1.api import component as dci_component
 from dciclient.v1.api import topic as dci_topic
 from dciclient.v1.api import remoteci as dci_remoteci
+
+
+def check_repo_is_accessible():
+    try:
+        five_seconds = 5
+        requests.get(
+            "https://repo.distributed-ci.io/", timeout=five_seconds,
+        )
+    except requests.exceptions.Timeout:
+        print("dci-downloader cannot access repo.distributed-ci.io server.")
+        if os.getenv("HTTP_PROXY") or os.getenv("HTTPS_PROXY"):
+            print("You configured a proxy. Check your proxy information.")
+        print("Exiting...")
+        sys.exit(1)
 
 
 def get_topic(topic_name):
