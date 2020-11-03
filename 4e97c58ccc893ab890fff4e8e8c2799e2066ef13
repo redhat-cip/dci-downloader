@@ -16,6 +16,23 @@
       "revId": "4e97c58ccc893ab890fff4e8e8c2799e2066ef13",
       "serverId": "6c1dc8ef-8b94-40e4-bd83-c2359d45ecc0",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5318973b_feb1dbfd",
+        "filename": "dci_downloader/api.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 28
+      },
+      "writtenOn": "2020-11-03T16:15:57Z",
+      "side": 1,
+      "message": "Maybe specify \"in a timely manner (timeout after 5 seconds)\"",
+      "revId": "4e97c58ccc893ab890fff4e8e8c2799e2066ef13",
+      "serverId": "6c1dc8ef-8b94-40e4-bd83-c2359d45ecc0",
+      "unresolved": false
     }
   ]
 }
