@@ -59,6 +59,7 @@ def download_topic(settings):
 
 
 def main():
+    api.check_repo_is_accessible()
     settings = get_settings(sys_args=sys.argv[1:], env_variables=dict(os.environ))
     exit_if_settings_invalid(settings)
     configure_ssl_certificates(settings)
