@@ -18,6 +18,9 @@ examples:
 
   # load options from yaml settings file
   dci-downloader --settings settings.yml
+
+  # load options from several yaml settings file (newer override older)
+  dci-downloader --settings settings.yml --settings extra.yml
 """
 
 COPYRIGHT = """
@@ -82,9 +85,10 @@ def parse_arguments(arguments):
     )
     parser.add_argument(
         "--settings",
-        dest="settings_file_path",
+        action="append",
+        dest="settings_file_paths",
         metavar="FILE_PATH",
-        help="settings file to overwrite cli parameters",
+        help="settings file(s) to overwrite cli parameters",
     )
     parser.add_argument("--version", action="version", version=__version__)
     parsed_arguments = parser.parse_args(arguments)
@@ -92,7 +96,7 @@ def parse_arguments(arguments):
         parsed_arguments.archs = ["x86_64"]
     parsed_arguments.archs = list(set(parsed_arguments.archs))
 
-    if parsed_arguments.settings_file_path is None:
+    if parsed_arguments.settings_file_paths is None:
         download_folder = parsed_arguments.download_folder
         if download_folder is None:
             print("download folder is required")
