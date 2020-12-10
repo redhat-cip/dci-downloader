@@ -8,13 +8,16 @@ import sys
 from dci_downloader.cli import parse_arguments
 
 
-def _read_settings_file(settings_file_path):
-    with open(settings_file_path, "r") as stream:
-        try:
-            return yaml.safe_load(stream)
-        except yaml.YAMLError:
-            print("Can't read %s file" % settings_file_path)
-            traceback.print_exc()
+def _read_settings_files(settings_file_paths=[]):
+    settings = {}
+    for settings_file_path in settings_file_paths:
+        with open(settings_file_path, "r") as stream:
+            try:
+                settings.update(yaml.safe_load(stream))
+            except yaml.YAMLError:
+                print("Can't read %s file" % settings_file_path)
+                traceback.print_exc()
+    return settings
 
 
 def _get_download_folder(cli_settings, env_variables):
@@ -102,10 +105,10 @@ def get_settings(sys_args, env_variables={}):
         "dci_key_file": key,
         "dci_cert_file": crt,
     }
-    settings_file_path = cli_arguments["settings_file_path"]
-    if settings_file_path:
-        settings_from_file = _read_settings_file(settings_file_path)
-        settings.update(_keep_backward_compatibility(settings_from_file))
+    settings_file_paths = cli_arguments["settings_file_paths"]
+    if settings_file_paths:
+        settings_from_files = _read_settings_files(settings_file_paths)
+        settings.update(_keep_backward_compatibility(settings_from_files))
     return _clean_settings(settings)
 
 
