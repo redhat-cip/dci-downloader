@@ -3,7 +3,7 @@ import pytest
 
 
 from dci_downloader.settings import (
-    _read_settings_file,
+    _read_settings_files,
     get_settings,
     exit_if_settings_invalid,
     _variants_are_invalid,
@@ -23,14 +23,22 @@ def _topic_equals(topic, expected_topic):
 def test_read_settings_file_v1():
     test_dir = os.path.dirname(os.path.abspath(__file__))
     settings_file_path = os.path.join(test_dir, "data", "settings_v1.yml")
-    settings = _read_settings_file(settings_file_path)
+    settings = _read_settings_files([settings_file_path])
     assert settings == {"topic": "RHEL-7"}
+
+
+def test_override_settings_file_v1():
+    test_dir = os.path.dirname(os.path.abspath(__file__))
+    settings_file_paths = [os.path.join(test_dir, "data", "settings_v1.yml")]
+    settings_file_paths.append(os.path.join(test_dir, "data", "override_v1.yml"))
+    settings = _read_settings_files(settings_file_paths)
+    assert settings == {"topic": "RHEL-override"}
 
 
 def test_read_settings_file_v2():
     test_dir = os.path.dirname(os.path.abspath(__file__))
     settings_file_path = os.path.join(test_dir, "data", "settings_v2.yml")
-    settings = _read_settings_file(settings_file_path)
+    settings = _read_settings_files([settings_file_path])
     assert settings == {
         "archs": ["x86_64", "ppc64le"],
         "dci_rhel_agent_cert": False,
@@ -43,10 +51,27 @@ def test_read_settings_file_v2():
     }
 
 
+def test_override_settings_file_v2():
+    test_dir = os.path.dirname(os.path.abspath(__file__))
+    settings_file_paths = [os.path.join(test_dir, "data", "settings_v2.yml")]
+    settings_file_paths.append(os.path.join(test_dir, "data", "override_v2.yml"))
+    settings = _read_settings_files(settings_file_paths)
+    assert settings == {
+        "archs": ["x86_64", "ppc64le"],
+        "dci_rhel_agent_cert": False,
+        "local_repo_ip": "192.168.1.1",
+        "systems": ["dci-client"],
+        "topic": "RHEL-override",
+        "variants": ["AppStream", "BaseOS"],
+        "with_debug": False,
+        "with_iso": True,
+    }
+
+
 def test_read_settings_file_v3():
     test_dir = os.path.dirname(os.path.abspath(__file__))
     settings_file_path = os.path.join(test_dir, "data", "settings_v3.yml")
-    settings = _read_settings_file(settings_file_path)
+    settings = _read_settings_files([settings_file_path])
     assert settings == {
         "download_folder": "/tmp/repo10",
         "jobs": [
@@ -62,6 +87,24 @@ def test_read_settings_file_v3():
                 "topic": "RHEL-8.1",
                 "archs": ["x86_64"],
                 "variants": ["AppStream", {"name": "BaseOS", "with_debug": True, "with_iso": False}],
+                "systems": ["SUT4"],
+            },
+        ],
+    }
+
+
+def test_override_settings_file_v3():
+    test_dir = os.path.dirname(os.path.abspath(__file__))
+    settings_file_paths = [os.path.join(test_dir, "data", "settings_v3.yml")]
+    settings_file_paths.append(os.path.join(test_dir, "data", "override_v3.yml"))
+    settings = _read_settings_files(settings_file_paths)
+    assert settings == {
+        "download_folder": "/tmp/override",
+        "jobs": [
+            {
+                "topic": "RHEL-8.2",
+                "archs": ["x86_64", "aarch64"],
+                "variants": ["AppStream", {"name": "BaseOS", "with_debug": True, "with_iso": True}],
                 "systems": ["SUT4"],
             },
         ],
