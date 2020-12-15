@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b04ec061_e2b78260",
+        "filename": "tests/test_cli.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 405
+      },
+      "writtenOn": "2020-12-15T09:08:26Z",
+      "side": 1,
+      "message": "order are important, I would have captured it in a test\n\nassert args[\"settings_file_paths\"] \u003d\u003d [\"/etc/dci-downloader/settings.yml\", \"/etc/dci-downloader/extra.yml\"]",
+      "range": {
+        "startLine": 39,
+        "startChar": 0,
+        "endLine": 40,
+        "endChar": 73
+      },
+      "revId": "f1b1e114ef3297726920cc9dd431454411144ad9",
+      "serverId": "6c1dc8ef-8b94-40e4-bd83-c2359d45ecc0",
+      "unresolved": false
+    }
+  ]
+}
