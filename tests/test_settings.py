@@ -454,3 +454,31 @@ def test_get_settings_set_ssl_file_from_settings_file():
     topic = settings["topics"][0]
     assert topic["dci_key_file"] == "/etc/dci-rhel-agent/dci.key"
     assert topic["dci_cert_file"] == "/etc/dci-rhel-agent/dci.crt"
+
+
+def test_exit_if_architecture_in_settings_invalid():
+    with pytest.raises(SystemExit):
+        exit_if_settings_invalid(
+            get_settings(
+                sys_args=["RHEL-8", "/tmp/repo7", "--arch", "x86"],
+                env_variables={
+                    "DCI_CLIENT_ID": "remoteci/9dd94b70-1707-46c5-a2bb-661e8d5d4212",
+                    "DCI_API_SECRET": "jSbJwfCdIfq12gwHAAtg5JXSBTO3wj0xkG7oW3DlqyM7bXahPRrfZlqmSv3BhmAy",
+                    "DCI_CS_URL": "https://distributed-ci.io",
+                },
+            )
+        )
+
+
+def test_exit_if_architecture_in_settings_invalid_for_rhel_7():
+    with pytest.raises(SystemExit):
+        exit_if_settings_invalid(
+            get_settings(
+                sys_args=["RHEL-7", "/tmp/repo7", "--arch", "aarch64"],
+                env_variables={
+                    "DCI_CLIENT_ID": "remoteci/9dd94b70-1707-46c5-a2bb-661e8d5d4212",
+                    "DCI_API_SECRET": "jSbJwfCdIfq12gwHAAtg5JXSBTO3wj0xkG7oW3DlqyM7bXahPRrfZlqmSv3BhmAy",
+                    "DCI_CS_URL": "https://distributed-ci.io",
+                },
+            )
+        )
