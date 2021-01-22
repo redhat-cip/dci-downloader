@@ -37,7 +37,8 @@ def _clean_topic(topic):
     archs = topic["archs"] if "archs" in topic else ["x86_64"]
     variants = topic["variants"] if "variants" in topic else []
     variants = [
-        v if type(v) is dict else {"name": v, "with_debug": False, "with_iso": False} for v in variants
+        v if type(v) is dict else {"name": v, "with_debug": False, "with_iso": False}
+        for v in variants
     ]
     all = topic["download_everything"] if "download_everything" in topic else False
     return {
@@ -115,12 +116,18 @@ def get_settings(sys_args, env_variables={}):
 def _variants_are_invalid(topic):
     topic_variants = {
         "RHEL-7": [
+            "Client-optional",
+            "Client",
+            "ComputeNode-optional",
+            "ComputeNode",
             "Server-NFV",
             "Server-RT",
             "Server-SAP",
             "Server-SAPHANA",
             "Server-optional",
             "Server",
+            "Workstation-optional",
+            "Workstation",
         ],
         "RHEL-8": [
             "AppStream",
@@ -132,7 +139,17 @@ def _variants_are_invalid(topic):
             "ResilientStorage",
             "SAP",
             "SAPHANA",
-            "unified",
+        ],
+        "RHEL-9": [
+            "AppStream",
+            "BaseOS",
+            "CRB",
+            "HighAvailability",
+            "NFV",
+            "RT",
+            "ResilientStorage",
+            "SAP",
+            "SAPHANA",
         ],
     }
     invalid = False
@@ -149,6 +166,30 @@ def _variants_are_invalid(topic):
             print(
                 "The authorized variants for %s are %s."
                 % (current_topic_name, ", ".join(variants))
+            )
+            break
+    return invalid
+
+
+def _arches_are_invalid(topic):
+    topic_archs = {
+        "RHEL-7": ["ppc64", "ppc64le", "s390x", "x86_64"],
+        "RHEL-8": ["aarch64", "ppc64le", "s390x", "x86_64"],
+        "RHEL-9": ["aarch64", "ppc64le", "s390x", "x86_64"],
+    }
+    invalid = False
+    for topic_name, archs in topic_archs.items():
+        current_topic_name = topic["name"]
+        archs_not_allowed = set(topic["archs"]) - set(archs)
+        if current_topic_name.startswith(topic_name) and archs_not_allowed:
+            invalid = True
+            print(
+                "Arches %s for the %s topic are not valid"
+                % (", ".join(archs_not_allowed), current_topic_name)
+            )
+            print(
+                "The authorized archs for %s are %s."
+                % (current_topic_name, ", ".join(archs))
             )
             break
     return invalid
@@ -172,6 +213,8 @@ def exit_if_settings_invalid(settings):
 
     for topic in topics:
         if _variants_are_invalid(topic):
+            has_error = True
+        if _arches_are_invalid(topic):
             has_error = True
 
     if has_error:
