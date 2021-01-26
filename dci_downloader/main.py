@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 import os
 import sys
-import signal
 import traceback
 import time
 
@@ -12,15 +11,6 @@ from dci_downloader.lock import file_lock, LockError
 from dci_downloader.fs import get_topic_folder, create_parent_dir
 from dci_downloader.certificates import configure_ssl_certificates
 from dci_downloader.settings import get_settings, exit_if_settings_invalid
-
-
-def signal_handler(sig, frame):
-    print("Exiting...")
-    sys.exit(130)
-
-
-signal.signal(signal.SIGINT, signal_handler)
-signal.signal(signal.SIGTERM, signal_handler)
 
 
 def download_components(settings):
@@ -63,16 +53,17 @@ def main():
     settings = get_settings(sys_args=sys.argv[1:], env_variables=dict(os.environ))
     exit_if_settings_invalid(settings)
     configure_ssl_certificates(settings)
-    return_code = 0
     for topic_settings in settings["topics"]:
         topic_name = topic_settings["name"]
         try:
             download_topic(topic_settings)
+        except KeyboardInterrupt:
+            print("Keyboard interrupt exiting...")
+            sys.exit(130)
         except Exception:
             print("Exception when downloading components for %s" % topic_name)
             traceback.print_exc()
-            return_code = 1
-    sys.exit(return_code)
+            sys.exit(1)
 
 
 if __name__ == "__main__":
