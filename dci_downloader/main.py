@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+import functools
 import os
 import sys
-import signal
 import traceback
 import time
 
@@ -12,15 +12,6 @@ from dci_downloader.lock import file_lock, LockError
 from dci_downloader.fs import get_topic_folder, create_parent_dir
 from dci_downloader.certificates import configure_ssl_certificates
 from dci_downloader.settings import get_settings, exit_if_settings_invalid
-
-
-def signal_handler(sig, frame):
-    print("Exiting...")
-    sys.exit(130)
-
-
-signal.signal(signal.SIGINT, signal_handler)
-signal.signal(signal.SIGTERM, signal_handler)
 
 
 def download_components(settings):
@@ -58,21 +49,29 @@ def download_topic(settings):
             count += 1
 
 
+def catch_all_and_print(f):
+    @functools.wraps(f)
+    def inner(*args, **kwargs):
+        try:
+            return f(*args, **kwargs)
+        except KeyboardInterrupt:
+            print("Keyboard interrupt exiting...")
+            sys.exit(130)
+        except Exception:
+            traceback.print_exc()
+            sys.exit(1)
+
+    return inner
+
+
+@catch_all_and_print
 def main():
     api.check_repo_is_accessible()
     settings = get_settings(sys_args=sys.argv[1:], env_variables=dict(os.environ))
     exit_if_settings_invalid(settings)
     configure_ssl_certificates(settings)
-    return_code = 0
     for topic_settings in settings["topics"]:
-        topic_name = topic_settings["name"]
-        try:
-            download_topic(topic_settings)
-        except Exception:
-            print("Exception when downloading components for %s" % topic_name)
-            traceback.print_exc()
-            return_code = 1
-    sys.exit(return_code)
+        download_topic(topic_settings)
 
 
 if __name__ == "__main__":
