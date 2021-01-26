@@ -20,7 +20,8 @@ def check_repo_is_accessible():
     try:
         five_seconds = 5
         requests.get(
-            "https://repo.distributed-ci.io/", timeout=five_seconds,
+            "https://repo.distributed-ci.io/",
+            timeout=five_seconds,
         )
     except requests.exceptions.Timeout:
         print("Timeout. dci-downloader cannot access repo.distributed-ci.io server.")
@@ -128,6 +129,8 @@ def retry(tries=3, delay=2, multiplier=2):
             while _tries:
                 try:
                     return f(*args, **kwargs)
+                except KeyboardInterrupt:
+                    raise
                 except Exception as e:
                     print("%s, retrying in %d seconds..." % (str(e), _delay))
                     time.sleep(_delay)
@@ -155,7 +158,10 @@ def download_file(file, cert, key, file_index, nb_files):
 
 
 def download_file_unpack(args):
-    download_file(*args)
+    try:
+        return download_file(*args)
+    except KeyboardInterrupt:
+        raise RuntimeError("KeyboardInterrupt")
 
 
 def download_files(files, settings):
@@ -167,9 +173,12 @@ def download_files(files, settings):
     try:
         executor.map(download_file_unpack, enhanced_files, chunksize=1)
         executor.close()
+    except KeyboardInterrupt:
+        print("Keyboard interrupt exiting...")
+        executor.terminate()
     except Exception:
         executor.terminate()
         raise
     finally:
         executor.join()
-        del(executor)
+        del executor
