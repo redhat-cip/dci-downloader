@@ -3,19 +3,25 @@
 import re
 
 
-def _get_patterns(variants, archs):
+def _get_patterns(filters):
+    variants = filters["variants"]
+    archs = filters["archs"]
+    with_debug = filters["with_debug"]
     patterns = []
     patterns.append(re.compile(r"^metadata"))
     archs = archs if archs else [".*"]
     if not variants:
         patterns.append(re.compile(r"^(.*)\/(%s)/os" % "|".join(archs)))
+        if with_debug:
+            patterns.append(re.compile(r"^(.*)\/(%s)/debug" % "|".join(archs)))
+        return patterns
     for variant in variants:
         variant_name = variant["name"]
-        with_debug = variant["with_debug"]
+        variant_with_debug = variant["with_debug"]
         with_iso = variant["with_iso"]
         regex = r"^(%s)\/(%s)/os" % (variant_name, "|".join(archs))
         patterns.append(re.compile(regex))
-        if with_debug:
+        if variant_with_debug:
             regex = r"^(%s)\/(%s)/debug" % (variant_name, "|".join(archs))
             patterns.append(re.compile(regex))
         if with_iso:
@@ -37,9 +43,7 @@ def filter_files_list(files_list, filters):
     if filters["download_everything"]:
         return files_list
     new_files_list = {"directories": [], "files": [], "symlinks": []}
-    variants = filters["variants"]
-    archs = filters["archs"]
-    patterns = _get_patterns(variants, archs)
+    patterns = _get_patterns(filters)
     for file in files_list["files"]:
         file_path = file["path"]
         if not file["path"]:
