@@ -163,7 +163,7 @@ def download_files(files, settings):
     cert = settings["dci_cert_file"]
     key = settings["dci_key_file"]
     enhanced_files = [[f, cert, key, i + 1, nb_files] for i, f in enumerate(files)]
-    executor = Pool(processes=4)
+    executor = Pool(processes=multiprocessing.cpu_count())
     try:
         executor.map(download_file_unpack, enhanced_files, chunksize=1)
         executor.close()
