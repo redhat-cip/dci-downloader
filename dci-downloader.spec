@@ -6,7 +6,7 @@
 %global srcname dci-downloader
 
 Name:             dci-downloader
-Version:          2.6.1
+Version:          2.7.0
 Release:          1.VERS%{?dist}
 Summary:          DCI Downloader
 License:          ASL 2.0
@@ -68,6 +68,8 @@ DCI downloader used to download Red Hat products
 %{_bindir}/%{srcname}
 
 %changelog
+* Fri Jan 29 2021 Guillaume Vincent <gvincent@redhat.com> - 2.7.0-1
+- Allow debug flag without a variant
 * Fri Jan 29 2021 Guillaume Vincent <gvincent@redhat.com> - 2.6.1-1
 - Decode compressed responses when we download a file
 * Tue Dec 15 2020 Jorge A Gallegos <jgallego@redhat.com> - 2.6.0-1

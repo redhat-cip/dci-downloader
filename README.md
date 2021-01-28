@@ -122,7 +122,7 @@ $ dci-downloader RHEL-8 /tmp/repo --all
 To download debug RPMs you can add the `--debug` flag
 
 ```console
-$ dci-downloader RHEL-8 /tmp/repo --variant AppStream --debug
+$ dci-downloader RHEL-8 /tmp --arch=ppc64le --debug
 ```
 
 ### Settings file
