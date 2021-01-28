@@ -40,17 +40,19 @@ def _clean_topic(topic):
         v if type(v) is dict else {"name": v, "with_debug": False, "with_iso": False}
         for v in variants
     ]
-    all = topic["download_everything"] if "download_everything" in topic else False
     return {
         "name": name,
         "components": components,
         "archs": archs,
         "variants": variants,
-        "download_everything": all,
+        "download_everything": topic["download_everything"]
+        if "download_everything" in topic
+        else False,
         "download_folder": topic["download_folder"],
         "dci_key_file": topic["dci_key_file"],
         "dci_cert_file": topic["dci_cert_file"],
         "component_id": component_id,
+        "with_debug": topic["with_debug"] if "with_debug" in topic else False,
     }
 
 
