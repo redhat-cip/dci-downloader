@@ -52,6 +52,24 @@
       "revId": "1f61c7a3332f419c84b226dbbcff2d5005053e21",
       "serverId": "6c1dc8ef-8b94-40e4-bd83-c2359d45ecc0",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ee238fa7_676ce4d1",
+        "filename": "dci_downloader/settings.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 648
+      },
+      "writtenOn": "2021-01-29T14:53:55Z",
+      "side": 1,
+      "message": "FC is right, I\u0027m just bad at explaining myself",
+      "parentUuid": "76b7abcd_dea86c0c",
+      "revId": "1f61c7a3332f419c84b226dbbcff2d5005053e21",
+      "serverId": "6c1dc8ef-8b94-40e4-bd83-c2359d45ecc0",
+      "unresolved": false
     }
   ]
 }
