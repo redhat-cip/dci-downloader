@@ -6,7 +6,7 @@
 %global srcname dci-downloader
 
 Name:             dci-downloader
-Version:          2.6.0
+Version:          2.6.1
 Release:          1.VERS%{?dist}
 Summary:          DCI Downloader
 License:          ASL 2.0
@@ -68,6 +68,8 @@ DCI downloader used to download Red Hat products
 %{_bindir}/%{srcname}
 
 %changelog
+* Fri Jan 29 2021 Guillaume Vincent <gvincent@redhat.com> - 2.6.1-1
+- Check DCI repo is accessible on startup
 * Tue Dec 15 2020 Jorge A Gallegos <jgallego@redhat.com> - 2.6.0-1
 - Add support for multiple setting files
 * Tue Nov 03 2020 Guillaume Vincent <gvincent@redhat.com> - 2.5.0-1

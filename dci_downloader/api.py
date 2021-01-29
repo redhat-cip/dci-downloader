@@ -150,6 +150,7 @@ def download_file(file, cert, key, file_index, nb_files):
     r = requests.get(file["source"], stream=True, cert=(cert, key))
     r.raise_for_status()
     with open(destination, "wb") as f:
+        r.raw.decode_content = True
         shutil.copyfileobj(r.raw, f)
     return file
 
