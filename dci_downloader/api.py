@@ -150,7 +150,8 @@ def download_file(file, cert, key, file_index, nb_files):
     r = requests.get(file["source"], stream=True, cert=(cert, key))
     r.raise_for_status()
     with open(destination, "wb") as f:
-        shutil.copyfileobj(r.raw, f)
+        for chunk in r.iter_content(chunk_size=512*1024):
+            f.write(chunk)
     return file
 
 
