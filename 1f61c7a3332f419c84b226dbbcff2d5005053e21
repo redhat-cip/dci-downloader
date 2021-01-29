@@ -34,6 +34,24 @@
       "revId": "1f61c7a3332f419c84b226dbbcff2d5005053e21",
       "serverId": "6c1dc8ef-8b94-40e4-bd83-c2359d45ecc0",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "76b7abcd_dea86c0c",
+        "filename": "dci_downloader/settings.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 28
+      },
+      "writtenOn": "2021-01-29T14:09:06Z",
+      "side": 1,
+      "message": "I think what Jorge means is that all assignments above this comment could be rewritten more clearly:\n\nname \u003d topic.get(\"topic\", default\u003dtopic.get(\"name\"))\ncomponent_id \u003d topic.get(\"component_id\")\ncomponents \u003d topic.get(\"components\", default\u003d[])\narchs \u003d topic.get(\"archs\", default\u003d\"x86_64\")\nvariants \u003d topic.get(\"variants\", default\u003d[])",
+      "parentUuid": "22856b73_e50c5354",
+      "revId": "1f61c7a3332f419c84b226dbbcff2d5005053e21",
+      "serverId": "6c1dc8ef-8b94-40e4-bd83-c2359d45ecc0",
+      "unresolved": false
     }
   ]
 }
