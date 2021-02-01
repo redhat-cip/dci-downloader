@@ -31,11 +31,11 @@ def _get_download_folder(cli_settings, env_variables):
 
 
 def _clean_topic(topic):
-    name = topic["topic"] if "topic" in topic else topic["name"]
-    component_id = topic["component_id"] if "component_id" in topic else None
-    components = topic["components"] if "components" in topic else []
-    archs = topic["archs"] if "archs" in topic else ["x86_64"]
-    variants = topic["variants"] if "variants" in topic else []
+    name = topic.get("topic", topic.get("name"))
+    component_id = topic.get("component_id")
+    components = topic.get("components", [])
+    archs = topic.get("archs", ["x86_64"])
+    variants = topic.get("variants", [])
     variants = [
         v if type(v) is dict else {"name": v, "with_debug": False, "with_iso": False}
         for v in variants
@@ -45,14 +45,12 @@ def _clean_topic(topic):
         "components": components,
         "archs": archs,
         "variants": variants,
-        "download_everything": topic["download_everything"]
-        if "download_everything" in topic
-        else False,
+        "download_everything": topic.get("download_everything", False),
         "download_folder": topic["download_folder"],
         "dci_key_file": topic["dci_key_file"],
         "dci_cert_file": topic["dci_cert_file"],
         "component_id": component_id,
-        "with_debug": topic["with_debug"] if "with_debug" in topic else False,
+        "with_debug": topic.get("with_debug", False),
     }
 
 
