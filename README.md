@@ -77,7 +77,6 @@ $ dcictl topic-list
 ```
 
 If you don't see any topic then **you should contact your EPM at Red Hat** which will give you access to the topic you need.
-/!\ Only RHEL topics are supported at the moment
 
 ## Usage
 
@@ -87,6 +86,18 @@ Example command to download the latest RHEL 8 compose into /tmp/repo folder.
 
 ```console
 $ dci-downloader RHEL-8 /tmp/repo
+```
+
+/!\ Starting with OSP15, OSP topics are now supported by dci-downloader. Older topics require the *--all* flag.
+
+From OSP15 onwards:
+```console
+$ dci-downloader OSP16.1 /tmp/repo
+```
+
+For older OSP topics
+```console
+$ dci-downloader --all OSP13 /tmp/repo
 ```
 
 ## Options
