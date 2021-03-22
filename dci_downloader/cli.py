@@ -84,6 +84,12 @@ def parse_arguments(arguments):
         action="store_true",
     )
     parser.add_argument(
+        "--registry",
+        help="local registry to mirror container images, this flag implicitly enables the container images mirrorring",
+        dest="registry",
+        default=None,
+    )
+    parser.add_argument(
         "--settings",
         action="append",
         dest="settings_file_paths",

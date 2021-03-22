@@ -6,6 +6,7 @@ import yaml
 import sys
 
 from dci_downloader.cli import parse_arguments
+from dci_downloader.containers import has_skopeo_command
 
 
 def _read_settings_files(settings_file_paths=[]):
@@ -30,6 +31,10 @@ def _get_download_folder(cli_settings, env_variables):
     return None
 
 
+def _get_registry(cli_settings, env_variables):
+    return env_variables.get("DCI_REGISTRY", cli_settings.get("registry"))
+
+
 def _clean_topic(topic):
     name = topic.get("topic", topic.get("name"))
     component_id = topic.get("component_id")
@@ -49,6 +54,7 @@ def _clean_topic(topic):
         "download_folder": topic["download_folder"],
         "dci_key_file": topic["dci_key_file"],
         "dci_cert_file": topic["dci_cert_file"],
+        "registry": topic["registry"],
         "component_id": component_id,
         "with_debug": topic.get("with_debug", False),
     }
@@ -61,6 +67,7 @@ def _clean_settings(settings):
         topic["download_folder"] = settings["download_folder"]
         topic["dci_key_file"] = settings["dci_key_file"]
         topic["dci_cert_file"] = settings["dci_cert_file"]
+        topic["registry"] = settings["registry"]
         new_topics.append(_clean_topic(topic))
     new_settings["topics"] = new_topics
     return new_settings
@@ -105,6 +112,7 @@ def get_settings(sys_args, env_variables={}):
         "download_folder": _get_download_folder(cli_arguments, env_variables),
         "dci_key_file": key,
         "dci_cert_file": crt,
+        "registry": _get_registry(cli_arguments, env_variables),
     }
     settings_file_paths = cli_arguments["settings_file_paths"]
     if settings_file_paths:
@@ -210,6 +218,14 @@ def exit_if_settings_invalid(settings):
     if not topics:
         has_error = True
         print("You need to specify at least one topic")
+
+    if settings["registry"] and not has_skopeo_command("sync"):
+        has_error = True
+        print(
+            "You specified a registry to mirror container images "
+            "but `skopeo sync [...]` is not available on your system. "
+            "Please ensure that skopeo >= 0.1.41 is installed."
+        )
 
     for topic in topics:
         if _variants_are_invalid(topic):

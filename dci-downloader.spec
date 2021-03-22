@@ -6,7 +6,7 @@
 %global srcname dci-downloader
 
 Name:             dci-downloader
-Version:          2.7.0
+Version:          2.8.0
 Release:          1.VERS%{?dist}
 Summary:          DCI Downloader
 License:          ASL 2.0
@@ -33,6 +33,7 @@ BuildRequires:  python3-PyYAML
 Requires:       python3-PyYAML
 Requires:       python3-requests
 Requires:       python3-dciclient
+Requires:       skopeo >= 0.1.41
 %endif
 
 %description
@@ -68,6 +69,8 @@ DCI downloader used to download Red Hat products
 %{_bindir}/%{srcname}
 
 %changelog
+* Mon Mar 22 2021 François Charlier <fcharlie@redhat.com> - 2.8.0-1
+- Add container images mirroring for supported topics
 * Fri Jan 29 2021 Guillaume Vincent <gvincent@redhat.com> - 2.7.0-1
 - Allow debug flag without a variant
 * Fri Jan 29 2021 Guillaume Vincent <gvincent@redhat.com> - 2.6.1-1
@@ -80,7 +83,7 @@ DCI downloader used to download Red Hat products
 - Clean cache folder with filtered files list
 * Wed Oct 14 2020 Guillaume Vincent <gvincent@redhat.com> - 2.4.5-1
 - Filter files only for composes
-* Mon Sep 08 2020 Guillaume Vincent <gvincent@redhat.com> - 2.4.4-1
+* Tue Sep 08 2020 Guillaume Vincent <gvincent@redhat.com> - 2.4.4-1
 - Improve locking mechanism
 - Improve Pool Executor closing
 * Thu Sep 03 2020 Guillaume Vincent <gvincent@redhat.com> - 2.4.3-1
@@ -112,7 +115,7 @@ DCI downloader used to download Red Hat products
 - Explicitly require PyYAML
 * Thu Oct 10 2019 Haïkel Guémar <hguemar@redhat.com> - 2.1.1-1
 - Fix compatibility with python3
-* Tue Oct 03 2019 Guillaume Vincent <gvincent@redhat.com> - 2.1.0-1
+* Thu Oct 03 2019 Guillaume Vincent <gvincent@redhat.com> - 2.1.0-1
 - Add multiple topics in settings file
 * Mon Sep 16 2019 Guillaume Vincent <gvincent@redhat.com> - 2.0.0-1
 - Change the API and simplify dci-downloader
