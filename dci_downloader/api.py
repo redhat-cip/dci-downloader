@@ -119,6 +119,15 @@ def get_files_list(base_url, settings):
     return r.json()
 
 
+def get_container_images_list(base_url, settings):
+    containers_list_url = "%s/images_list.yaml" % base_url
+    key = settings["dci_key_file"]
+    cert = settings["dci_cert_file"]
+    r = requests.get(containers_list_url, cert=(cert, key))
+    r.raise_for_status()
+    return r.content
+
+
 def retry(tries=3, delay=2, multiplier=2):
     def decorated_retry(f):
         @wraps(f)

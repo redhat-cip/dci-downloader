@@ -82,11 +82,15 @@ If you don't see any topic then **you should contact your EPM at Red Hat** which
 
 You can now download the latest version of a product using dci-downloader.
 
+### RHEL examples
+
 Example command to download the latest RHEL 8 compose into /tmp/repo folder.
 
 ```console
 $ dci-downloader RHEL-8 /tmp/repo
 ```
+
+### RHOSP examples
 
 /!\ Starting with OSP15, OSP topics are now supported by dci-downloader. Older topics require the *--all* flag.
 
@@ -99,6 +103,20 @@ For older OSP topics
 ```console
 $ dci-downloader --all OSP13 /tmp/repo
 ```
+
+dci-downloader also allows to mirror the container images associated with the component to a [local anonymous registry](#local-anonymous-registry).
+```
+$ dci-downloader OSP16.1 /tmp/repo --registry local_registry_host:5000
+```
+
+<a name="local-anonymous-registry">ℹ NOTE:</a> except when using dci-openstack-agent, it's the user's responsibility to provide a working anonymous registry.
+If needed a simple way to setup one is by using Docker Distribution registry in a container
+```console
+$ podman run --rm -p 5000:5000 registry:2
+```
+
+ℹ NOTE: dci-downloader does not currently clean/purge/untag any image on the registry,
+leaving this responsibility to the the user until a suitable solution is found.
 
 ## Options
 
