@@ -30,6 +30,10 @@ def _get_download_folder(cli_settings, env_variables):
     return None
 
 
+def _get_registry(cli_settings, env_variables):
+    return env_variables.get("DCI_REGISTRY", cli_settings.get("registry"))
+
+
 def _clean_topic(topic):
     name = topic.get("topic", topic.get("name"))
     component_id = topic.get("component_id")
@@ -105,6 +109,7 @@ def get_settings(sys_args, env_variables={}):
         "download_folder": _get_download_folder(cli_arguments, env_variables),
         "dci_key_file": key,
         "dci_cert_file": crt,
+        "registry": _get_registry(cli_arguments, env_variables),
     }
     settings_file_paths = cli_arguments["settings_file_paths"]
     if settings_file_paths:

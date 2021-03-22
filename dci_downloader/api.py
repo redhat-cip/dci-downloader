@@ -8,6 +8,7 @@ import time
 from functools import wraps
 from multiprocessing import Pool
 
+from dci_downloader.containers import dci_images_list_yaml_to_skopeo_format, skopeo_sync
 from dci_downloader.fs import create_parent_dir
 from dciclient.v1.api.context import build_signature_context
 from dciclient.v1.api import component as dci_component
@@ -119,6 +120,15 @@ def get_files_list(base_url, settings):
     return r.json()
 
 
+def get_container_images_list(base_url, settings):
+    containers_list_url = "%s/images_list.yaml" % base_url
+    key = settings["dci_key_file"]
+    cert = settings["dci_cert_file"]
+    r = requests.get(containers_list_url, cert=(cert, key))
+    r.raise_for_status()
+    return r.content()
+
+
 def retry(tries=3, delay=2, multiplier=2):
     def decorated_retry(f):
         @wraps(f)
@@ -186,3 +196,14 @@ def download_files(files, settings):
 
     if error is not None:
         raise error
+
+
+def mirror_container_images(topic, component, settings):
+    if "registry" in topic["data"]:
+        images_list = get_container_images_list(
+            get_base_url(topic, component), settings
+        )
+        skopeo_yaml = dci_images_list_yaml_to_skopeo_format(
+            images_list, topic["data"]["login"], topic["data"]["password"]
+        )
+        skopeo_sync(skopeo_yaml, settings.registry)
