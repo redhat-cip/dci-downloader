@@ -2,7 +2,12 @@
 # -*- coding: utf-8 -*-
 import os
 
-from dci_downloader.api import get_files_list, get_base_url, download_files
+from dci_downloader.api import (
+    get_files_list,
+    get_base_url,
+    download_files,
+    mirror_container_images,
+)
 from dci_downloader.stats import check_download_folder_size
 from dci_downloader.filters import filter_files_list
 from dci_downloader.files_list import get_files_to_download, get_files_to_remove
@@ -37,3 +42,5 @@ def download_component(topic, component, settings):
     check_download_folder_size(files_to_download, download_folder)
     download_files(files_to_download["files"], settings)
     recreate_symlinks(files_list["symlinks"], download_folder)
+    if "registry" in settings:
+        mirror_container_images(topic, component, settings)
