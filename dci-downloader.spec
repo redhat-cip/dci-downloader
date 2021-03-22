@@ -6,8 +6,8 @@
 %global srcname dci-downloader
 
 Name:             dci-downloader
-Version:          2.7.0
-Release:          1.VERS%{?dist}
+Version:          2.8.0
+Release:          0.VERS%{?dist}
 Summary:          DCI Downloader
 License:          ASL 2.0
 URL:              https://github.com/redhat-cip/%{srcname}
@@ -33,6 +33,7 @@ BuildRequires:  python3-PyYAML
 Requires:       python3-PyYAML
 Requires:       python3-requests
 Requires:       python3-dciclient
+Requires:       skopeo
 %endif
 
 %description
@@ -68,6 +69,8 @@ DCI downloader used to download Red Hat products
 %{_bindir}/%{srcname}
 
 %changelog
+* Mon Mar 22 2021 François Charlier <fcharlie@redhat.com> - 2.8.0-0
+- Add container images mirroring for supported topics
 * Fri Jan 29 2021 Guillaume Vincent <gvincent@redhat.com> - 2.7.0-1
 - Allow debug flag without a variant
 * Fri Jan 29 2021 Guillaume Vincent <gvincent@redhat.com> - 2.6.1-1
