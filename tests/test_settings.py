@@ -1,13 +1,14 @@
 import os
+import mock
 import pytest
-from mock import ANY
 
 from dci_downloader.settings import (
     _read_settings_files,
-    get_settings,
-    exit_if_settings_invalid,
     _variants_are_invalid,
+    exit_if_settings_invalid,
+    get_settings,
 )
+from mock import ANY
 
 
 def test_read_settings_file_v1():
@@ -135,6 +136,7 @@ def test_get_settings_read_arguments():
         "dci_cert_file": ANY,
         "name": "RHEL-8",
         "with_debug": False,
+        "registry": None,
     }
 
 
@@ -162,6 +164,7 @@ def test_get_settings_read_arguments_download_everything():
         "dci_cert_file": ANY,
         "name": "RHEL-8",
         "with_debug": False,
+        "registry": None,
     }
 
 
@@ -190,6 +193,7 @@ def test_get_settings_from_dci_rhel_agent_settings_file_with_only_topic_key():
         "dci_cert_file": ANY,
         "name": "RHEL-7",
         "with_debug": False,
+        "registry": None,
     }
 
 
@@ -220,6 +224,7 @@ def test_get_settings_from_first_dci_rhel_agent_settings_file():
         "dci_cert_file": ANY,
         "name": "RHEL-8.1",
         "with_debug": False,
+        "registry": None,
     }
 
 
@@ -320,6 +325,7 @@ def test_get_settings_with_jobs_key():
         "dci_cert_file": ANY,
         "name": "RHEL-7.6",
         "with_debug": False,
+        "registry": None,
     }
     assert settings["topics"][1] == {
         "variants": [
@@ -335,6 +341,7 @@ def test_get_settings_with_jobs_key():
         "dci_cert_file": ANY,
         "name": "RHEL-8.1",
         "with_debug": False,
+        "registry": None,
     }
 
 
@@ -380,6 +387,7 @@ def test_get_settings_local_repo_added_to_an_old_settings_file():
         "dci_cert_file": ANY,
         "name": "RHEL-8.2",
         "with_debug": False,
+        "registry": None,
     }
 
 
@@ -401,6 +409,7 @@ def test_get_settings_local_repo_with_multiple_topics():
         "dci_cert_file": ANY,
         "name": "RHEL-7.6",
         "with_debug": False,
+        "registry": None,
     }
     assert settings["topics"][1] == {
         "variants": [],
@@ -413,6 +422,7 @@ def test_get_settings_local_repo_with_multiple_topics():
         "dci_cert_file": ANY,
         "name": "RHEL-8.1",
         "with_debug": False,
+        "registry": None,
     }
 
 
@@ -488,6 +498,7 @@ def test_get_settings_with_debug_without_a_variant():
         "dci_cert_file": ANY,
         "name": "RHEL-8.2-milestone",
         "with_debug": True,
+        "registry": None,
     }
 
 
@@ -517,3 +528,53 @@ def test_exit_if_architecture_in_settings_invalid_for_rhel_7():
                 },
             )
         )
+
+
+@mock.patch("dci_downloader.settings.has_skopeo_command")
+def test_exit_if_registry_and_no_skopeo(has_skopeo_command_mock):
+    has_skopeo_command_mock.return_value = False
+    with pytest.raises(SystemExit):
+        exit_if_settings_invalid(
+            get_settings(
+                sys_args=[
+                    "OSP16.2",
+                    "/tmp/repoOSP16.2",
+                    "--registry",
+                    "localhost:5000",
+                ],
+                env_variables={
+                    "DCI_CLIENT_ID": "remoteci/9dd94b70-1707-46c5-a2bb-661e8d5d4212",
+                    "DCI_API_SECRET": "jSbJwfCdIfq12gwHAAtg5JXSBTO3wj0xkG7oW3DlqyM7bXahPRrfZlqmSv3BhmAy",
+                    "DCI_CS_URL": "https://distributed-ci.io",
+                },
+            )
+        )
+
+
+@mock.patch("dci_downloader.settings.has_skopeo_command")
+def test_with_registry_and_skopeo(has_skopeo_command_mock):
+    has_skopeo_command_mock.return_value = True
+    exit_if_settings_invalid(
+        get_settings(
+            sys_args=["OSP16.2", "/tmp/repoOSP16.2", "--registry", "localhost:5000"],
+            env_variables={
+                "DCI_CLIENT_ID": "remoteci/9dd94b70-1707-46c5-a2bb-661e8d5d4212",
+                "DCI_API_SECRET": "jSbJwfCdIfq12gwHAAtg5JXSBTO3wj0xkG7oW3DlqyM7bXahPRrfZlqmSv3BhmAy",
+                "DCI_CS_URL": "https://distributed-ci.io",
+            },
+        )
+    )
+
+
+def test_with_registry():
+    settings = get_settings(
+        sys_args=["RHEL-8", "/tmp/repo1", "--registry", "host:port"],
+        env_variables={
+            "DCI_CLIENT_ID": "remoteci/9dd94b70-1707-46c5-a2bb-661e8d5d4212",
+            "DCI_API_SECRET": "",
+            "DCI_CS_URL": "",
+            "XDG_DATA_HOME": "/home/dci/.local/share",
+        },
+    )
+    topic = settings["topics"][0]
+    assert topic["registry"] == "host:port"
