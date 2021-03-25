@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b669194a_e92c0162",
+        "filename": "dci_downloader/api.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 209,
+      "author": {
+        "id": 405
+      },
+      "writtenOn": "2021-03-25T07:25:27Z",
+      "side": 1,
+      "message": "In api.py, usually I put everything related to the communication with the control server\nMaybe this one can be on the containers.py file.",
+      "range": {
+        "startLine": 201,
+        "startChar": 0,
+        "endLine": 209,
+        "endChar": 51
+      },
+      "revId": "c8f63ad5955e3dff5f0e152f7e75c5c0b057f4a3",
+      "serverId": "6c1dc8ef-8b94-40e4-bd83-c2359d45ecc0",
+      "unresolved": true
+    }
+  ]
+}
