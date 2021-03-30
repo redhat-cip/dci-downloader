@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "5c008c66_dbd01776",
+        "filename": "README.md",
+        "patchSetId": 10
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 28
+      },
+      "writtenOn": "2021-03-30T15:53:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f20e3fa2_8b67c8a1",
+      "revId": "e64789121b690348cf28642c1aaaaf55dd47099c",
+      "serverId": "6c1dc8ef-8b94-40e4-bd83-c2359d45ecc0",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f5b38502_79960866",
         "filename": "dci-downloader.spec",
         "patchSetId": 10
@@ -33,6 +51,24 @@
       "revId": "e64789121b690348cf28642c1aaaaf55dd47099c",
       "serverId": "6c1dc8ef-8b94-40e4-bd83-c2359d45ecc0",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f9a922c5_f3314efa",
+        "filename": "dci-downloader.spec",
+        "patchSetId": 10
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 28
+      },
+      "writtenOn": "2021-03-30T15:53:14Z",
+      "side": 1,
+      "message": "the python2/python3 is more about EL7/EL8 than Python itself.\n\nEL7 does not provide a skopeo recent enough to have the \"sync\" subcommand.\n\nI\u0027ll add a version check also as the container-tools:1.0 module provides an outdated skopeo.",
+      "parentUuid": "f5b38502_79960866",
+      "revId": "e64789121b690348cf28642c1aaaaf55dd47099c",
+      "serverId": "6c1dc8ef-8b94-40e4-bd83-c2359d45ecc0",
+      "unresolved": false
     },
     {
       "key": {
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "dacd817f_63f1bb8e",
+        "filename": "dci_downloader/containers.py",
+        "patchSetId": 10
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 28
+      },
+      "writtenOn": "2021-03-30T15:53:14Z",
+      "side": 1,
+      "message": "True, I just did not want to bother with it for now.\n\nIt might be implemented later if required.",
+      "parentUuid": "d23f9c18_1dfefc54",
+      "revId": "e64789121b690348cf28642c1aaaaf55dd47099c",
+      "serverId": "6c1dc8ef-8b94-40e4-bd83-c2359d45ecc0",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b93a1ce6_5364ba71",
         "filename": "dci_downloader/containers.py",
         "patchSetId": 10
@@ -70,6 +124,24 @@
     },
     {
       "key": {
+        "uuid": "a183d52b_6b5dc82a",
+        "filename": "dci_downloader/containers.py",
+        "patchSetId": 10
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 28
+      },
+      "writtenOn": "2021-03-30T15:53:14Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "b93a1ce6_5364ba71",
+      "revId": "e64789121b690348cf28642c1aaaaf55dd47099c",
+      "serverId": "6c1dc8ef-8b94-40e4-bd83-c2359d45ecc0",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b519cdfc_811e2290",
         "filename": "dci_downloader/downloader.py",
         "patchSetId": 10
@@ -84,6 +156,24 @@
       "revId": "e64789121b690348cf28642c1aaaaf55dd47099c",
       "serverId": "6c1dc8ef-8b94-40e4-bd83-c2359d45ecc0",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d854bd37_890c70cd",
+        "filename": "dci_downloader/downloader.py",
+        "patchSetId": 10
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 28
+      },
+      "writtenOn": "2021-03-30T15:53:14Z",
+      "side": 1,
+      "message": "This has just changed because code reformatting done by Black.\n\nThese functions are used in the existing code lines 36, 35 and 43",
+      "parentUuid": "b519cdfc_811e2290",
+      "revId": "e64789121b690348cf28642c1aaaaf55dd47099c",
+      "serverId": "6c1dc8ef-8b94-40e4-bd83-c2359d45ecc0",
+      "unresolved": false
     },
     {
       "key": {
@@ -118,6 +208,24 @@
       "revId": "e64789121b690348cf28642c1aaaaf55dd47099c",
       "serverId": "6c1dc8ef-8b94-40e4-bd83-c2359d45ecc0",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ad60dad5_0642b470",
+        "filename": "tests/test_containers.py",
+        "patchSetId": 10
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 28
+      },
+      "writtenOn": "2021-03-30T15:53:14Z",
+      "side": 1,
+      "message": "We don\u0027t download the image, just check that it\u0027s parsed correclty.",
+      "parentUuid": "11a1ee91_403844a6",
+      "revId": "e64789121b690348cf28642c1aaaaf55dd47099c",
+      "serverId": "6c1dc8ef-8b94-40e4-bd83-c2359d45ecc0",
+      "unresolved": false
     }
   ]
 }
