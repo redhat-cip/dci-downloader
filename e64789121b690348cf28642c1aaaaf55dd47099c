@@ -1,0 +1,123 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f20e3fa2_8b67c8a1",
+        "filename": "README.md",
+        "patchSetId": 10
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 648
+      },
+      "writtenOn": "2021-03-30T15:09:17Z",
+      "side": 1,
+      "message": "s/a suitable solution is found/a suitable solution is provided/ (since we\u0027re providing the capability through the downloader)",
+      "revId": "e64789121b690348cf28642c1aaaaf55dd47099c",
+      "serverId": "6c1dc8ef-8b94-40e4-bd83-c2359d45ecc0",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f5b38502_79960866",
+        "filename": "dci-downloader.spec",
+        "patchSetId": 10
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 648
+      },
+      "writtenOn": "2021-03-30T15:09:17Z",
+      "side": 1,
+      "message": "skopeo not required with python2 ?",
+      "revId": "e64789121b690348cf28642c1aaaaf55dd47099c",
+      "serverId": "6c1dc8ef-8b94-40e4-bd83-c2359d45ecc0",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d23f9c18_1dfefc54",
+        "filename": "dci_downloader/containers.py",
+        "patchSetId": 10
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 648
+      },
+      "writtenOn": "2021-03-30T15:09:17Z",
+      "side": 1,
+      "message": "in theory if you do `skopeo login` prior to running the downloader you\u0027ll have access to the destination registry in skopeo, meaning you *can* import the images to a login-protected registry, yes?",
+      "revId": "e64789121b690348cf28642c1aaaaf55dd47099c",
+      "serverId": "6c1dc8ef-8b94-40e4-bd83-c2359d45ecc0",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b93a1ce6_5364ba71",
+        "filename": "dci_downloader/containers.py",
+        "patchSetId": 10
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 648
+      },
+      "writtenOn": "2021-03-30T15:09:17Z",
+      "side": 1,
+      "message": "nitpick: you\u0027re already printing the skopeo command right above, there\u0027s really no need to print the command twice imo",
+      "revId": "e64789121b690348cf28642c1aaaaf55dd47099c",
+      "serverId": "6c1dc8ef-8b94-40e4-bd83-c2359d45ecc0",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b519cdfc_811e2290",
+        "filename": "dci_downloader/downloader.py",
+        "patchSetId": 10
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 648
+      },
+      "writtenOn": "2021-03-30T15:09:17Z",
+      "side": 1,
+      "message": "why are these imports here? I don\u0027t see them used in this file",
+      "revId": "e64789121b690348cf28642c1aaaaf55dd47099c",
+      "serverId": "6c1dc8ef-8b94-40e4-bd83-c2359d45ecc0",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e2afcf09_1388e91b",
+        "filename": "dci_downloader/settings.py",
+        "patchSetId": 10
+      },
+      "lineNbr": 222,
+      "author": {
+        "id": 648
+      },
+      "writtenOn": "2021-03-30T15:09:17Z",
+      "side": 1,
+      "message": "👌 meaningful error messages 👍",
+      "revId": "e64789121b690348cf28642c1aaaaf55dd47099c",
+      "serverId": "6c1dc8ef-8b94-40e4-bd83-c2359d45ecc0",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "11a1ee91_403844a6",
+        "filename": "tests/test_containers.py",
+        "patchSetId": 10
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 648
+      },
+      "writtenOn": "2021-03-30T15:09:17Z",
+      "side": 1,
+      "message": "nitpick: for the purpose of the tests, would it make sense to pull a smaller image?",
+      "revId": "e64789121b690348cf28642c1aaaaf55dd47099c",
+      "serverId": "6c1dc8ef-8b94-40e4-bd83-c2359d45ecc0",
+      "unresolved": true
+    }
+  ]
+}
