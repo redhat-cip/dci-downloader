@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c823ce6d_70301735",
+        "filename": "dci_downloader/containers.py",
+        "patchSetId": 11
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 405
+      },
+      "writtenOn": "2021-03-31T09:14:49Z",
+      "side": 1,
+      "message": "you forget to remove this one",
+      "range": {
+        "startLine": 71,
+        "startChar": 16,
+        "endLine": 71,
+        "endChar": 46
+      },
+      "revId": "9164e162334b8001ba857e2fc4cdf84d037a32ab",
+      "serverId": "6c1dc8ef-8b94-40e4-bd83-c2359d45ecc0",
+      "unresolved": true
+    }
+  ]
+}
