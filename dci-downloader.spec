@@ -7,7 +7,7 @@
 
 Name:             dci-downloader
 Version:          2.8.0
-Release:          1.VERS%{?dist}
+Release:          2.VERS%{?dist}
 Summary:          DCI Downloader
 License:          ASL 2.0
 URL:              https://github.com/redhat-cip/%{srcname}
@@ -69,6 +69,9 @@ DCI downloader used to download Red Hat products
 %{_bindir}/%{srcname}
 
 %changelog
+* Wed Apr 14 2021 François Charlier <fcharlie@redhat.com> - 2.8.0-2
+- Fix a problem with container images mirrorring trigerred even if no registry
+  was specified
 * Mon Mar 22 2021 François Charlier <fcharlie@redhat.com> - 2.8.0-1
 - Add container images mirroring for supported topics
 * Fri Jan 29 2021 Guillaume Vincent <gvincent@redhat.com> - 2.7.0-1

@@ -42,5 +42,5 @@ def download_component(topic, component, settings):
     check_download_folder_size(files_to_download, download_folder)
     download_files(files_to_download["files"], settings)
     recreate_symlinks(files_list["symlinks"], download_folder)
-    if "registry" in settings:
+    if settings.get("registry", None):
         mirror_container_images(topic, component, settings)
