@@ -1,13 +1,18 @@
-topic: RHEL-8.1
-local_repo_ip: 192.168.1.1
-dci_rhel_agent_cert: false
-systems:
-  - dci-client
-variants:
-  - AppStream
-  - BaseOS
-archs:
-  - x86_64
-  - ppc64le
-with_debug: false
-with_iso: false
+version: "2"
+download_folder: /var/www/html
+topics:
+  - topic: RHEL-9.0
+    tags:
+      - nightly
+    archs:
+      - x86_64
+  - topic: RHEL-8.4
+    tags:
+      - milestone
+    archs:
+      - ppc64le
+    variants:
+      - AppStream
+      - name: BaseOS
+        with_debug: true
+  - topic: RHEL-8.2

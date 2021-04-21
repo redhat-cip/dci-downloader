@@ -42,3 +42,46 @@ def test_download_one_component_if_component_id(downloader_mock, api_mock):
     downloader_mock.download_component.assert_called_once_with(
         topic, component, settings
     )
+
+
+@mock.patch("dci_downloader.api.get_components_per_topic")
+@mock.patch("dci_downloader.main.api.get_topic")
+@mock.patch("dci_downloader.main.downloader")
+def test_download_components_with_tags(
+    downloader_mock, get_topic_mock, get_components_per_topic_mock
+):
+    topic = {"id": "t1", "name": "RHEL-8", "component_types": ["compose"]}
+    get_topic_mock.return_value = topic
+    get_components_per_topic_mock.return_value = [
+        {"id": "c1", "name": "RHEL-8.2.0-20191120.0", "topic_id": "t1"}
+    ]
+    download_components(
+        {"name": "RHEL-8", "download_folder": "/var/www/html", "tags": ["tag1", "tag2"]}
+    )
+    get_components_per_topic_mock.assert_called_with(
+        limit=1,
+        offset=0,
+        sort="-created_at",
+        topic_id="t1",
+        where="type:compose,state:active,tags:tag1,tags:tag2",
+    )
+    download_components(
+        {"name": "RHEL-8", "download_folder": "/var/www/html", "tags": []}
+    )
+    get_components_per_topic_mock.assert_called_with(
+        limit=1,
+        offset=0,
+        sort="-created_at",
+        topic_id="t1",
+        where="type:compose,state:active",
+    )
+    download_components(
+        {"name": "RHEL-8", "download_folder": "/var/www/html", "tags": ["tag1"]}
+    )
+    get_components_per_topic_mock.assert_called_with(
+        limit=1,
+        offset=0,
+        sort="-created_at",
+        topic_id="t1",
+        where="type:compose,state:active,tags:tag1",
+    )

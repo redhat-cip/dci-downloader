@@ -64,19 +64,34 @@ def get_component_by_id(component_id):
     return component
 
 
-def get_components(topic):
-    context = build_signature_context()
+def get_components_per_topic(topic_id, limit, sort, offset, where):
+    response = dci_topic.list_components(
+        context=build_signature_context(),
+        topic_id=topic_id,
+        limit=limit,
+        sort=sort,
+        offset=offset,
+        where=where,
+    ).json()
+    return response["components"]
+
+
+def get_components(topic, tags=[]):
     components = []
     for component_type in topic["component_types"]:
-        res = dci_topic.list_components(
-            context,
-            topic["id"],
-            limit=1,
-            sort="-created_at",
-            offset=0,
-            where="type:%s,state:active" % component_type,
-        ).json()
-        components.extend(res["components"])
+        where = "type:%s,state:active" % component_type
+        if tags:
+            tags_where = ",".join(["tags:%s" % tag for tag in tags])
+            where += ",%s" % tags_where
+        components.extend(
+            get_components_per_topic(
+                topic_id=topic["id"],
+                limit=1,
+                sort="-created_at",
+                offset=0,
+                where=where,
+            )
+        )
     return components
 
 
