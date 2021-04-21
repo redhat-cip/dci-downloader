@@ -45,6 +45,7 @@ def _clean_topic(topic):
         v if type(v) is dict else {"name": v, "with_debug": False, "with_iso": False}
         for v in variants
     ]
+    filters = topic.get("filters", [])
     return {
         "name": name,
         "components": components,
@@ -57,6 +58,7 @@ def _clean_topic(topic):
         "registry": topic["registry"],
         "component_id": component_id,
         "with_debug": topic.get("with_debug", False),
+        "filters": filters
     }
 
 
@@ -118,6 +120,7 @@ def get_settings(sys_args, env_variables={}):
     if settings_file_paths:
         settings_from_files = _read_settings_files(settings_file_paths)
         settings.update(_keep_backward_compatibility(settings_from_files))
+    settings["version"] = int(settings.get("version", "1"))
     return _clean_settings(settings)
 
 

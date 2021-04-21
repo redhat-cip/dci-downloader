@@ -11,24 +11,24 @@ from dci_downloader.settings import (
 from mock import ANY
 
 
-def test_read_settings_file_v1():
+def test_read_settings_file_v1a():
     test_dir = os.path.dirname(os.path.abspath(__file__))
-    settings_file_path = os.path.join(test_dir, "data", "settings_v1.yml")
+    settings_file_path = os.path.join(test_dir, "data", "settings_v1a.yml")
     settings = _read_settings_files([settings_file_path])
     assert settings == {"topic": "RHEL-7"}
 
 
-def test_override_settings_file_v1():
+def test_override_settings_file_v1a():
     test_dir = os.path.dirname(os.path.abspath(__file__))
-    settings_file_paths = [os.path.join(test_dir, "data", "settings_v1.yml")]
-    settings_file_paths.append(os.path.join(test_dir, "data", "override_v1.yml"))
+    settings_file_paths = [os.path.join(test_dir, "data", "settings_v1a.yml")]
+    settings_file_paths.append(os.path.join(test_dir, "data", "override_v1a.yml"))
     settings = _read_settings_files(settings_file_paths)
     assert settings == {"topic": "RHEL-override"}
 
 
-def test_read_settings_file_v2():
+def test_read_settings_file_v1b():
     test_dir = os.path.dirname(os.path.abspath(__file__))
-    settings_file_path = os.path.join(test_dir, "data", "settings_v2.yml")
+    settings_file_path = os.path.join(test_dir, "data", "settings_v1b.yml")
     settings = _read_settings_files([settings_file_path])
     assert settings == {
         "archs": ["x86_64", "ppc64le"],
@@ -42,10 +42,10 @@ def test_read_settings_file_v2():
     }
 
 
-def test_override_settings_file_v2():
+def test_override_settings_file_v1b():
     test_dir = os.path.dirname(os.path.abspath(__file__))
-    settings_file_paths = [os.path.join(test_dir, "data", "settings_v2.yml")]
-    settings_file_paths.append(os.path.join(test_dir, "data", "override_v2.yml"))
+    settings_file_paths = [os.path.join(test_dir, "data", "settings_v1b.yml")]
+    settings_file_paths.append(os.path.join(test_dir, "data", "override_v1b.yml"))
     settings = _read_settings_files(settings_file_paths)
     assert settings == {
         "archs": ["x86_64", "ppc64le"],
@@ -59,9 +59,9 @@ def test_override_settings_file_v2():
     }
 
 
-def test_read_settings_file_v3():
+def test_read_settings_file_v1c():
     test_dir = os.path.dirname(os.path.abspath(__file__))
-    settings_file_path = os.path.join(test_dir, "data", "settings_v3.yml")
+    settings_file_path = os.path.join(test_dir, "data", "settings_v1c.yml")
     settings = _read_settings_files([settings_file_path])
     assert settings == {
         "download_folder": "/tmp/repo10",
@@ -70,7 +70,10 @@ def test_read_settings_file_v3():
                 "topic": "RHEL-7.6",
                 "archs": ["x86_64", "ppc64le"],
                 "variants": ["Server", "Server-SAP"],
-                "tags": ["my_tag_1", "my_tag_2"],
+                "filters": [
+                    {"type": "component_type1", "tag": "tag1"},
+                    {"type": "component_type2", "tag": "tag2"},
+                ],
                 "tests": ["rhcert", "hardware_cert"],
                 "systems": ["SUT1", "SUT2", "SUT3"],
             },
@@ -87,10 +90,10 @@ def test_read_settings_file_v3():
     }
 
 
-def test_override_settings_file_v3():
+def test_override_settings_file_v1c():
     test_dir = os.path.dirname(os.path.abspath(__file__))
-    settings_file_paths = [os.path.join(test_dir, "data", "settings_v3.yml")]
-    settings_file_paths.append(os.path.join(test_dir, "data", "override_v3.yml"))
+    settings_file_paths = [os.path.join(test_dir, "data", "settings_v1c.yml")]
+    settings_file_paths.append(os.path.join(test_dir, "data", "override_v1c.yml"))
     settings = _read_settings_files(settings_file_paths)
     assert settings == {
         "download_folder": "/tmp/override",
@@ -137,7 +140,9 @@ def test_get_settings_read_arguments():
         "name": "RHEL-8",
         "with_debug": False,
         "registry": None,
+        "filters": [],
     }
+    assert settings["version"] == 1
 
 
 def test_get_settings_read_arguments_with_component_id():
@@ -146,6 +151,7 @@ def test_get_settings_read_arguments_with_component_id():
         env_variables={"DCI_CLIENT_ID": "", "DCI_API_SECRET": "", "DCI_CS_URL": ""},
     )
     assert settings["topics"][0]["component_id"] == "c1"
+    assert settings["version"] == 1
 
 
 def test_get_settings_read_arguments_download_everything():
@@ -165,12 +171,14 @@ def test_get_settings_read_arguments_download_everything():
         "name": "RHEL-8",
         "with_debug": False,
         "registry": None,
+        "filters": [],
     }
+    assert settings["version"] == 1
 
 
 def test_get_settings_from_dci_rhel_agent_settings_file_with_only_topic_key():
     test_dir = os.path.dirname(os.path.abspath(__file__))
-    settings_file_path = os.path.join(test_dir, "data", "settings_v1.yml")
+    settings_file_path = os.path.join(test_dir, "data", "settings_v1a.yml")
     settings = get_settings(
         sys_args=["--settings", settings_file_path],
         env_variables={
@@ -194,12 +202,14 @@ def test_get_settings_from_dci_rhel_agent_settings_file_with_only_topic_key():
         "name": "RHEL-7",
         "with_debug": False,
         "registry": None,
+        "filters": [],
     }
+    assert settings["version"] == 1
 
 
 def test_get_settings_from_first_dci_rhel_agent_settings_file():
     test_dir = os.path.dirname(os.path.abspath(__file__))
-    settings_file_path = os.path.join(test_dir, "data", "settings_v2.yml")
+    settings_file_path = os.path.join(test_dir, "data", "settings_v1b.yml")
     settings = get_settings(
         sys_args=["--settings", settings_file_path],
         env_variables={
@@ -225,7 +235,9 @@ def test_get_settings_from_first_dci_rhel_agent_settings_file():
         "name": "RHEL-8.1",
         "with_debug": False,
         "registry": None,
+        "filters": [],
     }
+    assert settings["version"] == 1
 
 
 def test_get_settings_add_env_variables():
@@ -270,7 +282,7 @@ def test_exit_if_settings_invalid_with_empty_env_variables():
 def test_exit_if_settings_invalid_without_download_folder():
     with pytest.raises(SystemExit):
         test_dir = os.path.dirname(os.path.abspath(__file__))
-        settings_file_path = os.path.join(test_dir, "data", "settings_v2.yml")
+        settings_file_path = os.path.join(test_dir, "data", "settings_v1b.yml")
         exit_if_settings_invalid(
             get_settings(
                 sys_args=["--settings", settings_file_path],
@@ -306,7 +318,7 @@ def test_exit_if_settings_invalid_with_bad_variants():
 
 def test_get_settings_with_jobs_key():
     test_dir = os.path.dirname(os.path.abspath(__file__))
-    settings_file_path = os.path.join(test_dir, "data", "settings_v3.yml")
+    settings_file_path = os.path.join(test_dir, "data", "settings_v1c.yml")
     settings = get_settings(
         sys_args=["--settings", settings_file_path],
         env_variables={"DCI_CLIENT_ID": "", "DCI_API_SECRET": "", "DCI_CS_URL": ""},
@@ -326,6 +338,10 @@ def test_get_settings_with_jobs_key():
         "name": "RHEL-7.6",
         "with_debug": False,
         "registry": None,
+        "filters": [
+            {"type": "component_type1", "tag": "tag1"},
+            {"type": "component_type2", "tag": "tag2"},
+        ],
     }
     assert settings["topics"][1] == {
         "variants": [
@@ -342,7 +358,9 @@ def test_get_settings_with_jobs_key():
         "name": "RHEL-8.1",
         "with_debug": False,
         "registry": None,
+        "filters": [],
     }
+    assert settings["version"] == 1
 
 
 def test_get_settings_download_folder_overwrite_DCI_LOCAL_REPO():
@@ -363,7 +381,7 @@ def test_get_settings_download_folder_overwrite_DCI_LOCAL_REPO():
 
 def test_get_settings_local_repo_added_to_an_old_settings_file():
     test_dir = os.path.dirname(os.path.abspath(__file__))
-    settings_file_path = os.path.join(test_dir, "data", "settings_v4.yml")
+    settings_file_path = os.path.join(test_dir, "data", "settings_v1d.yml")
     settings = get_settings(
         sys_args=["--settings", settings_file_path],
         env_variables={
@@ -388,12 +406,14 @@ def test_get_settings_local_repo_added_to_an_old_settings_file():
         "name": "RHEL-8.2",
         "with_debug": False,
         "registry": None,
+        "filters": [],
     }
+    assert settings["version"] == 1
 
 
 def test_get_settings_local_repo_with_multiple_topics():
     test_dir = os.path.dirname(os.path.abspath(__file__))
-    settings_file_path = os.path.join(test_dir, "data", "settings_v5.yml")
+    settings_file_path = os.path.join(test_dir, "data", "settings_v1e.yml")
     settings = get_settings(
         sys_args=["--settings", settings_file_path],
         env_variables={"DCI_CLIENT_ID": "", "DCI_API_SECRET": "", "DCI_CS_URL": ""},
@@ -410,6 +430,7 @@ def test_get_settings_local_repo_with_multiple_topics():
         "name": "RHEL-7.6",
         "with_debug": False,
         "registry": None,
+        "filters": [],
     }
     assert settings["topics"][1] == {
         "variants": [],
@@ -423,7 +444,9 @@ def test_get_settings_local_repo_with_multiple_topics():
         "name": "RHEL-8.1",
         "with_debug": False,
         "registry": None,
+        "filters": [],
     }
+    assert settings["version"] == 1
 
 
 def test_backward_compatibility_test_variants_are_invalid_with_metadata():
@@ -470,7 +493,7 @@ def test_get_settings_set_ssl_file_from_env():
 
 def test_get_settings_set_ssl_file_from_settings_file():
     test_dir = os.path.dirname(os.path.abspath(__file__))
-    settings_file_path = os.path.join(test_dir, "data", "settings_v6.yml")
+    settings_file_path = os.path.join(test_dir, "data", "settings_v1f.yml")
     settings = get_settings(
         sys_args=["--settings", settings_file_path],
         env_variables={"DCI_CLIENT_ID": "", "DCI_API_SECRET": "", "DCI_CS_URL": ""},
@@ -482,7 +505,7 @@ def test_get_settings_set_ssl_file_from_settings_file():
 
 def test_get_settings_with_debug_without_a_variant():
     test_dir = os.path.dirname(os.path.abspath(__file__))
-    settings_file_path = os.path.join(test_dir, "data", "settings_v7.yml")
+    settings_file_path = os.path.join(test_dir, "data", "settings_v1g.yml")
     settings = get_settings(
         sys_args=["--settings", settings_file_path],
         env_variables={"DCI_CLIENT_ID": "", "DCI_API_SECRET": "", "DCI_CS_URL": ""},
@@ -499,7 +522,9 @@ def test_get_settings_with_debug_without_a_variant():
         "name": "RHEL-8.2-milestone",
         "with_debug": True,
         "registry": None,
+        "filters": [],
     }
+    assert settings["version"] == 1
 
 
 def test_exit_if_architecture_in_settings_invalid():
@@ -578,3 +603,73 @@ def test_with_registry():
     )
     topic = settings["topics"][0]
     assert topic["registry"] == "host:port"
+
+
+def test_get_settings_v2():
+    test_dir = os.path.dirname(os.path.abspath(__file__))
+    settings_file_path = os.path.join(test_dir, "data", "settings_v2.yml")
+    settings = get_settings(
+        sys_args=["--settings", settings_file_path],
+        env_variables={"DCI_CLIENT_ID": "", "DCI_API_SECRET": "", "DCI_CS_URL": ""},
+    )
+
+    assert settings == {
+        "registry": None,
+        "dci_cert_file": ANY,
+        "topics": [
+            {
+                "registry": None,
+                "components": [],
+                "variants": [],
+                "name": "RHEL-9.0",
+                "dci_cert_file": ANY,
+                "archs": ["x86_64"],
+                "download_everything": False,
+                "with_debug": False,
+                "download_folder": "/var/www/html",
+                "component_id": None,
+                "dci_key_file": ANY,
+                "filters": [
+                    {"type": "compose", "tag": "nightly"},
+                ],
+            },
+            {
+                "registry": None,
+                "components": [],
+                "variants": [
+                    {"name": "AppStream", "with_iso": False, "with_debug": False},
+                    {"name": "BaseOS", "with_debug": True},
+                ],
+                "name": "RHEL-8.4",
+                "dci_cert_file": ANY,
+                "archs": ["ppc64le"],
+                "download_everything": False,
+                "with_debug": False,
+                "download_folder": "/var/www/html",
+                "component_id": None,
+                "dci_key_file": ANY,
+                "filters": [
+                    {"type": "compose", "tag": "milestone"},
+                ],
+            },
+            {
+                "registry": None,
+                "components": [],
+                "variants": [],
+                "name": "RHEL-8.2",
+                "dci_cert_file": ANY,
+                "archs": ["x86_64"],
+                "download_everything": False,
+                "with_debug": False,
+                "download_folder": "/var/www/html",
+                "component_id": None,
+                "dci_key_file": ANY,
+                "filters": [],
+            },
+        ],
+        "dci_key_file": ANY,
+        "remoteci_id": None,
+        "env_variables": {"DCI_API_SECRET": "", "DCI_CLIENT_ID": "", "DCI_CS_URL": ""},
+        "download_folder": "/var/www/html",
+        "version": 2,
+    }

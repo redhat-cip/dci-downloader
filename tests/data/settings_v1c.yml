@@ -7,9 +7,11 @@ jobs:
     variants:
       - Server
       - Server-SAP
-    tags:
-      - my_tag_1
-      - my_tag_2
+    filters:
+      - type: component_type1
+        tag: tag1
+      - type: component_type2
+        tag: tag2
     tests:
       - rhcert
       - hardware_cert

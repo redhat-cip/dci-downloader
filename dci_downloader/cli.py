@@ -21,6 +21,9 @@ examples:
 
   # load options from several yaml settings file (newer override older)
   dci-downloader --settings settings.yml --settings extra.yml
+
+  # download the latest RHEL-9 development build
+  dci-downloader --filter=compose:development RHEL-9.0 /tmp/repo
 """
 
 COPYRIGHT = """
@@ -75,6 +78,14 @@ def parse_arguments(arguments):
         help="download a specific variant (default: all variants)",
     )
     parser.add_argument(
+        "--filter",
+        action="append",
+        metavar="FILTER",
+        dest="filters",
+        default=[],
+        help="filter components by type and tag. Filter must be with the following format <component_type>:<tag>.",
+    )
+    parser.add_argument(
         "--debug", help="download debug RPMs", dest="with_debug", action="store_true"
     )
     parser.add_argument(
@@ -116,7 +127,21 @@ def parse_arguments(arguments):
             sys.exit(2)
 
     parsed_arguments.variants = [
-        {"name": v, "with_debug": parsed_arguments.with_debug, "with_iso": parsed_arguments.with_iso}
+        {
+            "name": v,
+            "with_debug": parsed_arguments.with_debug,
+            "with_iso": parsed_arguments.with_iso,
+        }
         for v in parsed_arguments.variants
     ]
+    filters = []
+    if parsed_arguments.filters:
+        for filter in parsed_arguments.filters:
+            elements = filter.split(":")
+            if len(elements) != 2:
+                print("FILTER has the wrong format.")
+                print("Type 'dci-downloader --help' for more information.")
+                sys.exit(2)
+            filters.append({"type": elements[0].lower(), "tag": elements[1]})
+    parsed_arguments.filters = filters
     return vars(parsed_arguments)

@@ -1,0 +1,13 @@
+topic: RHEL-8.1
+local_repo_ip: 192.168.1.1
+dci_rhel_agent_cert: false
+systems:
+  - dci-client
+variants:
+  - AppStream
+  - BaseOS
+archs:
+  - x86_64
+  - ppc64le
+with_debug: false
+with_iso: false

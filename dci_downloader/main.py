@@ -26,7 +26,8 @@ def download_components(settings):
         topic = api.get_topic(topic_name)
         if topic is None:
             raise Exception("Topic name %s not found" % topic_name)
-        components = api.get_components(topic)
+        filters = settings.get("filters", [])
+        components = api.get_components(topic, filters)
     for component in components:
         downloader.download_component(topic, component, settings)
 

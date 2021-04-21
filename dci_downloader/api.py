@@ -68,20 +68,37 @@ def get_component_by_id(component_id):
     return component
 
 
-def get_components(topic):
-    context = build_signature_context()
-    components = []
+def get_components_per_topic(
+    topic_id, sort="-created_at", limit=100, offset=0, where=""
+):
+    response = dci_topic.list_components(
+        context=build_signature_context(),
+        id=topic_id,
+        sort=sort,
+        limit=limit,
+        offset=offset,
+        where=where,
+    ).json()
+    return response["components"]
+
+
+def get_components(topic, filters=[]):
+    returned_components = []
+    tag_per_type = {filter["type"]: filter["tag"] for filter in filters}
     for component_type in topic["component_types"]:
-        res = dci_topic.list_components(
-            context,
-            topic["id"],
-            limit=1,
+        component_type = component_type.lower()
+        where = "type:%s,state:active" % component_type
+        if component_type in tag_per_type:
+            where += ",tags:%s" % tag_per_type[component_type]
+        components = get_components_per_topic(
+            topic_id=topic["id"],
             sort="-created_at",
+            limit=1,
             offset=0,
-            where="type:%s,state:active" % component_type,
-        ).json()
-        components.extend(res["components"])
-    return components
+            where=where,
+        )
+        returned_components.extend(components)
+    return returned_components
 
 
 def get_keys(remoteci_id):

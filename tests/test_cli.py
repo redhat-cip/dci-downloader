@@ -25,12 +25,14 @@ def test_parsing_settings_file():
 
 
 def test_parsing_multiple_settings_file():
-    args = parse_arguments([
-        "--settings",
-        "/etc/dci-downloader/settings.yml",
-        "--settings",
-        "/etc/dci-downloader/extra.yml",
-    ])
+    args = parse_arguments(
+        [
+            "--settings",
+            "/etc/dci-downloader/settings.yml",
+            "--settings",
+            "/etc/dci-downloader/extra.yml",
+        ]
+    )
     assert args["name"] is None
     assert args["archs"] == ["x86_64"]
     assert args["variants"] == []
@@ -39,7 +41,7 @@ def test_parsing_multiple_settings_file():
     # ensure all settings files are present and in the right order
     assert args["settings_file_paths"] == [
         "/etc/dci-downloader/settings.yml",
-        "/etc/dci-downloader/extra.yml"
+        "/etc/dci-downloader/extra.yml",
     ]
     assert args["download_folder"] is None
 
@@ -85,7 +87,9 @@ def test_parsing_component_id():
 
 def test_parsing_1_variant():
     args = parse_arguments(["RHEL-8", "/var/www/html", "--variant", "BaseOS"])
-    assert args["variants"] == [{"name": "BaseOS", "with_debug": False, "with_iso": False}]
+    assert args["variants"] == [
+        {"name": "BaseOS", "with_debug": False, "with_iso": False}
+    ]
 
 
 def test_parsing_2_variants():
@@ -219,3 +223,42 @@ def test_parsing_variants_with_iso():
         {"name": "BaseOS", "with_debug": False, "with_iso": True},
     ]
     assert args["with_iso"]
+
+
+def test_parsing_filters():
+    args = parse_arguments(
+        [
+            "--filter=compose:nightly",
+            "RHEL-8",
+            "/tmp/repo",
+        ]
+    )
+    assert args["name"] == "RHEL-8"
+    assert args["download_folder"] == "/tmp/repo"
+    assert args["archs"] == ["x86_64"]
+    assert args["filters"] == [{"type": "compose", "tag": "nightly"}]
+
+
+def test_parsing_bad_filter_raise_exception():
+    with raises(SystemExit):
+        parse_arguments(
+            [
+                "--filter=nightly",
+                "RHEL-8",
+                "/tmp/repo",
+            ]
+        )
+
+
+def test_parsing_filters_change_type_to_lower_case():
+    args = parse_arguments(
+        [
+            "--filter=coMpose:Nightly",
+            "RHEL-8",
+            "/tmp/repo",
+        ]
+    )
+    assert args["name"] == "RHEL-8"
+    assert args["download_folder"] == "/tmp/repo"
+    assert args["archs"] == ["x86_64"]
+    assert args["filters"] == [{"type": "compose", "tag": "Nightly"}]
