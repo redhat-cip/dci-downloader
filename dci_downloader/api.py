@@ -14,13 +14,17 @@ from dciclient.v1.api import component as dci_component
 from dciclient.v1.api import topic as dci_topic
 from dciclient.v1.api import remoteci as dci_remoteci
 
+FIVE_SECONDS = 5
+TEN_SECONDS = 10
+# We'll allow 5 seconds to connect & 10 seconds to get an answer
+REQUESTS_TIMEOUT = (FIVE_SECONDS, TEN_SECONDS)
+
 
 def check_repo_is_accessible():
     try:
-        five_seconds = 5
         requests.get(
             "https://repo.distributed-ci.io/",
-            timeout=five_seconds,
+            timeout=REQUESTS_TIMEOUT,
         )
     except requests.exceptions.Timeout:
         print("Timeout. dci-downloader cannot access repo.distributed-ci.io server.")
@@ -109,25 +113,6 @@ def get_base_url(topic, component):
     )
 
 
-def get_files_list(base_url, settings):
-    print("Download DCI file list, it may take a few seconds")
-    files_list_url = "%s/dci_files_list.json" % base_url
-    key = settings["dci_key_file"]
-    cert = settings["dci_cert_file"]
-    r = requests.get(files_list_url, cert=(cert, key))
-    r.raise_for_status()
-    return r.json()
-
-
-def get_container_images_list(base_url, settings):
-    containers_list_url = "%s/images_list.yaml" % base_url
-    key = settings["dci_key_file"]
-    cert = settings["dci_cert_file"]
-    r = requests.get(containers_list_url, cert=(cert, key))
-    r.raise_for_status()
-    return r.content
-
-
 def retry(tries=3, delay=2, multiplier=2):
     def decorated_retry(f):
         @wraps(f)
@@ -154,11 +139,34 @@ def retry(tries=3, delay=2, multiplier=2):
 
 
 @retry()
+def get_files_list(base_url, settings):
+    print("Download DCI file list, it may take a few seconds")
+    files_list_url = "%s/dci_files_list.json" % base_url
+    key = settings["dci_key_file"]
+    cert = settings["dci_cert_file"]
+    r = requests.get(files_list_url, cert=(cert, key), timeout=REQUESTS_TIMEOUT)
+    r.raise_for_status()
+    return r.json()
+
+
+@retry()
+def get_container_images_list(base_url, settings):
+    containers_list_url = "%s/images_list.yaml" % base_url
+    key = settings["dci_key_file"]
+    cert = settings["dci_cert_file"]
+    r = requests.get(containers_list_url, cert=(cert, key), timeout=REQUESTS_TIMEOUT)
+    r.raise_for_status()
+    return r.content
+
+
+@retry()
 def download_file(file, cert, key, file_index, nb_files):
     destination = file["destination"]
     print("(%d/%d): %s" % (file_index, nb_files, destination))
     create_parent_dir(destination)
-    r = requests.get(file["source"], stream=True, cert=(cert, key))
+    r = requests.get(
+        file["source"], stream=True, cert=(cert, key), timeout=REQUESTS_TIMEOUT
+    )
     r.raise_for_status()
     with open(destination, "wb") as f:
         for chunk in r.iter_content(chunk_size=512 * 1024):
