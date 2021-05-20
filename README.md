@@ -92,25 +92,29 @@ $ dci-downloader RHEL-8 /tmp/repo
 
 ### RHOSP examples
 
-/!\ Starting with OSP15, OSP topics are now supported by dci-downloader. Older topics require the *--all* flag.
+/!\ Starting with OSP15, OSP topics are now supported by dci-downloader. Older topics require the _--all_ flag.
 
 From OSP15 onwards:
+
 ```console
 $ dci-downloader OSP16.1 /tmp/repo
 ```
 
 For older OSP topics
+
 ```console
 $ dci-downloader --all OSP13 /tmp/repo
 ```
 
 dci-downloader also allows to mirror the container images associated with the component to a [local anonymous registry](#local-anonymous-registry).
+
 ```
 $ dci-downloader OSP16.1 /tmp/repo --registry local_registry_host:5000
 ```
 
 <a name="local-anonymous-registry">ℹ NOTE:</a> except when using dci-openstack-agent, it's the user's responsibility to provide a working anonymous registry.
 If needed a simple way to setup one is by using Docker Distribution registry in a container
+
 ```console
 $ podman run --rm -p 5000:5000 registry:2
 ```
@@ -202,7 +206,6 @@ dci_cert_file: /etc/dci-rhel-agent/dci.crt
 ## Proxy
 
 If you are using a proxy, just add `HTTP_PROXY` or `HTTPS_PROXY` env variable pointing to your proxy.
-
 
 ## License
 
