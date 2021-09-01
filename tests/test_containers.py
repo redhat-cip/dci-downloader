@@ -1,7 +1,7 @@
 from dci_downloader.containers import (
     dci_images_list_yaml_to_skopeo_format,
     dci_image_info,
-    has_skopeo_command,
+    has_command,
 )
 
 
@@ -37,6 +37,6 @@ def test_images_list_yaml_to_skopeo_yaml():
     assert len(reg["images"]) == 5
 
 
-def test_has_skopeo_command():
-    assert has_skopeo_command("meh") is False
-    assert has_skopeo_command("", skopeo_bin="/bin/ls") is True
+def test_has_command():
+    assert has_command("meh") is False
+    assert has_command("/bin/ls") is True

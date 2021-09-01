@@ -555,9 +555,9 @@ def test_exit_if_architecture_in_settings_invalid_for_rhel_7():
         )
 
 
-@mock.patch("dci_downloader.settings.has_skopeo_command")
-def test_exit_if_registry_and_no_skopeo(has_skopeo_command_mock):
-    has_skopeo_command_mock.return_value = False
+@mock.patch("dci_downloader.settings.has_command")
+def test_exit_if_registry_and_no_skopeo(has_command_mock):
+    has_command_mock.return_value = False
     with pytest.raises(SystemExit):
         exit_if_settings_invalid(
             get_settings(
@@ -576,9 +576,9 @@ def test_exit_if_registry_and_no_skopeo(has_skopeo_command_mock):
         )
 
 
-@mock.patch("dci_downloader.settings.has_skopeo_command")
-def test_with_registry_and_skopeo(has_skopeo_command_mock):
-    has_skopeo_command_mock.return_value = True
+@mock.patch("dci_downloader.settings.has_command")
+def test_with_registry_and_skopeo(has_command_mock):
+    has_command_mock.return_value = True
     exit_if_settings_invalid(
         get_settings(
             sys_args=["OSP16.2", "/tmp/repoOSP16.2", "--registry", "localhost:5000"],

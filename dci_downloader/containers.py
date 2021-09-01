@@ -36,9 +36,9 @@ def dci_images_list_yaml_to_skopeo_format(
     return skopeo_dict
 
 
-def has_skopeo_command(command, skopeo_bin="skopeo"):
+def has_command(command):
     try:
-        check_output([skopeo_bin, command, "--help"])
+        check_output(command.split(" "))
     except (OSError, CalledProcessError):
         return False
     return True
@@ -66,8 +66,7 @@ def skopeo_sync(skopeo_yaml_source, destination_registry, skopeo_bin="skopeo"):
         if retcode != 0:
             print(
                 "Skopeo sync failed with exit code %d.\n"
-                "Please check the skopeo logs above to determine the problem."
-                % retcode
+                "Please check the skopeo logs above to determine the problem." % retcode
             )
             exit(retcode)
         print("Skopeo sync succeeeded.")

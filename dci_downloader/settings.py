@@ -6,7 +6,7 @@ import yaml
 import sys
 
 from dci_downloader.cli import parse_arguments
-from dci_downloader.containers import has_skopeo_command
+from dci_downloader.containers import has_command
 
 
 def _read_settings_files(settings_file_paths=[]):
@@ -222,7 +222,7 @@ def exit_if_settings_invalid(settings):
         has_error = True
         print("You need to specify at least one topic")
 
-    if settings["registry"] and not has_skopeo_command("sync"):
+    if settings["registry"] and not has_command("skopeo sync --help"):
         has_error = True
         print(
             "You specified a registry to mirror container images "
