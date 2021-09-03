@@ -103,9 +103,10 @@ def parse_arguments(arguments):
     parser.add_argument(
         "--settings",
         action="append",
-        dest="settings_file_paths",
+        dest="settings_files_paths",
         metavar="FILE_PATH",
         help="settings file(s) to overwrite cli parameters",
+        default=[]
     )
     parser.add_argument("--version", action="version", version=__version__)
     parsed_arguments = parser.parse_args(arguments)
@@ -113,7 +114,7 @@ def parse_arguments(arguments):
         parsed_arguments.archs = ["x86_64"]
     parsed_arguments.archs = list(set(parsed_arguments.archs))
 
-    if parsed_arguments.settings_file_paths is None:
+    if parsed_arguments.settings_files_paths is None:
         download_folder = parsed_arguments.download_folder
         if download_folder is None:
             print("download folder is required")

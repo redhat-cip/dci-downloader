@@ -5,13 +5,15 @@ import traceback
 import yaml
 import sys
 
+from collections import defaultdict
+
 from dci_downloader.cli import parse_arguments
 from dci_downloader.containers import has_command
 
 
-def _read_settings_files(settings_file_paths=[]):
+def _read_settings_files(settings_files_paths=[]):
     settings = {}
-    for settings_file_path in settings_file_paths:
+    for settings_file_path in settings_files_paths:
         with open(settings_file_path, "r") as stream:
             try:
                 settings.update(yaml.safe_load(stream))
@@ -19,20 +21,6 @@ def _read_settings_files(settings_file_paths=[]):
                 print("Can't read %s file" % settings_file_path)
                 traceback.print_exc()
     return settings
-
-
-def _get_download_folder(cli_settings, env_variables):
-    dci_local_repo = env_variables.get("DCI_LOCAL_REPO")
-    if dci_local_repo:
-        return dci_local_repo
-    download_folder = cli_settings["download_folder"]
-    if download_folder:
-        return download_folder
-    return None
-
-
-def _get_registry(cli_settings, env_variables):
-    return env_variables.get("DCI_REGISTRY", cli_settings.get("registry"))
 
 
 def _clean_topic(topic):
@@ -58,20 +46,28 @@ def _clean_topic(topic):
         "registry": topic["registry"],
         "component_id": component_id,
         "with_debug": topic.get("with_debug", False),
-        "filters": filters
+        "filters": filters,
     }
 
 
 def _clean_settings(settings):
-    new_settings = settings.copy()
+    dci_home_path = _get_dci_downloader_home_folder(settings["env_variables"])
+    key = settings.get("dci_key_file", os.path.join(dci_home_path, "dci.key"))
+    crt = settings.get("dci_cert_file", os.path.join(dci_home_path, "dci.crt"))
+    new_settings = {
+        "version": int(settings.get("version", "1")),
+        "env_variables": settings["env_variables"],
+        "dci_key_file": key,
+        "dci_cert_file": crt,
+    }
     new_topics = []
     for topic in settings["topics"]:
         topic["download_folder"] = settings["download_folder"]
-        topic["dci_key_file"] = settings["dci_key_file"]
-        topic["dci_cert_file"] = settings["dci_cert_file"]
+        topic["dci_key_file"] = key
+        topic["dci_cert_file"] = crt
         topic["registry"] = settings["registry"]
         new_topics.append(_clean_topic(topic))
-    new_settings["topics"] = new_topics
+    new_settings["topics"] = sorted(new_topics, key=lambda k: k["name"])
     return new_settings
 
 
@@ -79,21 +75,17 @@ def _keep_backward_compatibility(settings):
     if "local_repo" in settings:
         settings["download_folder"] = settings["local_repo"]
     if "topic" in settings:
-        settings["topics"] = [settings]
+        settings["topics"] = [settings.copy()]
     if "jobs" in settings:
         settings["topics"] = settings["jobs"]
     if "download_key_file" in settings:
         settings["dci_key_file"] = settings["download_key_file"]
     if "download_crt_file" in settings:
         settings["dci_cert_file"] = settings["download_crt_file"]
+    settings["download_folder"] = settings.get("download_folder")
+    settings["registry"] = settings.get("registry")
+    settings["topics"] = settings.get("topics", [])
     return settings
-
-
-def _get_remoteci_id(env_variables):
-    remoteci_id = env_variables.get("DCI_CLIENT_ID")
-    if remoteci_id:
-        return remoteci_id.split("/")[1]
-    return None
 
 
 def _get_dci_downloader_home_folder(env_variables):
@@ -102,25 +94,69 @@ def _get_dci_downloader_home_folder(env_variables):
     return os.path.join(data_home_path, "dci-downloader")
 
 
+def _remove_none_values(d):
+    return {k: v for k, v in d.items() if v is not None}
+
+
+def _merge_settings(settings):
+    topics_by_name = defaultdict(dict)
+    for setting in settings:
+        for topic in setting.get("topics", []):
+            k = "name" if "name" in topic else "topic"
+            topics_by_name[topic[k]].update(topic)
+    s = {}
+    s.update(settings[0])
+    s.update(settings[1])
+    s.update(settings[2])
+    s["topics"] = list(topics_by_name.values())
+    return s
+
+
 def get_settings(sys_args, env_variables={}):
-    cli_arguments = parse_arguments(sys_args)
-    dci_home_path = _get_dci_downloader_home_folder(env_variables)
-    key = env_variables.get("DCI_KEY_FILE", os.path.join(dci_home_path, "dci.key"))
-    crt = env_variables.get("DCI_CERT_FILE", os.path.join(dci_home_path, "dci.crt"))
-    settings = {
-        "remoteci_id": _get_remoteci_id(env_variables),
+    settings_from_env_variables = {
         "env_variables": env_variables,
-        "topics": [cli_arguments],
-        "download_folder": _get_download_folder(cli_arguments, env_variables),
-        "dci_key_file": key,
-        "dci_cert_file": crt,
-        "registry": _get_registry(cli_arguments, env_variables),
+        "dci_key_file": env_variables.get("DCI_KEY_FILE"),
+        "dci_cert_file": env_variables.get("DCI_CERT_FILE"),
+        "download_folder": env_variables.get("DCI_LOCAL_REPO"),
+        "registry": env_variables.get("DCI_REGISTRY"),
     }
-    settings_file_paths = cli_arguments["settings_file_paths"]
-    if settings_file_paths:
-        settings_from_files = _read_settings_files(settings_file_paths)
-        settings.update(_keep_backward_compatibility(settings_from_files))
-    settings["version"] = int(settings.get("version", "1"))
+
+    cli_arguments = parse_arguments(sys_args)
+    settings_from_cli = {
+        "download_folder": cli_arguments["download_folder"],
+        "registry": cli_arguments["registry"],
+        "topics": [],
+    }
+    topic_name = cli_arguments["name"]
+    if topic_name:
+        settings_from_cli["topics"].append(
+            {
+                "download_everything": cli_arguments["download_everything"],
+                "variants": cli_arguments["variants"],
+                "with_debug": cli_arguments["with_debug"],
+                "name": topic_name,
+                "with_iso": cli_arguments["with_iso"],
+                "archs": cli_arguments["archs"],
+                "filters": cli_arguments["filters"],
+                "component_id": cli_arguments["component_id"],
+            }
+        )
+
+    settings_from_files = {"download_folder": None, "registry": None, "topics": []}
+    settings_files_paths = cli_arguments["settings_files_paths"]
+    if settings_files_paths:
+        settings_from_files.update(
+            _keep_backward_compatibility(_read_settings_files(settings_files_paths))
+        )
+
+    settings = _merge_settings(
+        [
+            settings_from_files,
+            _remove_none_values(settings_from_env_variables),
+            _remove_none_values(settings_from_cli),
+        ]
+    )
+
     return _clean_settings(settings)
 
 
@@ -213,22 +249,23 @@ def exit_if_settings_invalid(settings):
             has_error = True
             print("Environment variable %s not set" % env_variable)
 
-    if settings["download_folder"] is None:
-        has_error = True
-        print("The destination folder for the download is not specified.")
-
     topics = settings["topics"]
     if not topics:
         has_error = True
         print("You need to specify at least one topic")
 
-    if settings["registry"] and not has_command("skopeo sync --help"):
-        has_error = True
-        print(
-            "You specified a registry to mirror container images "
-            "but `skopeo sync [...]` is not available on your system. "
-            "Please ensure that skopeo >= 0.1.41 is installed."
-        )
+    for topic in topics:
+        if topic.get("download_folder") is None:
+            has_error = True
+            print("The destination folder for the download is not specified.")
+
+        if topic.get("registry") and not has_command("skopeo sync --help"):
+            has_error = True
+            print(
+                "You specified a registry to mirror container images "
+                "but `skopeo sync [...]` is not available on your system. "
+                "Please ensure that skopeo >= 0.1.41 is installed."
+            )
 
     for topic in topics:
         if _variants_are_invalid(topic):

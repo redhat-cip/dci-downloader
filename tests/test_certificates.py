@@ -16,7 +16,11 @@ def test_configure_ssl_certificates_dont_call_api_refresh_key_if_certs_exist(
 ):
     with tempfile.NamedTemporaryFile() as key_file, tempfile.NamedTemporaryFile() as cert_file:
         settings = {
-            "remoteci_id": "r1",
+            "env_variables": {
+                "DCI_CLIENT_ID": "remoteci/66194b70-46c5-1707-a2bb-9dde8d5d4212",
+                "DCI_API_SECRET": "",
+                "DCI_CS_URL": "",
+            },
             "dci_key_file": key_file.name,
             "dci_cert_file": cert_file.name,
         }
@@ -36,12 +40,16 @@ def test_configure_ssl_certificates_call_api_refresh_key_if_certs_dont_exist(
         key_file = os.path.join(tmpdir, "subfolder", "dci.key")
         cert_file = os.path.join(tmpdir, "subfolder", "dci.crt")
         settings = {
-            "remoteci_id": "r1",
+            "env_variables": {
+                "DCI_CLIENT_ID": "remoteci/66194b70-46c5-1707-a2bb-9dde8d5d4212",
+                "DCI_API_SECRET": "",
+                "DCI_CS_URL": "",
+            },
             "dci_key_file": key_file,
             "dci_cert_file": cert_file,
         }
         configure_ssl_certificates(settings)
-        get_keys_mock.assert_called_once_with("r1")
+        get_keys_mock.assert_called_once_with("66194b70-46c5-1707-a2bb-9dde8d5d4212")
 
         with open(cert_file) as f:
             assert f.read() == "cert"

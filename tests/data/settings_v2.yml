@@ -1,13 +1,13 @@
 version: "2"
 download_folder: /var/www/html
 topics:
-  - topic: RHEL-9.0
+  - name: RHEL-9.0
     filters:
       - type: compose
         tag: nightly
     archs:
       - x86_64
-  - topic: RHEL-8.4
+  - name: RHEL-8.4
     filters:
       - type: compose
         tag: milestone
@@ -17,4 +17,4 @@ topics:
       - AppStream
       - name: BaseOS
         with_debug: true
-  - topic: RHEL-8.2
+  - name: RHEL-8.2

@@ -5,8 +5,15 @@ from dci_downloader import api
 from dci_downloader.fs import create_parent_dir
 
 
+def _get_remoteci_id(env_variables):
+    remoteci_id = env_variables.get("DCI_CLIENT_ID")
+    if remoteci_id:
+        return remoteci_id.split("/")[1]
+    return None
+
+
 def _generate_key_and_cert(settings):
-    keys = api.get_keys(settings["remoteci_id"])
+    keys = api.get_keys(_get_remoteci_id(settings["env_variables"]))
     if keys is None:
         print("Can't get certificate's keys, contact DCI administrator")
         sys.exit(1)

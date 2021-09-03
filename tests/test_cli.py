@@ -9,7 +9,7 @@ def test_parsing_no_options():
     assert args["variants"] == []
     assert not args["with_debug"]
     assert not args["with_iso"]
-    assert args["settings_file_paths"] is None
+    assert args["settings_files_paths"] == []
     assert args["download_folder"] == "/var/www/html"
 
 
@@ -20,7 +20,7 @@ def test_parsing_settings_file():
     assert args["variants"] == []
     assert not args["with_debug"]
     assert not args["with_iso"]
-    assert "/etc/dci-downloader/settings.yml" in args["settings_file_paths"]
+    assert "/etc/dci-downloader/settings.yml" in args["settings_files_paths"]
     assert args["download_folder"] is None
 
 
@@ -39,16 +39,11 @@ def test_parsing_multiple_settings_file():
     assert not args["with_debug"]
     assert not args["with_iso"]
     # ensure all settings files are present and in the right order
-    assert args["settings_file_paths"] == [
+    assert args["settings_files_paths"] == [
         "/etc/dci-downloader/settings.yml",
         "/etc/dci-downloader/extra.yml",
     ]
     assert args["download_folder"] is None
-
-
-def test_parsing_no_option_raise_exception():
-    with raises(SystemExit):
-        parse_arguments([])
 
 
 def test_parsing_with_debug():
