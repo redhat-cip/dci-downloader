@@ -3,7 +3,6 @@
 import functools
 import os
 import sys
-import traceback
 import time
 
 from dci_downloader import api
@@ -58,8 +57,8 @@ def catch_all_and_print(f):
         except KeyboardInterrupt:
             print("Keyboard interrupt exiting...")
             sys.exit(130)
-        except Exception:
-            traceback.print_exc()
+        except Exception as e:
+            print(e)
             sys.exit(1)
 
     return inner
