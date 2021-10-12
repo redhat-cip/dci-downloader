@@ -5,8 +5,6 @@ topics:
     filters:
       - type: compose
         tag: nightly
-    archs:
-      - x86_64
   - name: RHEL-8.4
     filters:
       - type: compose

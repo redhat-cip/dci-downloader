@@ -8,7 +8,7 @@
 $ sudo yum -y install https://packages.distributed-ci.io/dci-release.el7.noarch.rpm
 $ sudo yum -y install dci-downloader
 $ source ~/dcirc.sh
-$ dci-downloader RHEL-8 /tmp/repo
+$ dci-downloader RHEL-8.5 /tmp/repo
 ```
 
 ## Table of Contents
@@ -84,10 +84,10 @@ You can now download the latest version of a product using dci-downloader.
 
 ### RHEL examples
 
-Example command to download the latest RHEL 8 compose into /tmp/repo folder.
+Example command to download the latest RHEL-8.5 components into /tmp/repo folder.
 
 ```console
-$ dci-downloader RHEL-8 /tmp/repo
+$ dci-downloader RHEL-8.5 /tmp/repo
 ```
 
 ### RHOSP examples
@@ -128,34 +128,51 @@ By default dci-downloader will download all variants for x86_64 architecture wit
 
 ### Download other architectures
 
-To download a specific architecture you can specify those using `--arch` option
+To download other architectures you can specify those using `--arch` option
+
+Download x86_64 and ppc64le architectures for RHEL-8.5 topic:
 
 ```console
-$ dci-downloader RHEL-8 /tmp/repo --arch x86_64 --arch ppc64le
+$ dci-downloader RHEL-8.5 /tmp/repo --arch x86_64 --arch ppc64le
 ```
 
 ### Specific variants
 
 To download only specific variants you can specify those using `--variant`
 
+Download only AppStream and BaseOS variants:
+
 ```console
-$ dci-downloader RHEL-8 /tmp/repo --variant AppStream --variant BaseOS
+$ dci-downloader RHEL-8.5 /tmp/repo --variant AppStream --variant BaseOS
 ```
 
-### Download the whole component
+### Filters
+
+By default dci-downloader download the latest components attached to a topic.
+But if you want to filter those component, you can use the `--filter` option.
+
+Download only the latest RHEL-8.5 `nigthly` compose
+
+```console
+$ dci-downloader RHEL-8.5 /tmp/repo --filter=compose:nigthly
+```
+
+### Download the whole compose
 
 To download everything you can add the `--all` flag
 
 ```console
-$ dci-downloader RHEL-8 /tmp/repo --all
+$ dci-downloader RHEL-8.5 /tmp/repo --all
 ```
 
 ### Debug RPMs
 
 To download debug RPMs you can add the `--debug` flag
 
+Download RHEL-8.5 compose with debug rpms
+
 ```console
-$ dci-downloader RHEL-8 /tmp --arch=ppc64le --debug
+$ dci-downloader RHEL-8.5 /tmp --debug
 ```
 
 ### Settings file
@@ -173,23 +190,24 @@ All settings from settings.yml file will overwrite cli parameters.
 Examples of a settings file:
 
 ```yaml
+version: "2"
 download_folder: /var/www/html
 topics:
-  - topic: RHEL-7.8
+  - name: RHEL-9.0
+    filters:
+      - type: compose
+        tag: nightly
+  - name: RHEL-8.4
+    filters:
+      - type: compose
+        tag: milestone
     archs:
-      - x86_64
       - ppc64le
-    variants:
-      - Server
-      - Server-SAP
-  - topic: RHEL-8.1
-    archs:
-      - x86_64
     variants:
       - AppStream
       - name: BaseOS
         with_debug: true
-        with_iso: false
+  - name: RHEL-8.2
 ```
 
 ## SSL certificates
@@ -220,7 +238,4 @@ $ dci-downloader --version
 $ dci-downloader --help
 ```
 
-## Contact
-
-Email: Distributed-CI Team <distributed-ci@redhat.com>
-IRC: #distributed-ci on Freenode
+To contact DCI see [Questions and help](https://docs.distributed-ci.io/question_and_help.html)
