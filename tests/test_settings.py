@@ -701,3 +701,18 @@ def test_env_variable_overwrite_settings_file():
         },
     )
     assert settings["topics"][0]["download_folder"] == "/tmp/repo"
+
+
+def test_topic_in_cli_append_topics_array():
+    test_dir = os.path.dirname(os.path.abspath(__file__))
+    settings_file_path = os.path.join(test_dir, "data", "settings_v2.yml")
+    settings = get_settings(
+        sys_args=["RHEL-8.5", "/var/www/html", "--settings", settings_file_path],
+        env_variables={
+            "DCI_CLIENT_ID": "",
+            "DCI_API_SECRET": "",
+            "DCI_CS_URL": "",
+            "DCI_LOCAL_REPO": "/tmp/repo",
+        },
+    )
+    assert len(settings["topics"]) == 4
