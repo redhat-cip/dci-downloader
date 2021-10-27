@@ -530,6 +530,33 @@ def test_get_settings_with_debug_without_a_variant():
     assert settings["version"] == 1
 
 
+def test_get_settings_with_debug_with_variants():
+    test_dir = os.path.dirname(os.path.abspath(__file__))
+    settings_file_path = os.path.join(test_dir, "data", "settings_v1h.yml")
+    settings = get_settings(
+        sys_args=["--settings", settings_file_path],
+        env_variables={"DCI_CLIENT_ID": "", "DCI_API_SECRET": "", "DCI_CS_URL": ""},
+    )
+    assert settings["topics"][0] == {
+        "variants": [
+            {"name": "AppStream", "with_debug": True, "with_iso": False},
+            {"name": "BaseOS", "with_debug": True, "with_iso": False},
+        ],
+        "download_everything": False,
+        "download_folder": "/var/www/html",
+        "archs": ["x86_64"],
+        "component_id": None,
+        "dci_key_file": ANY,
+        "components": [],
+        "dci_cert_file": ANY,
+        "name": "RHEL-8.5",
+        "with_debug": True,
+        "registry": None,
+        "filters": [],
+    }
+    assert settings["version"] == 1
+
+
 def test_exit_if_architecture_in_settings_invalid():
     with pytest.raises(SystemExit):
         exit_if_settings_invalid(

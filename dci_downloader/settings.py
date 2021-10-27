@@ -29,8 +29,9 @@ def _clean_topic(topic):
     components = topic.get("components", [])
     archs = topic.get("archs", ["x86_64"])
     variants = topic.get("variants", [])
+    with_debug = topic.get("with_debug", False)
     variants = [
-        v if type(v) is dict else {"name": v, "with_debug": False, "with_iso": False}
+        v if type(v) is dict else {"name": v, "with_debug": with_debug, "with_iso": False}
         for v in variants
     ]
     filters = topic.get("filters", [])
@@ -45,7 +46,7 @@ def _clean_topic(topic):
         "dci_cert_file": topic["dci_cert_file"],
         "registry": topic["registry"],
         "component_id": component_id,
-        "with_debug": topic.get("with_debug", False),
+        "with_debug": with_debug,
         "filters": filters,
     }
 
