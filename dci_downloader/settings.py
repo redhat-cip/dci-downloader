@@ -31,7 +31,9 @@ def _clean_topic(topic):
     variants = topic.get("variants", [])
     with_debug = topic.get("with_debug", False)
     variants = [
-        v if type(v) is dict else {"name": v, "with_debug": with_debug, "with_iso": False}
+        v
+        if type(v) is dict
+        else {"name": v, "with_debug": with_debug, "with_iso": False}
         for v in variants
     ]
     filters = topic.get("filters", [])
@@ -67,6 +69,8 @@ def _clean_settings(settings):
         topic["dci_key_file"] = key
         topic["dci_cert_file"] = crt
         topic["registry"] = settings["registry"]
+        if settings["with_debug"]:
+            topic["with_debug"] = settings["with_debug"]
         new_topics.append(_clean_topic(topic))
     new_settings["topics"] = sorted(new_topics, key=lambda k: k["name"])
     return new_settings
@@ -127,6 +131,7 @@ def get_settings(sys_args, env_variables={}):
         "download_folder": cli_arguments["download_folder"],
         "registry": cli_arguments["registry"],
         "topics": [],
+        "with_debug": cli_arguments["with_debug"],
     }
     topic_name = cli_arguments["name"]
     if topic_name:
@@ -149,7 +154,6 @@ def get_settings(sys_args, env_variables={}):
         settings_from_files.update(
             _keep_backward_compatibility(_read_settings_files(settings_files_paths))
         )
-
     settings = _merge_settings(
         [
             settings_from_files,
@@ -157,7 +161,6 @@ def get_settings(sys_args, env_variables={}):
             _remove_none_values(settings_from_cli),
         ]
     )
-
     return _clean_settings(settings)
 
 

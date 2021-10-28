@@ -1,0 +1,9 @@
+download_folder: /var/www/html
+topics:
+  - topic: RHEL-8.5
+    variants:
+      - AppStream
+      - BaseOS
+    archs:
+      - x86_64
+    with_debug: false
