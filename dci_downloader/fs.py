@@ -36,13 +36,13 @@ def recreate_symlinks(symlinks, destination_path):
         os.symlink(symlink["destination"], link_path)
 
 
-def get_topic_folder(settings):
-    topic_name = settings["name"].strip().replace(" ", "_")
+def get_topic_folder(settings, topic):
+    topic_name = topic["name"].strip().replace(" ", "_")
     download_folder = settings["download_folder"]
     return os.path.join(download_folder, topic_name)
 
 
-def get_component_folder(settings, component):
-    topic_folder = get_topic_folder(settings)
+def get_component_folder(settings, topic, component):
+    topic_folder = get_topic_folder(settings, topic)
     component_type = component["type"].strip().replace(" ", "_").lower()
     return os.path.join(topic_folder, component_type)

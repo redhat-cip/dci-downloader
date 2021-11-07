@@ -13,22 +13,16 @@ from dci_downloader.certificates import configure_ssl_certificates
 from dci_downloader.settings import get_settings, exit_if_settings_invalid
 
 
-def download_components(settings):
+def download_components(settings, topic):
     if "component_id" in settings and settings["component_id"]:
         component_id = settings["component_id"]
         component = api.get_component_by_id(component_id)
-        topic_id = component["topic_id"]
-        topic = api.get_topic_by_id(topic_id)
         components = [component]
     else:
-        topic_name = settings["name"]
-        topic = api.get_topic(topic_name)
-        if topic is None:
-            raise Exception("Topic name %s not found" % topic_name)
         filters = settings.get("filters", [])
         components = api.get_components(topic, filters)
     for component in components:
-        downloader.download_component(topic, component, settings)
+        downloader.download_component(settings, topic, component)
 
 
 def download_topic(settings):
@@ -38,11 +32,11 @@ def download_topic(settings):
     sleep = 30
     while not_finished and count < (ten_hours / sleep):
         try:
-            topic_path = get_topic_folder(settings)
-            lock_file = os.path.join(topic_path, ".lock")
+            topic = api.get_topic(settings["name"])
+            lock_file = os.path.join(get_topic_folder(settings, topic), ".lock")
             create_parent_dir(lock_file)
             with file_lock(lock_file):
-                download_components(settings)
+                download_components(settings, topic)
                 not_finished = False
         except LockError:
             time.sleep(sleep)
