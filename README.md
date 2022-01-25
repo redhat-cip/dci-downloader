@@ -11,15 +11,6 @@ $ source ~/dcirc.sh
 $ dci-downloader RHEL-8.5 /tmp/repo
 ```
 
-## Table of Contents
-
-- [Requirements](#requirements)
-- [Installation](#installation)
-- [Configuration](#configuration)
-- [Usage](#usage)
-- [License](#license)
-- [Contact](#contact)
-
 ## Requirements
 
 ### Red Hat SSO
