@@ -36,7 +36,7 @@ def check_repo_is_accessible():
 
 def get_topic(topic_name):
     context = build_signature_context()
-    t = dci_topic.list(context, where="name:%s" % topic_name)
+    t = dci_topic.list(context, where="name:%s,state:active" % topic_name)
     t.raise_for_status()
     topics = t.json()["topics"]
     if len(topics) == 0:
