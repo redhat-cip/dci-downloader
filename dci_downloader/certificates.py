@@ -5,24 +5,17 @@ from dci_downloader import api
 from dci_downloader.fs import create_parent_dir
 
 
-def _get_remoteci_id(env_variables):
-    remoteci_id = env_variables.get("DCI_CLIENT_ID")
-    if remoteci_id:
-        return remoteci_id.split("/")[1]
-    return None
-
-
-def _generate_key_and_cert(settings):
-    keys = api.get_keys(_get_remoteci_id(settings["env_variables"]))
+def _generate_key_and_cert(topic_info):
+    keys = api.get_keys(topic_info["remoteci_id"])
     if keys is None:
         print("Can't get certificate's keys, contact DCI administrator")
         sys.exit(1)
 
-    dci_cert_file = settings["dci_cert_file"]
+    dci_cert_file = topic_info["dci_cert_file"]
     create_parent_dir(dci_cert_file)
 
     key = keys["key"]
-    dci_key_file = settings["dci_key_file"]
+    dci_key_file = topic_info["dci_key_file"]
     with open(dci_key_file, "w") as f:
         f.write(key)
 
@@ -31,11 +24,11 @@ def _generate_key_and_cert(settings):
         f.write(cert)
 
 
-def configure_ssl_certificates(settings):
-    dci_key_file = settings["dci_key_file"]
-    dci_cert_file = settings["dci_cert_file"]
+def configure_ssl_certificates(topic_info):
+    dci_key_file = topic_info["dci_key_file"]
+    dci_cert_file = topic_info["dci_cert_file"]
     if os.path.exists(dci_key_file) and os.path.exists(dci_cert_file):
         if not api.cert_is_valid(dci_cert_file):
-            _generate_key_and_cert(settings)
+            _generate_key_and_cert(topic_info)
     else:
-        _generate_key_and_cert(settings)
+        _generate_key_and_cert(topic_info)

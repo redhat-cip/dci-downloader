@@ -42,7 +42,7 @@ def get_topic_folder(settings, topic):
     return os.path.join(download_folder, topic_name)
 
 
-def get_component_folder(settings, topic, component):
-    topic_folder = get_topic_folder(settings, topic)
+def get_component_folder(topic_info, topic, component):
+    topic_folder = get_topic_folder(topic_info, topic)
     component_type = component["type"].strip().replace(" ", "_").lower()
     return os.path.join(topic_folder, component_type)

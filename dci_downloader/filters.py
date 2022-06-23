@@ -39,11 +39,11 @@ def _match_pattern(string, patterns):
     return match
 
 
-def filter_files_list(files_list, filters):
-    if filters["download_everything"]:
+def filter_files_list(topic_info, files_list):
+    if topic_info["download_everything"]:
         return files_list
     new_files_list = {"directories": [], "files": [], "symlinks": []}
-    patterns = _get_patterns(filters)
+    patterns = _get_patterns(topic_info)
     for file in files_list["files"]:
         file_path = file["path"]
         if not file["path"]:

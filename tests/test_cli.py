@@ -257,3 +257,27 @@ def test_parsing_filters_change_type_to_lower_case():
     assert args["download_folder"] == "/tmp/repo"
     assert args["archs"] == ["x86_64"]
     assert args["filters"] == [{"type": "compose", "tag": "Nightly"}]
+
+
+def test_parsing_registry():
+    args = parse_arguments(
+        [
+            "OSP16.1",
+            "/tmp/repo",
+            "--registry",
+            "localhost:5000",
+        ]
+    )
+    assert args["registry"] == "localhost:5000"
+
+
+def test_parsing_repo():
+    args = parse_arguments(
+        [
+            "OSP16.1",
+            "/tmp/repo",
+            "--dci-repo-url",
+            "https://repo2.distributed-ci.io/",
+        ]
+    )
+    assert args["repo_url"] == "https://repo2.distributed-ci.io/"

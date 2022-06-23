@@ -20,12 +20,9 @@ TEN_SECONDS = 10
 REQUESTS_TIMEOUT = (FIVE_SECONDS, TEN_SECONDS)
 
 
-def check_repo_is_accessible():
+def check_repo_is_accessible(topic_info):
     try:
-        requests.get(
-            "https://repo.distributed-ci.io/",
-            timeout=REQUESTS_TIMEOUT,
-        )
+        requests.get(topic_info["repo_url"], timeout=REQUESTS_TIMEOUT)
     except requests.exceptions.Timeout:
         print("Timeout. dci-downloader cannot access repo.distributed-ci.io server.")
         if os.getenv("HTTP_PROXY") or os.getenv("HTTPS_PROXY"):
@@ -122,8 +119,9 @@ def cert_is_valid(cert_file):
         return False
 
 
-def get_base_url(topic, component):
-    return "https://repo.distributed-ci.io/%s/%s/%s" % (
+def get_base_url(topic_info, topic, component):
+    return "%s/%s/%s/%s" % (
+        topic_info["repo_url"],
         topic["product_id"],
         topic["id"],
         component["id"],
@@ -156,21 +154,22 @@ def retry(tries=3, delay=2, multiplier=2):
 
 
 @retry()
-def get_files_list(base_url, settings):
+def get_files_list(topic_info, base_url):
     print("Download DCI file list, it may take a few seconds")
     files_list_url = "%s/dci_files_list.json" % base_url
-    key = settings["dci_key_file"]
-    cert = settings["dci_cert_file"]
+    key = topic_info["dci_key_file"]
+    cert = topic_info["dci_cert_file"]
     r = requests.get(files_list_url, cert=(cert, key), timeout=REQUESTS_TIMEOUT)
     r.raise_for_status()
     return r.json()
 
 
 @retry()
-def get_container_images_list(base_url, settings):
+def get_container_images_list(topic_info, topic, component):
+    base_url = get_base_url(topic_info, topic, component)
     containers_list_url = "%s/images_list.yaml" % base_url
-    key = settings["dci_key_file"]
-    cert = settings["dci_cert_file"]
+    key = topic_info["dci_key_file"]
+    cert = topic_info["dci_cert_file"]
     r = requests.get(containers_list_url, cert=(cert, key), timeout=REQUESTS_TIMEOUT)
     r.raise_for_status()
     return r.content
@@ -198,10 +197,10 @@ def download_file_unpack(args):
         raise RuntimeError("KeyboardInterrupt")
 
 
-def download_files(files, settings):
+def download_files(topic_info, files):
     nb_files = len(files)
-    cert = settings["dci_cert_file"]
-    key = settings["dci_key_file"]
+    cert = topic_info["dci_cert_file"]
+    key = topic_info["dci_key_file"]
     enhanced_files = [[f, cert, key, i + 1, nb_files] for i, f in enumerate(files)]
     executor = Pool(processes=4)
     error = None

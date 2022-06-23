@@ -101,12 +101,18 @@ def parse_arguments(arguments):
         default=None,
     )
     parser.add_argument(
+        "--dci-repo-url",
+        help="repo url used to download components",
+        dest="repo_url",
+        default=None,
+    )
+    parser.add_argument(
         "--settings",
         action="append",
         dest="settings_files_paths",
         metavar="FILE_PATH",
         help="settings file(s) to overwrite cli parameters",
-        default=[]
+        default=[],
     )
     parser.add_argument("--version", action="version", version=__version__)
     parsed_arguments = parser.parse_args(arguments)

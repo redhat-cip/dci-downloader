@@ -4,7 +4,7 @@ import yaml
 
 from subprocess import check_output, CalledProcessError, Popen
 
-from dci_downloader.api import get_container_images_list, get_base_url
+from dci_downloader.api import get_container_images_list
 
 DCI_CONTAINER_RE = re.compile(r"^(?P<registry>.+?)/(?P<image>.+):(?P<tag>.+)$")
 
@@ -72,14 +72,12 @@ def skopeo_sync(skopeo_yaml_source, destination_registry, skopeo_bin="skopeo"):
         print("Skopeo sync succeeeded.")
 
 
-def mirror_container_images(topic, component, settings):
+def mirror_container_images(topic_info, topic, component):
     if "registry" in topic["data"]:
-        images_list = get_container_images_list(
-            get_base_url(topic, component), settings
-        )
+        images_list = get_container_images_list(topic_info, topic, component)
         skopeo_yaml = dci_images_list_yaml_to_skopeo_format(
             images_list,
             topic["data"]["registry"]["login"],
             topic["data"]["registry"]["password"],
         )
-        skopeo_sync(skopeo_yaml, settings["registry"])
+        skopeo_sync(skopeo_yaml, topic_info["registry"])

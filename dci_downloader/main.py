@@ -10,33 +10,39 @@ from dci_downloader import downloader
 from dci_downloader.lock import file_lock, LockError
 from dci_downloader.fs import get_topic_folder, create_parent_dir
 from dci_downloader.certificates import configure_ssl_certificates
-from dci_downloader.settings import get_settings, exit_if_settings_invalid
+from dci_downloader.settings import (
+    get_settings,
+    exit_if_settings_invalid,
+    exit_if_env_variables_invalid,
+)
 
 
-def download_components(settings, topic):
-    if "component_id" in settings and settings["component_id"]:
-        component_id = settings["component_id"]
+def download_components(topic_info, topic):
+    if "component_id" in topic_info and topic_info["component_id"]:
+        component_id = topic_info["component_id"]
         component = api.get_component_by_id(component_id)
         components = [component]
     else:
-        filters = settings.get("filters", [])
+        filters = topic_info.get("filters", [])
         components = api.get_components(topic, filters)
     for component in components:
-        downloader.download_component(settings, topic, component)
+        downloader.download_component(topic_info, topic, component)
 
 
-def download_topic(settings):
+def download_topic(topic_info):
     not_finished = True
     count = 0
     ten_hours = 10 * 60 * 60
     sleep = 30
     while not_finished and count < (ten_hours / sleep):
         try:
-            topic = api.get_topic(settings["name"])
-            lock_file = os.path.join(get_topic_folder(settings, topic), ".lock")
+            configure_ssl_certificates(topic_info)
+            api.check_repo_is_accessible(topic_info)
+            topic = api.get_topic(topic_info["name"])
+            lock_file = os.path.join(get_topic_folder(topic_info, topic), ".lock")
             create_parent_dir(lock_file)
             with file_lock(lock_file):
-                download_components(settings, topic)
+                download_components(topic_info, topic)
                 not_finished = False
         except LockError:
             time.sleep(sleep)
@@ -60,12 +66,12 @@ def catch_all_and_print(f):
 
 @catch_all_and_print
 def main():
-    api.check_repo_is_accessible()
-    settings = get_settings(sys_args=sys.argv[1:], env_variables=dict(os.environ))
+    env_variables = dict(os.environ)
+    exit_if_env_variables_invalid(env_variables)
+    settings = get_settings(sys_args=sys.argv[1:], env_variables=env_variables)
     exit_if_settings_invalid(settings)
-    configure_ssl_certificates(settings)
-    for topic_settings in settings["topics"]:
-        download_topic(topic_settings)
+    for topic_info in settings:
+        download_topic(topic_info)
 
 
 if __name__ == "__main__":

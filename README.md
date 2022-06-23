@@ -27,6 +27,7 @@ You should check that your remoteci:
 - Should be able to reach:
   - `https://api.distributed-ci.io` (443).
   - `https://repo.distributed-ci.io` (443).
+  - `https://registry.distributed-ci.io` (443).
 
 ## Installation
 

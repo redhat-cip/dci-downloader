@@ -23,30 +23,35 @@ def _read_settings_files(settings_files_paths=[]):
     return settings
 
 
-def _clean_topic(topic):
-    name = topic.get("topic", topic.get("name"))
-    component_id = topic.get("component_id")
-    components = topic.get("components", [])
-    archs = topic.get("archs", ["x86_64"])
-    variants = topic.get("variants", [])
-    with_debug = topic.get("with_debug", False)
+def _clean_topic(topic_info):
+    name = topic_info.get("topic", topic_info.get("name"))
+    component_id = topic_info.get("component_id")
+    components = topic_info.get("components", [])
+    archs = topic_info.get("archs", ["x86_64"])
+    variants = topic_info.get("variants", [])
+    with_debug = topic_info.get("with_debug", False)
     variants = [
         v
         if type(v) is dict
         else {"name": v, "with_debug": with_debug, "with_iso": False}
         for v in variants
     ]
-    filters = topic.get("filters", [])
+    filters = topic_info.get("filters", [])
+    repo_url = topic_info["repo_url"]
+    if repo_url.endswith("/"):
+        repo_url = repo_url[:-1]
     return {
         "name": name,
         "components": components,
         "archs": archs,
         "variants": variants,
-        "download_everything": topic.get("download_everything", False),
-        "download_folder": topic["download_folder"],
-        "dci_key_file": topic["dci_key_file"],
-        "dci_cert_file": topic["dci_cert_file"],
-        "registry": topic["registry"],
+        "download_everything": topic_info.get("download_everything", False),
+        "download_folder": topic_info["download_folder"],
+        "dci_key_file": topic_info["dci_key_file"],
+        "dci_cert_file": topic_info["dci_cert_file"],
+        "remoteci_id": topic_info["remoteci_id"],
+        "repo_url": repo_url,
+        "registry": topic_info["registry"],
         "component_id": component_id,
         "with_debug": with_debug,
         "filters": filters,
@@ -57,23 +62,18 @@ def _clean_settings(settings):
     dci_home_path = _get_dci_downloader_home_folder(settings["env_variables"])
     key = settings.get("dci_key_file", os.path.join(dci_home_path, "dci.key"))
     crt = settings.get("dci_cert_file", os.path.join(dci_home_path, "dci.crt"))
-    new_settings = {
-        "version": int(settings.get("version", "1")),
-        "env_variables": settings["env_variables"],
-        "dci_key_file": key,
-        "dci_cert_file": crt,
-    }
-    new_topics = []
+    new_settings = []
     for topic in settings["topics"]:
         topic["download_folder"] = settings["download_folder"]
         topic["dci_key_file"] = key
         topic["dci_cert_file"] = crt
+        topic["remoteci_id"] = settings.get("remoteci_id")
+        topic["repo_url"] = settings.get("repo_url", "https://repo.distributed-ci.io")
         topic["registry"] = settings["registry"]
         if settings["with_debug"]:
             topic["with_debug"] = settings["with_debug"]
-        new_topics.append(_clean_topic(topic))
-    new_settings["topics"] = sorted(new_topics, key=lambda k: k["name"])
-    return new_settings
+        new_settings.append(_clean_topic(topic))
+    return sorted(new_settings, key=lambda k: k["name"])
 
 
 def _keep_backward_compatibility(settings):
@@ -117,6 +117,13 @@ def _merge_settings(settings):
     return s
 
 
+def _get_remoteci_id(env_variables):
+    remoteci_id = env_variables.get("DCI_CLIENT_ID")
+    if remoteci_id:
+        return remoteci_id.split("/")[1]
+    return None
+
+
 def get_settings(sys_args, env_variables={}):
     settings_from_env_variables = {
         "env_variables": env_variables,
@@ -124,12 +131,15 @@ def get_settings(sys_args, env_variables={}):
         "dci_cert_file": env_variables.get("DCI_CERT_FILE"),
         "download_folder": env_variables.get("DCI_LOCAL_REPO"),
         "registry": env_variables.get("DCI_REGISTRY"),
+        "remoteci_id": _get_remoteci_id(env_variables),
+        "repo_url": env_variables.get("DCI_REPO_URL"),
     }
 
     cli_arguments = parse_arguments(sys_args)
     settings_from_cli = {
         "download_folder": cli_arguments["download_folder"],
         "registry": cli_arguments["registry"],
+        "repo_url": cli_arguments["repo_url"],
         "topics": [],
         "with_debug": cli_arguments["with_debug"],
     }
@@ -246,19 +256,24 @@ def _arches_are_invalid(topic):
     return invalid
 
 
-def exit_if_settings_invalid(settings):
+def exit_if_env_variables_invalid(env_variables):
     has_error = False
     for env_variable in ["DCI_CLIENT_ID", "DCI_API_SECRET", "DCI_CS_URL"]:
-        if env_variable not in settings["env_variables"]:
+        if env_variable not in env_variables:
             has_error = True
             print("Environment variable %s not set" % env_variable)
+    if has_error:
+        sys.exit(1)
 
-    topics = settings["topics"]
-    if not topics:
+
+def exit_if_settings_invalid(settings):
+    has_error = False
+
+    if not settings:
         has_error = True
         print("You need to specify at least one topic")
 
-    for topic in topics:
+    for topic in settings:
         if topic.get("download_folder") is None:
             has_error = True
             print("The destination folder for the download is not specified.")
@@ -271,9 +286,9 @@ def exit_if_settings_invalid(settings):
                 "Please ensure that skopeo >= 0.1.41 is installed."
             )
 
-    for topic in topics:
         if _variants_are_invalid(topic):
             has_error = True
+
         if _arches_are_invalid(topic):
             has_error = True
 
