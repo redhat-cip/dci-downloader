@@ -105,14 +105,12 @@ def _remove_none_values(d):
 
 def _merge_settings(settings):
     topics_by_name = defaultdict(dict)
+    s = {}
     for setting in settings:
         for topic in setting.get("topics", []):
             k = "name" if "name" in topic else "topic"
             topics_by_name[topic[k]].update(topic)
-    s = {}
-    s.update(settings[0])
-    s.update(settings[1])
-    s.update(settings[2])
+        s.update(setting)
     s["topics"] = list(topics_by_name.values())
     return s
 

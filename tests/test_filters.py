@@ -51,7 +51,7 @@ def test_default_filter_files_list():
         ],
         "symlinks": [],
     }
-    settings = get_settings(sys_args=["RHEL-8", "/tmp"])[0]
+    topic_info = get_settings(sys_args=["RHEL-8", "/tmp"])[0]
     expected_files_list = {
         "directories": [],
         "files": [
@@ -82,7 +82,7 @@ def test_default_filter_files_list():
         ],
         "symlinks": [],
     }
-    assert filter_files_list(settings, dci_files_list) == expected_files_list
+    assert filter_files_list(topic_info, dci_files_list) == expected_files_list
 
 
 def test_filter_files_list_with_debug():
@@ -104,7 +104,7 @@ def test_filter_files_list_with_debug():
         ],
         "symlinks": [],
     }
-    settings = get_settings(
+    topic_info = get_settings(
         sys_args=["RHEL-8", "/tmp", "--variant", "AppStream", "--debug"]
     )[0]
     expected_files_list = {
@@ -125,7 +125,7 @@ def test_filter_files_list_with_debug():
         ],
         "symlinks": [],
     }
-    assert filter_files_list(settings, dci_files_list) == expected_files_list
+    assert filter_files_list(topic_info, dci_files_list) == expected_files_list
 
 
 def test_filter_files_list_with_debug_keep_os_folder_nrt():
@@ -160,7 +160,7 @@ def test_filter_files_list_with_debug_keep_os_folder_nrt():
         "symlinks": [],
     }
     args = ["RHEL-8", "/tmp", "--arch=ppc64le", "--debug"]
-    settings = get_settings(sys_args=args)[0]
+    topic_info = get_settings(sys_args=args)[0]
     expected_files_list = {
         "directories": [],
         "files": [
@@ -180,7 +180,7 @@ def test_filter_files_list_with_debug_keep_os_folder_nrt():
         "symlinks": [],
     }
 
-    assert filter_files_list(settings, dci_files_list) == expected_files_list
+    assert filter_files_list(topic_info, dci_files_list) == expected_files_list
 
 
 def test_filter_files_list_with_iso():
@@ -208,7 +208,7 @@ def test_filter_files_list_with_iso():
         ],
         "symlinks": [],
     }
-    settings = get_settings(
+    topic_info = get_settings(
         sys_args=["RHEL-8", "/tmp", "--variant", "BaseOS", "--iso"]
     )[0]
     expected_files_list = {
@@ -229,7 +229,7 @@ def test_filter_files_list_with_iso():
         ],
         "symlinks": [],
     }
-    assert filter_files_list(settings, dci_files_list) == expected_files_list
+    assert filter_files_list(topic_info, dci_files_list) == expected_files_list
 
 
 def test_non_existing_variants_are_ignored():
@@ -269,7 +269,7 @@ def test_non_existing_variants_are_ignored():
         ],
         "symlinks": [],
     }
-    settings = get_settings(sys_args=["RHEL-8", "/tmp", "--variant", "Server"])[0]
+    topic_info = get_settings(sys_args=["RHEL-8", "/tmp", "--variant", "Server"])[0]
     expected_files_list = {
         "directories": [],
         "files": [
@@ -282,7 +282,7 @@ def test_non_existing_variants_are_ignored():
         ],
         "symlinks": [],
     }
-    assert filter_files_list(settings, dci_files_list) == expected_files_list
+    assert filter_files_list(topic_info, dci_files_list) == expected_files_list
 
 
 def test_filter_files_list_download_everything():
@@ -328,7 +328,7 @@ def test_filter_files_list_download_everything():
         ],
         "symlinks": [],
     }
-    settings = get_settings(sys_args=["RHEL-8", "/tmp", "--all"])[0]
+    topic_info = get_settings(sys_args=["RHEL-8", "/tmp", "--all"])[0]
     expected_files_list = {
         "directories": [],
         "files": [
@@ -371,7 +371,7 @@ def test_filter_files_list_download_everything():
         ],
         "symlinks": [],
     }
-    assert filter_files_list(settings, dci_files_list) == expected_files_list
+    assert filter_files_list(topic_info, dci_files_list) == expected_files_list
 
 
 def test_nrt_always_download_metadata():
@@ -387,7 +387,7 @@ def test_nrt_always_download_metadata():
         ],
         "symlinks": [],
     }
-    settings = get_settings(sys_args=["RHEL-8", "/tmp", "--variant", "AppStream"])[0]
+    topic_info = get_settings(sys_args=["RHEL-8", "/tmp", "--variant", "AppStream"])[0]
     expected_files_list = {
         "directories": [],
         "files": [
@@ -400,4 +400,4 @@ def test_nrt_always_download_metadata():
         ],
         "symlinks": [],
     }
-    assert filter_files_list(settings, dci_files_list) == expected_files_list
+    assert filter_files_list(topic_info, dci_files_list) == expected_files_list
