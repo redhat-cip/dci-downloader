@@ -746,3 +746,13 @@ def test_topic_in_cli_append_topics_array():
         },
     )
     assert len(settings) == 4
+
+
+def test_local_repo_overwrite_local_repo_in_settings():
+    test_dir = os.path.dirname(os.path.abspath(__file__))
+    settings_file_path = os.path.join(test_dir, "data", "settings_v1d.yml")
+    settings = get_settings(
+        sys_args=["--local-repo", "/tmp/notinv1d", "--settings", settings_file_path],
+        env_variables={"DCI_CLIENT_ID": "", "DCI_API_SECRET": "", "DCI_CS_URL": ""},
+    )
+    assert settings[0]["download_folder"] == "/tmp/notinv1d"

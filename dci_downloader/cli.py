@@ -107,6 +107,12 @@ def parse_arguments(arguments):
         default=None,
     )
     parser.add_argument(
+        "--local-repo",
+        help="destination folder/",
+        dest="local_repo",
+        default=None,
+    )
+    parser.add_argument(
         "--settings",
         action="append",
         dest="settings_files_paths",
@@ -151,4 +157,8 @@ def parse_arguments(arguments):
                 sys.exit(2)
             filters.append({"type": elements[0].lower(), "tag": elements[1]})
     parsed_arguments.filters = filters
+
+    if parsed_arguments.local_repo and parsed_arguments.download_folder is None:
+        parsed_arguments.download_folder = parsed_arguments.local_repo
+
     return vars(parsed_arguments)

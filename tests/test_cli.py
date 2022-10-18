@@ -281,3 +281,16 @@ def test_parsing_repo():
         ]
     )
     assert args["repo_url"] == "https://repo2.distributed-ci.io/"
+
+
+def test_parsing_local_repo():
+    args = parse_arguments(
+        ["--settings", "/etc/dci-downloader/settings.yml", "--local-repo", "/tmp/repo"]
+    )
+    assert args["settings_files_paths"] == ["/etc/dci-downloader/settings.yml"]
+    assert args["download_folder"] == "/tmp/repo"
+
+
+def test_parsing_local_repo_with_positional_arguments():
+    args = parse_arguments(["RHEL-9.2", "/tmp/repo", "--local-repo", "/tmp/repo1"])
+    assert args["download_folder"] == "/tmp/repo"
