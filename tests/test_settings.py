@@ -125,6 +125,9 @@ def test_get_settings_read_arguments():
         "archs": ["ppc64le"],
         "component_id": None,
         "remoteci_id": None,
+        "client_id": "",
+        "api_secret": "",
+        "cs_url": "",
         "dci_key_file": ANY,
         "components": [],
         "dci_cert_file": ANY,
@@ -156,6 +159,9 @@ def test_get_settings_read_arguments_download_everything():
         "archs": ["x86_64"],
         "component_id": None,
         "remoteci_id": None,
+        "client_id": "",
+        "api_secret": "",
+        "cs_url": "",
         "dci_key_file": ANY,
         "components": [],
         "dci_cert_file": ANY,
@@ -187,6 +193,9 @@ def test_get_settings_from_dci_rhel_agent_settings_file_with_only_topic_key():
             "archs": ["x86_64"],
             "component_id": None,
             "remoteci_id": "9dd94b70-1707-46c5-a2bb-661e8d5d4212",
+            "client_id": "remoteci/9dd94b70-1707-46c5-a2bb-661e8d5d4212",
+            "api_secret": "",
+            "cs_url": "",
             "dci_key_file": ANY,
             "components": [],
             "dci_cert_file": ANY,
@@ -223,6 +232,9 @@ def test_get_settings_from_first_dci_rhel_agent_settings_file():
             "archs": ["x86_64", "ppc64le"],
             "component_id": None,
             "remoteci_id": "66194b70-46c5-1707-a2bb-9dde8d5d4212",
+            "client_id": "remoteci/66194b70-46c5-1707-a2bb-9dde8d5d4212",
+            "api_secret": "",
+            "cs_url": "",
             "dci_key_file": ANY,
             "components": [],
             "dci_cert_file": ANY,
@@ -318,6 +330,9 @@ def test_get_settings_with_jobs_key():
             "registry": None,
             "component_id": None,
             "remoteci_id": None,
+            "client_id": "",
+            "api_secret": "",
+            "cs_url": "",
             "with_debug": False,
             "filters": [
                 {"type": "component_type1", "tag": "tag1"},
@@ -340,6 +355,9 @@ def test_get_settings_with_jobs_key():
             "registry": None,
             "component_id": None,
             "remoteci_id": None,
+            "client_id": "",
+            "api_secret": "",
+            "cs_url": "",
             "with_debug": False,
             "filters": [],
         },
@@ -369,6 +387,9 @@ def test_get_settings_local_repo_added_to_an_old_settings_file():
         "archs": ["x86_64", "ppc64le"],
         "component_id": None,
         "remoteci_id": None,
+        "client_id": "",
+        "api_secret": "",
+        "cs_url": "",
         "dci_key_file": ANY,
         "components": [],
         "dci_cert_file": ANY,
@@ -394,6 +415,9 @@ def test_get_settings_local_repo_with_multiple_topics():
         "archs": ["x86_64"],
         "component_id": None,
         "remoteci_id": None,
+        "client_id": "",
+        "api_secret": "",
+        "cs_url": "",
         "dci_key_file": ANY,
         "components": [],
         "dci_cert_file": ANY,
@@ -410,6 +434,9 @@ def test_get_settings_local_repo_with_multiple_topics():
         "archs": ["x86_64"],
         "component_id": None,
         "remoteci_id": None,
+        "client_id": "",
+        "api_secret": "",
+        "cs_url": "",
         "dci_key_file": ANY,
         "components": [],
         "dci_cert_file": ANY,
@@ -489,6 +516,9 @@ def test_get_settings_with_debug_without_a_variant():
         "archs": ["ppc64le"],
         "component_id": None,
         "remoteci_id": None,
+        "client_id": "",
+        "api_secret": "",
+        "cs_url": "",
         "dci_key_file": ANY,
         "components": [],
         "dci_cert_file": ANY,
@@ -517,6 +547,9 @@ def test_get_settings_with_debug_with_variants():
         "archs": ["x86_64"],
         "component_id": None,
         "remoteci_id": None,
+        "client_id": "",
+        "api_secret": "",
+        "cs_url": "",
         "dci_key_file": ANY,
         "components": [],
         "dci_cert_file": ANY,
@@ -545,6 +578,9 @@ def test_nrt_get_settings_with_debug_in_the_cli_overwriting_settings():
         "archs": ["x86_64"],
         "component_id": None,
         "remoteci_id": None,
+        "client_id": "",
+        "api_secret": "",
+        "cs_url": "",
         "dci_key_file": ANY,
         "components": [],
         "dci_cert_file": ANY,
@@ -660,6 +696,9 @@ def test_get_settings_v2():
             "repo_url": "https://repo2.distributed-ci.io",
             "component_id": None,
             "remoteci_id": None,
+            "client_id": "",
+            "api_secret": "",
+            "cs_url": "",
             "dci_key_file": ANY,
             "filters": [],
         },
@@ -679,6 +718,9 @@ def test_get_settings_v2():
             "repo_url": "https://repo2.distributed-ci.io",
             "component_id": None,
             "remoteci_id": None,
+            "client_id": "",
+            "api_secret": "",
+            "cs_url": "",
             "dci_key_file": ANY,
             "filters": [
                 {"type": "compose", "tag": "milestone"},
@@ -697,6 +739,9 @@ def test_get_settings_v2():
             "repo_url": "https://repo2.distributed-ci.io",
             "component_id": None,
             "remoteci_id": None,
+            "client_id": "",
+            "api_secret": "",
+            "cs_url": "",
             "dci_key_file": ANY,
             "filters": [
                 {"type": "compose", "tag": "nightly"},
@@ -756,3 +801,30 @@ def test_local_repo_overwrite_local_repo_in_settings():
         env_variables={"DCI_CLIENT_ID": "", "DCI_API_SECRET": "", "DCI_CS_URL": ""},
     )
     assert settings[0]["download_folder"] == "/tmp/notinv1d"
+
+
+def test_read_client_id_and_api_secret():
+    settings = get_settings(
+        sys_args=["RHEL-8.7", "/tmp/repo"],
+        env_variables={
+            "DCI_CLIENT_ID": "remoteci/9dd94b70-1707-46c5-a2bb-661e8d5d4212",
+            "DCI_API_SECRET": "jSbJwfCdIfq12gwHAAtg5JXSBTO3wj0xkG7oW3DlqyM7bXahPRrfZlqmSv3BhmAy",
+            "DCI_CS_URL": "https://api.distributed-ci.io",
+        },
+    )
+    assert settings[0]["client_id"] == "remoteci/9dd94b70-1707-46c5-a2bb-661e8d5d4212"
+    assert (
+        settings[0]["api_secret"]
+        == "jSbJwfCdIfq12gwHAAtg5JXSBTO3wj0xkG7oW3DlqyM7bXahPRrfZlqmSv3BhmAy"
+    )
+    assert settings[0]["cs_url"] == "https://api.distributed-ci.io"
+
+    settings = get_settings(
+        sys_args=["RHEL-8.7", "/tmp/repo", "--dci-cs-url", "http://localhost:5000/"],
+        env_variables={
+            "DCI_CLIENT_ID": "remoteci/9dd94b70-1707-46c5-a2bb-661e8d5d4212",
+            "DCI_API_SECRET": "jSbJwfCdIfq12gwHAAtg5JXSBTO3wj0xkG7oW3DlqyM7bXahPRrfZlqmSv3BhmAy",
+            "DCI_CS_URL": "https://api.distributed-ci.io",
+        },
+    )
+    assert settings[0]["cs_url"] == "http://localhost:5000"

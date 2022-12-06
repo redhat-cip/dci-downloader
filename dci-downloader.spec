@@ -1,11 +1,8 @@
-%if 0%{?rhel} && 0%{?rhel} < 8
-%global is_EL7 1
-%endif
-%global srcname dci-downloader
 %global summary DCI downloader used to download Red Hat products
+%global srcname dci-downloader
 
 Name:             %{srcname}
-Version:          3.0.0
+Version:          3.1.0
 Release:          1.VERS%{?dist}
 Summary:          %{summary}
 
@@ -15,69 +12,42 @@ Source0:          %{srcname}-%{version}.tar.gz
 
 BuildArch:        noarch
 
-%description
-%{summary}
-
-%if 0%{?is_EL7}
-%package -n python2-%{srcname}
-Summary: %{summary}
-BuildRequires:    python2-devel
-BuildRequires:    python2-setuptools
-BuildRequires:    python-requests
-BuildRequires:    python-dciclient
-BuildRequires:    PyYAML
-Requires:         python-requests
-Requires:         python-dciclient
-Requires:         PyYAML
-%{?python_provide:%python_provide python2-%{srcname}}
-
-%description -n python2-%{srcname}
-%{summary}
-%endif
-
-%package -n python3-%{srcname}
-Summary: %{summary}
 BuildRequires:  python3-devel
 BuildRequires:  python3-setuptools
+%if 0%{?rhel} < 8
+BuildRequires:  python36-requests
+Requires:       python36-requests
+%else
 BuildRequires:  python3-requests
+Requires:       python3-requests
+%endif
 BuildRequires:  python3-PyYAML
 Requires:       python3-PyYAML
-Requires:       python3-requests
 Requires:       python3-dciclient
 Requires:       skopeo >= 0.1.41
-%{?python_provide:%python_provide python3-%{srcname}}
 
-%description -n python3-%{srcname}
+%description
 %{summary}
 
 %prep
 %autosetup -n %{srcname}-%{version}
 
 %build
-%if 0%{?is_EL7}
-%py2_build
-%endif
 %py3_build
 
 %install
 %py3_install
-%if 0%{?is_EL7}
-%py2_install
 
-%files -n python2-%{srcname}
-%license LICENSE
-%doc README.md
-%{python2_sitelib}/*
-%{_bindir}/%{srcname}
-%endif
-
-%files -n python3-%{srcname}
+%files
 %license LICENSE
 %doc README.md
 %{python3_sitelib}/*
 %{_bindir}/%{srcname}
 
 %changelog
+* Thu Feb 09 2023 Guillaume Vincent <gvincent@redhat.com> - 3.1.0-1
+- Download component on s3 if available
+- Build only for python3
 * Tue Jan 10 2023 Guillaume Vincent <gvincent@redhat.com> 3.0.0-1
 - Build also python3-dci-downloader on EL7
 * Tue Jul 05 2022 Guillaume Vincent <fcharlie@redhat.com> - 2.9.0-1

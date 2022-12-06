@@ -4,8 +4,10 @@ import os
 
 from dci_downloader.api import (
     get_files_list,
-    get_base_url,
     download_files,
+    is_component_on_s3,
+    build_s3_context,
+    build_repo_context,
 )
 from dci_downloader.containers import mirror_container_images
 from dci_downloader.stats import check_download_folder_size
@@ -20,6 +22,7 @@ from dci_downloader.fs import (
 
 
 def clean_download_folder(files_list, download_folder):
+    print("Verifying local mirror, this may take some time")
     if not os.path.isdir(download_folder):
         mkdir_p(download_folder)
 
@@ -32,15 +35,29 @@ def clean_download_folder(files_list, download_folder):
 
 def download_component(topic_info, topic, component):
     print("Download component %s" % component["name"])
-    base_url = get_base_url(topic_info, topic, component)
-    files_list = get_files_list(topic_info, base_url)
+    remoteci_context = build_s3_context(
+        component_id=component["id"],
+        cs_url=topic_info["cs_url"],
+        client_id=topic_info["client_id"],
+        api_secret=topic_info["api_secret"],
+    )
+    repo_context = build_repo_context(
+        product_id=topic["product_id"],
+        topic_id=topic["id"],
+        component_id=component["id"],
+        repo_url=topic_info["repo_url"],
+        cert=topic_info["dci_cert_file"],
+        key=topic_info["dci_key_file"],
+    )
+    context = remoteci_context if is_component_on_s3(remoteci_context) else repo_context
+    files_list = get_files_list(context)
     if component["type"].lower() == "compose":
         files_list = filter_files_list(topic_info, files_list)
     download_folder = get_component_folder(topic_info, topic, component)
     clean_download_folder(files_list, download_folder)
-    files_to_download = get_files_to_download(base_url, download_folder, files_list)
+    files_to_download = get_files_to_download(download_folder, files_list)
     check_download_folder_size(files_to_download, download_folder)
-    download_files(topic_info, files_to_download["files"])
+    download_files(context, files_to_download["files"])
     recreate_symlinks(files_list["symlinks"], download_folder)
     if topic_info.get("registry", None):
-        mirror_container_images(topic_info, topic, component)
+        mirror_container_images(context, topic_info["registry"], topic)

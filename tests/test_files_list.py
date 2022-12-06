@@ -38,15 +38,13 @@ def test_get_files_to_download_remove_existing_files():
                 "path": "",
                 "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
                 "size": 0,
-                "source": "http://example.org/c",
-                "destination": os.path.join(path, "c")
+                "source": "c",
+                "destination": os.path.join(path, "c"),
             },
         ],
         "symlinks": [],
     }
-    files_to_download = get_files_to_download(
-        "http://example.org", path, dci_files_list
-    )
+    files_to_download = get_files_to_download(path, dci_files_list)
     assert files_to_download == expected_files_to_download
 
 

@@ -38,7 +38,10 @@ def download_topic(topic_info):
         try:
             configure_ssl_certificates(topic_info)
             api.check_repo_is_accessible(topic_info)
+            api.check_api_is_accessible(topic_info)
             topic = api.get_topic(topic_info["name"])
+            if topic is None:
+                return
             lock_file = os.path.join(get_topic_folder(topic_info, topic), ".lock")
             create_parent_dir(lock_file)
             with file_lock(lock_file):

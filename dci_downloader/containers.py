@@ -72,12 +72,12 @@ def skopeo_sync(skopeo_yaml_source, destination_registry, skopeo_bin="skopeo"):
         print("Skopeo sync succeeeded.")
 
 
-def mirror_container_images(topic_info, topic, component):
+def mirror_container_images(context, registry, topic):
     if "registry" in topic["data"]:
-        images_list = get_container_images_list(topic_info, topic, component)
+        images_list = get_container_images_list(context)
         skopeo_yaml = dci_images_list_yaml_to_skopeo_format(
             images_list,
             topic["data"]["registry"]["login"],
             topic["data"]["registry"]["password"],
         )
-        skopeo_sync(skopeo_yaml, topic_info["registry"])
+        skopeo_sync(skopeo_yaml, registry)

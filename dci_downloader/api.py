@@ -5,11 +5,12 @@ import requests
 import sys
 import time
 
+from concurrent.futures import ThreadPoolExecutor
 from functools import wraps
-from multiprocessing import Pool
+from threading import local
 
 from dci_downloader.fs import create_parent_dir
-from dciclient.v1.api.context import build_signature_context
+from dciclient.v1.api.context import build_signature_context, DciSignatureAuth
 from dciclient.v1.api import component as dci_component
 from dciclient.v1.api import topic as dci_topic
 from dciclient.v1.api import remoteci as dci_remoteci
@@ -20,15 +21,23 @@ TEN_SECONDS = 10
 REQUESTS_TIMEOUT = (FIVE_SECONDS, TEN_SECONDS)
 
 
-def check_repo_is_accessible(topic_info):
+def _check_url_is_accessible(url):
     try:
-        requests.get(topic_info["repo_url"], timeout=REQUESTS_TIMEOUT)
+        requests.get(url, timeout=REQUESTS_TIMEOUT)
     except requests.exceptions.Timeout:
-        print("Timeout. dci-downloader cannot access repo.distributed-ci.io server.")
+        print("Timeout. dci-downloader cannot access %s url." % url)
         if os.getenv("HTTP_PROXY") or os.getenv("HTTPS_PROXY"):
             print("You configured a proxy. Check your proxy information.")
         print("Exiting...")
         sys.exit(1)
+
+
+def check_repo_is_accessible(topic_info):
+    _check_url_is_accessible(topic_info["repo_url"])
+
+
+def check_api_is_accessible(topic_info):
+    _check_url_is_accessible(topic_info["cs_url"])
 
 
 def get_topic(topic_name):
@@ -100,11 +109,12 @@ def get_components(topic, filters=[]):
 
 def get_keys(remoteci_id):
     context = build_signature_context()
-    remoteci = dci_remoteci.get(context, remoteci_id).json()["remoteci"]
-    res = dci_remoteci.refresh_keys(context, id=remoteci_id, etag=remoteci["etag"])
-
-    if res.status_code == 201:
-        return res.json()["keys"]
+    r = dci_remoteci.get(context, remoteci_id)
+    r.raise_for_status()
+    remoteci = r.json()["remoteci"]
+    r = dci_remoteci.refresh_keys(context, id=remoteci_id, etag=remoteci["etag"])
+    r.raise_for_status()
+    return r.json()["keys"]
 
 
 def cert_is_valid(cert_file):
@@ -119,13 +129,96 @@ def cert_is_valid(cert_file):
         return False
 
 
-def get_base_url(topic_info, topic, component):
-    return "%s/%s/%s/%s" % (
-        topic_info["repo_url"],
-        topic["product_id"],
-        topic["id"],
-        component["id"],
-    )
+def is_component_on_s3(remoteci_context):
+    try:
+        r = remoteci_context.head("dci_files_list.json")
+        r.raise_for_status()
+        print("Getting component files from API+S3")
+        return True
+    except Exception:
+        print("Getting component files from legacy repository")
+        return False
+
+
+def build_s3_context(component_id, cs_url, client_id, api_secret):
+    class S3Context(object):
+        """
+        S3Context builds a request Session() object configured to download
+        files from S3 through a redirection from DCI API.
+        """
+
+        def __init__(self, base_url, client_id, api_secret):
+            self.threadlocal = local()
+            self.session_auth = DciSignatureAuth(client_id, api_secret)
+            self.base_url = base_url
+
+        @property
+        def session(self):
+            """
+            Each thread must have its own `requests.Session()` instance.
+            `session` is a property looking for `session` object in a
+            thread-local context.
+            """
+            if not hasattr(self.threadlocal, "session"):
+                session = requests.Session()
+                session.auth = self.session_auth
+                session.timeout = REQUESTS_TIMEOUT
+                session.stream = True
+                self.threadlocal.session = session
+            return self.threadlocal.session
+
+        def get(self, relpath):
+            return self.session.get("%s/%s" % (self.base_url, relpath.lstrip("/")))
+
+        def head(self, relpath):
+            # allow_redirects must be set to True to get the final HTTP status
+            return self.session.head(
+                "%s/%s" % (self.base_url, relpath.lstrip("/")), allow_redirects=True
+            )
+
+    base_url = "%s/api/v1/components/%s/files" % (cs_url, component_id)
+    return S3Context(base_url, client_id, api_secret)
+
+
+def build_repo_context(product_id, topic_id, component_id, repo_url, cert, key):
+    class RepoContext(object):
+        """
+        RepoContext builds a request Session() object configured to download
+        files from `repo.distributed-ci.io` authenticated by a TLS client
+        certificate and private key.
+        """
+
+        def __init__(self, base_url, cert, key):
+            self.threadlocal = local()
+            self.session_cert = (cert, key)
+            self.base_url = base_url
+
+        @property
+        def session(self):
+            """
+            Each thread must have its own `requests.Session()` instance.
+            `session` is a property looking for `session` object in a
+            thread-local context.
+            """
+            if not hasattr(self.threadlocal, "session"):
+                session = requests.Session()
+                session.cert = self.session_cert
+                session.timeout = REQUESTS_TIMEOUT
+                session.stream = True
+                self.threadlocal.session = session
+            return self.threadlocal.session
+
+        def get(self, relpath):
+            return self.session.get("%s/%s" % (self.base_url, relpath.lstrip("/")))
+
+        def head(self, relpath):
+            # allow_redirects must be set to True to get the final HTTP status
+            return self.session.head(
+                "%s/%s" % (self.base_url, relpath.lstrip("/")), allow_redirects=True
+            )
+
+    base_url = "%s/%s/%s/%s" % (repo_url, product_id, topic_id, component_id)
+    return RepoContext(base_url, cert, key)
 
 
 def retry(tries=3, delay=2, multiplier=2):
@@ -154,68 +247,48 @@ def retry(tries=3, delay=2, multiplier=2):
 
 
 @retry()
-def get_files_list(topic_info, base_url):
+def get_files_list(context):
     print("Download DCI file list, it may take a few seconds")
-    files_list_url = "%s/dci_files_list.json" % base_url
-    key = topic_info["dci_key_file"]
-    cert = topic_info["dci_cert_file"]
-    r = requests.get(files_list_url, cert=(cert, key), timeout=REQUESTS_TIMEOUT)
+    r = context.get("dci_files_list.json")
     r.raise_for_status()
     return r.json()
 
 
 @retry()
-def get_container_images_list(topic_info, topic, component):
-    base_url = get_base_url(topic_info, topic, component)
-    containers_list_url = "%s/images_list.yaml" % base_url
-    key = topic_info["dci_key_file"]
-    cert = topic_info["dci_cert_file"]
-    r = requests.get(containers_list_url, cert=(cert, key), timeout=REQUESTS_TIMEOUT)
+def get_container_images_list(context):
+    r = context.get("images_list.yaml")
     r.raise_for_status()
     return r.content
 
 
 @retry()
-def download_file(file, cert, key, file_index, nb_files):
+def download_file(context, file, i, nb_files):
+    start_time = time.monotonic()
     destination = file["destination"]
-    print("(%d/%d): %s" % (file_index, nb_files, destination))
+    print("(%d/%d): < Getting %s" % (i + 1, nb_files, destination))
     create_parent_dir(destination)
-    r = requests.get(
-        file["source"], stream=True, cert=(cert, key), timeout=REQUESTS_TIMEOUT
-    )
+    r = context.get(file["source"])
     r.raise_for_status()
     with open(destination, "wb") as f:
-        for chunk in r.iter_content(chunk_size=512 * 1024):
+        for chunk in r.iter_content(chunk_size=1024 * 1024):
             f.write(chunk)
+    print(
+        "(%d/%d): > Done %s - %.2f KB/s"
+        % (
+            i + 1,
+            nb_files,
+            destination,
+            file["size"] / (time.monotonic() - start_time) / 1024,
+        )
+    )
     return file
 
 
-def download_file_unpack(args):
-    try:
-        return download_file(*args)
-    except KeyboardInterrupt:
-        raise RuntimeError("KeyboardInterrupt")
-
-
-def download_files(topic_info, files):
+def download_files(context, files):
     nb_files = len(files)
-    cert = topic_info["dci_cert_file"]
-    key = topic_info["dci_key_file"]
-    enhanced_files = [[f, cert, key, i + 1, nb_files] for i, f in enumerate(files)]
-    executor = Pool(processes=4)
-    error = None
-    try:
-        executor.map(download_file_unpack, enhanced_files, chunksize=1)
-        executor.close()
-    except KeyboardInterrupt as e:
-        executor.terminate()
-        error = e
-    except Exception as e:
-        executor.terminate()
-        error = e
-    finally:
-        executor.join()
-        del executor
-
-    if error is not None:
-        raise error
+    with ThreadPoolExecutor(max_workers=10) as executor:
+        for file in executor.map(
+            download_file,
+            *zip(*[(context, file, i, nb_files) for i, file in enumerate(files)])
+        ):
+            pass

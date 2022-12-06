@@ -283,6 +283,29 @@ def test_parsing_repo():
     assert args["repo_url"] == "https://repo2.distributed-ci.io/"
 
 
+def test_parsing_cs_url():
+    args = parse_arguments(
+        [
+            "OSP16.1",
+            "/tmp/repo",
+            "--dci-cs-url",
+            "https://example.org",
+        ]
+    )
+
+    assert args["cs_url"] == "https://example.org"
+
+
+def test_default_cs_url():
+    args = parse_arguments(
+        [
+            "OSP16.1",
+            "/tmp/repo",
+        ]
+    )
+    assert args["cs_url"] is None
+
+
 def test_parsing_local_repo():
     args = parse_arguments(
         ["--settings", "/etc/dci-downloader/settings.yml", "--local-repo", "/tmp/repo"]

@@ -37,9 +37,6 @@ def _clean_topic(topic_info):
         for v in variants
     ]
     filters = topic_info.get("filters", [])
-    repo_url = topic_info["repo_url"]
-    if repo_url.endswith("/"):
-        repo_url = repo_url[:-1]
     return {
         "name": name,
         "components": components,
@@ -50,7 +47,10 @@ def _clean_topic(topic_info):
         "dci_key_file": topic_info["dci_key_file"],
         "dci_cert_file": topic_info["dci_cert_file"],
         "remoteci_id": topic_info["remoteci_id"],
-        "repo_url": repo_url,
+        "repo_url": topic_info["repo_url"].rstrip("/"),
+        "cs_url": topic_info["cs_url"].rstrip("/"),
+        "client_id": topic_info["client_id"],
+        "api_secret": topic_info["api_secret"],
         "registry": topic_info["registry"],
         "component_id": component_id,
         "with_debug": with_debug,
@@ -69,6 +69,9 @@ def _clean_settings(settings):
         topic["dci_cert_file"] = crt
         topic["remoteci_id"] = settings.get("remoteci_id")
         topic["repo_url"] = settings.get("repo_url", "https://repo.distributed-ci.io")
+        topic["cs_url"] = settings.get("cs_url", "https://api.distributed-ci.io")
+        topic["client_id"] = settings.get("client_id")
+        topic["api_secret"] = settings.get("api_secret")
         topic["registry"] = settings["registry"]
         if settings["with_debug"]:
             topic["with_debug"] = settings["with_debug"]
@@ -131,6 +134,9 @@ def get_settings(sys_args, env_variables={}):
         "registry": env_variables.get("DCI_REGISTRY"),
         "remoteci_id": _get_remoteci_id(env_variables),
         "repo_url": env_variables.get("DCI_REPO_URL"),
+        "client_id": env_variables.get("DCI_CLIENT_ID"),
+        "api_secret": env_variables.get("DCI_API_SECRET"),
+        "cs_url": env_variables.get("DCI_CS_URL"),
     }
 
     cli_arguments = parse_arguments(sys_args)
@@ -138,6 +144,7 @@ def get_settings(sys_args, env_variables={}):
         "download_folder": cli_arguments["download_folder"],
         "registry": cli_arguments["registry"],
         "repo_url": cli_arguments["repo_url"],
+        "cs_url": cli_arguments["cs_url"],
         "topics": [],
         "with_debug": cli_arguments["with_debug"],
     }

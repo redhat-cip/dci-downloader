@@ -16,16 +16,14 @@ def _file_clean(file_path, sha256):
     return _sha256_hexdigest_file(file_path) == sha256
 
 
-def get_files_to_download(base_url, download_folder, files_list):
+def get_files_to_download(download_folder, files_list):
     files_to_download = []
     for file in files_list["files"]:
         relative_path = os.path.join(file["path"], file["name"])
         file_path = os.path.join(download_folder, relative_path)
         if os.path.exists(file_path):
             continue
-        file.update(
-            {"source": os.path.join(base_url, relative_path), "destination": file_path}
-        )
+        file.update({"source": relative_path, "destination": file_path})
         files_to_download.append(file)
     files_list["files"] = files_to_download
     return files_list

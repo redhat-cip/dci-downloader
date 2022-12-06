@@ -34,6 +34,7 @@ setuptools.setup(
     long_description=readme,
     long_description_content_type="text/markdown",
     install_requires=install_requires,
+    extras_require={':python_version == "2.7"': ["futures"]},
     url="https://github.com/redhat-cip/dci-downloader",
     license="Apache v2.0",
     classifiers=[

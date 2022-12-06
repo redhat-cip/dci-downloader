@@ -107,6 +107,12 @@ def parse_arguments(arguments):
         default=None,
     )
     parser.add_argument(
+        "--dci-cs-url",
+        help="control server url used to download components.",
+        dest="cs_url",
+        default=None,
+    )
+    parser.add_argument(
         "--local-repo",
         help="destination folder/",
         dest="local_repo",
