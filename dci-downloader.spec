@@ -1,20 +1,26 @@
 %if 0%{?rhel} && 0%{?rhel} < 8
-%global with_python2 1
-%else
-%global with_python3 1
+%global is_EL7 1
 %endif
 %global srcname dci-downloader
+%global summary DCI downloader used to download Red Hat products
 
-Name:             dci-downloader
-Version:          2.9.0
+Name:             %{srcname}
+Version:          3.0.0
 Release:          1.VERS%{?dist}
-Summary:          DCI Downloader
+Summary:          %{summary}
+
 License:          ASL 2.0
 URL:              https://github.com/redhat-cip/%{srcname}
-BuildArch:        noarch
 Source0:          %{srcname}-%{version}.tar.gz
 
-%if 0%{?with_python2}
+BuildArch:        noarch
+
+%description
+%{summary}
+
+%if 0%{?is_EL7}
+%package -n python2-%{srcname}
+Summary: %{summary}
 BuildRequires:    python2-devel
 BuildRequires:    python2-setuptools
 BuildRequires:    python-requests
@@ -23,9 +29,14 @@ BuildRequires:    PyYAML
 Requires:         python-requests
 Requires:         python-dciclient
 Requires:         PyYAML
+%{?python_provide:%python_provide python2-%{srcname}}
+
+%description -n python2-%{srcname}
+%{summary}
 %endif
 
-%if 0%{?with_python3}
+%package -n python3-%{srcname}
+Summary: %{summary}
 BuildRequires:  python3-devel
 BuildRequires:  python3-setuptools
 BuildRequires:  python3-requests
@@ -34,41 +45,41 @@ Requires:       python3-PyYAML
 Requires:       python3-requests
 Requires:       python3-dciclient
 Requires:       skopeo >= 0.1.41
-%endif
+%{?python_provide:%python_provide python3-%{srcname}}
 
-%description
-DCI downloader used to download Red Hat products
+%description -n python3-%{srcname}
+%{summary}
 
 %prep
 %autosetup -n %{srcname}-%{version}
 
 %build
-%if 0%{?with_python2}
+%if 0%{?is_EL7}
 %py2_build
 %endif
-%if 0%{?with_python3}
 %py3_build
-%endif
 
 %install
-%if 0%{?with_python2}
-%py2_install
-%endif
-%if 0%{?with_python3}
 %py3_install
-%endif
+%if 0%{?is_EL7}
+%py2_install
 
-%files
+%files -n python2-%{srcname}
 %license LICENSE
 %doc README.md
-%if 0%{?with_python2}
 %{python2_sitelib}/*
-%else
-%{python3_sitelib}/*
+%{_bindir}/%{srcname}
 %endif
+
+%files -n python3-%{srcname}
+%license LICENSE
+%doc README.md
+%{python3_sitelib}/*
 %{_bindir}/%{srcname}
 
 %changelog
+* Tue Jan 10 2023 Guillaume Vincent <gvincent@redhat.com> 3.0.0-1
+- Build also python3-dci-downloader on EL7
 * Tue Jul 05 2022 Guillaume Vincent <fcharlie@redhat.com> - 2.9.0-1
 - Make dci repo url configurable
 * Wed Apr 14 2021 François Charlier <fcharlie@redhat.com> - 2.8.0-2

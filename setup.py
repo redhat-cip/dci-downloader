@@ -20,7 +20,7 @@ import setuptools
 from dci_downloader import version
 
 root_dir = os.path.dirname(os.path.abspath(__file__))
-readme = open(os.path.join(root_dir, "README.md")).read()
+readme = open(os.path.join(root_dir, "README.md"), "rb").read().decode("utf-8")
 requirements = open(os.path.join(root_dir, "requirements.txt")).read()
 install_requires = [r.split("==")[0] for r in requirements.split("\n")]
 
