@@ -1,14 +1,14 @@
 # DCI Downloader
 
-`dci-downloader` is a useful tool for downloading the latest versions of Red Hat products
+`dci-downloader` is a useful tool for downloading the latest versions of Red Hat products.
 
 ## TLDR
 
 ```console
-$ sudo yum -y install https://packages.distributed-ci.io/dci-release.el7.noarch.rpm
-$ sudo yum -y install dci-downloader
+$ sudo dnf -y install https://packages.distributed-ci.io/dci-release.el8.noarch.rpm
+$ sudo dnf -y install dci-downloader
 $ source ~/dcirc.sh
-$ dci-downloader RHEL-8.5 /tmp/repo
+$ dci-downloader RHEL-9.2 /tmp/repo
 ```
 
 ## Requirements
@@ -22,7 +22,7 @@ DCI is connected to the Red Hat SSO. You will need a [Red Hat account](https://a
 A remoteci is a Virtual Machine or a baremetal server running RHEL.
 You should check that your remoteci:
 
-- Is running the latest RHEL 7 release.
+- Is running the latest RHEL 8 release.
 - Has enough free space in the destination folder.
 - Should be able to reach:
   - `https://api.distributed-ci.io` (443).
@@ -34,13 +34,9 @@ You should check that your remoteci:
 The `dci-downloader` is packaged and available as a RPM files.
 
 ```console
-$ sudo yum -y install https://packages.distributed-ci.io/dci-release.el7.noarch.rpm
-$ sudo yum -y install dci-downloader
+$ sudo dnf -y install https://packages.distributed-ci.io/dci-release.el8.noarch.rpm
+$ sudo dnf -y install dci-downloader
 ```
-
-## Limitation
-
-At the moment it is not possible to perform two parallel downloads in two different processes. If you use a configuration file with multiple topics, the download is done synchronously topic after topic.
 
 ## Configuration
 
@@ -76,26 +72,16 @@ You can now download the latest version of a product using dci-downloader.
 
 ### RHEL examples
 
-Example command to download the latest RHEL-8.5 components into /tmp/repo folder.
+Example command to download the latest RHEL-9.2 components into /tmp/repo folder.
 
 ```console
-$ dci-downloader RHEL-8.5 /tmp/repo
+$ dci-downloader RHEL-9.2 /tmp/repo
 ```
 
 ### RHOSP examples
 
-/!\ Starting with OSP15, OSP topics are now supported by dci-downloader. Older topics require the _--all_ flag.
-
-From OSP15 onwards:
-
 ```console
 $ dci-downloader OSP16.1 /tmp/repo
-```
-
-For older OSP topics
-
-```console
-$ dci-downloader --all OSP13 /tmp/repo
 ```
 
 dci-downloader also allows to mirror the container images associated with the component to a [local anonymous registry](#local-anonymous-registry).
@@ -111,8 +97,7 @@ If needed a simple way to setup one is by using Docker Distribution registry in 
 $ podman run --rm -p 5000:5000 registry:2
 ```
 
-ℹ NOTE: dci-downloader does not currently clean/purge/untag any image on the registry,
-leaving this responsibility to the the user until a suitable solution is provided.
+ℹ NOTE: dci-downloader does not currently clean/purge/untag any image on the registry, leaving this responsibility to the the user until a suitable solution is provided.
 
 ## Options
 
@@ -122,10 +107,10 @@ By default dci-downloader will download all variants for x86_64 architecture wit
 
 To download other architectures you can specify those using `--arch` option
 
-Download x86_64 and ppc64le architectures for RHEL-8.5 topic:
+Download x86_64 and ppc64le architectures for RHEL-9.2 topic:
 
 ```console
-$ dci-downloader RHEL-8.5 /tmp/repo --arch x86_64 --arch ppc64le
+$ dci-downloader RHEL-9.2 /tmp/repo --arch x86_64 --arch ppc64le
 ```
 
 ### Specific variants
@@ -135,7 +120,7 @@ To download only specific variants you can specify those using `--variant`
 Download only AppStream and BaseOS variants:
 
 ```console
-$ dci-downloader RHEL-8.5 /tmp/repo --variant AppStream --variant BaseOS
+$ dci-downloader RHEL-9.2 /tmp/repo --variant AppStream --variant BaseOS
 ```
 
 ### Filters
@@ -143,10 +128,10 @@ $ dci-downloader RHEL-8.5 /tmp/repo --variant AppStream --variant BaseOS
 By default dci-downloader download the latest components attached to a topic.
 But if you want to filter those component, you can use the `--filter` option.
 
-Download only the latest RHEL-8.5 `nigthly` compose
+Download only the latest RHEL-9.2 `nigthly` compose
 
 ```console
-$ dci-downloader RHEL-8.5 /tmp/repo --filter=compose:nigthly
+$ dci-downloader RHEL-9.2 /tmp/repo --filter=compose:nigthly
 ```
 
 ### Download the whole compose
@@ -154,17 +139,17 @@ $ dci-downloader RHEL-8.5 /tmp/repo --filter=compose:nigthly
 To download everything you can add the `--all` flag
 
 ```console
-$ dci-downloader RHEL-8.5 /tmp/repo --all
+$ dci-downloader RHEL-9.2 /tmp/repo --all
 ```
 
 ### Debug RPMs
 
 To download debug RPMs you can add the `--debug` flag
 
-Download RHEL-8.5 compose with debug rpms
+Download RHEL-9.2 compose with debug rpms
 
 ```console
-$ dci-downloader RHEL-8.5 /tmp --debug
+$ dci-downloader RHEL-9.2 /tmp/repo --debug
 ```
 
 ### Settings file
@@ -182,14 +167,13 @@ All settings from settings.yml file will overwrite cli parameters.
 Examples of a settings file:
 
 ```yaml
-version: "2"
-download_folder: /var/www/html
+download_folder: /tmp/repo
 topics:
-  - name: RHEL-9.0
+  - name: RHEL-9.2
     filters:
       - type: compose
         tag: nightly
-  - name: RHEL-8.4
+  - name: RHEL-8.6
     filters:
       - type: compose
         tag: milestone
@@ -199,7 +183,6 @@ topics:
       - AppStream
       - name: BaseOS
         with_debug: true
-  - name: RHEL-8.2
 ```
 
 ## SSL certificates
