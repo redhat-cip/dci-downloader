@@ -254,11 +254,17 @@ def get_files_list(context):
     return r.json()
 
 
-@retry()
-def get_container_images_list(context):
-    r = context.get("images_list.yaml")
-    r.raise_for_status()
-    return r.content
+def get_and_save_image_list(context, download_folder):
+    try:
+        images_list_file_name = "images_list.yaml"
+        r = context.get(images_list_file_name)
+        r.raise_for_status()
+        images_list = r.content
+        with open(os.path.join(download_folder, images_list_file_name), "wb") as f:
+            f.write(images_list)
+        return images_list
+    except Exception:
+        return None
 
 
 @retry()

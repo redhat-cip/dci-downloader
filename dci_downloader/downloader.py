@@ -4,6 +4,7 @@ import os
 
 from dci_downloader.api import (
     get_files_list,
+    get_and_save_image_list,
     download_files,
     is_component_on_s3,
     build_s3_context,
@@ -59,5 +60,6 @@ def download_component(topic_info, topic, component):
     check_download_folder_size(files_to_download, download_folder)
     download_files(context, files_to_download["files"])
     recreate_symlinks(files_list["symlinks"], download_folder)
-    if topic_info.get("registry", None):
-        mirror_container_images(context, topic_info["registry"], topic)
+    images_list = get_and_save_image_list(context, download_folder)
+    if images_list and topic_info.get("registry", None):
+        mirror_container_images(context, topic_info["registry"], topic, images_list)
