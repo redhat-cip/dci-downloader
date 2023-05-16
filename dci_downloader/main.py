@@ -24,6 +24,9 @@ def download_components(topic_info, topic):
     else:
         filters = topic_info.get("filters", [])
         components = api.get_components(topic, filters)
+    if not components:
+        print("Nothing to download. Exiting...")
+        sys.exit(0)
     for component in components:
         downloader.download_component(topic_info, topic, component)
 
