@@ -52,7 +52,7 @@ def download_component(topic_info, topic, component):
     )
     context = remoteci_context if is_component_on_s3(remoteci_context) else repo_context
     files_list = get_files_list(context)
-    if component["type"].lower() == "compose":
+    if component["type"].lower() in ["compose", "compose-noinstall"]:
         files_list = filter_files_list(topic_info, files_list)
     download_folder = get_component_folder(topic_info, topic, component)
     clean_download_folder(files_list, download_folder)
