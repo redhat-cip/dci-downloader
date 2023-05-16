@@ -154,14 +154,13 @@ def parse_arguments(arguments):
         for v in parsed_arguments.variants
     ]
     filters = []
-    if parsed_arguments.filters:
-        for filter in parsed_arguments.filters:
-            elements = filter.split(":")
-            if len(elements) != 2:
-                print("FILTER has the wrong format.")
-                print("Type 'dci-downloader --help' for more information.")
-                sys.exit(2)
+    for filter in parsed_arguments.filters:
+        if ":" in filter:
+            elements = filter.split(":", 1)
             filters.append({"type": elements[0].lower(), "tag": elements[1]})
+        else:
+            filters.append({"type": filter, "tag": None})
+
     parsed_arguments.filters = filters
 
     if parsed_arguments.local_repo and parsed_arguments.download_folder is None:

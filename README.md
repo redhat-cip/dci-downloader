@@ -126,12 +126,18 @@ $ dci-downloader RHEL-9.2 /tmp/repo --variant AppStream --variant BaseOS
 ### Filters
 
 By default dci-downloader download the latest components attached to a topic.
-But if you want to filter those component, you can use the `--filter` option.
+But if you want to filter those component, you can use the `--filter <type>` or `--filter <type>:<tag>` option.
 
-Download only the latest RHEL-9.2 `nigthly` compose
+Download only the latest RHEL-9.2 `compose`
 
 ```console
-$ dci-downloader RHEL-9.2 /tmp/repo --filter=compose:nigthly
+$ dci-downloader RHEL-9.2 /tmp/repo --filter=compose
+```
+
+Download only the latest RHEL-9.2 `compose` with tag `nightly`
+
+```console
+$ dci-downloader RHEL-9.2 /tmp/repo --filter=compose:nightly
 ```
 
 ### Download the whole compose

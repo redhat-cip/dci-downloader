@@ -90,12 +90,15 @@ def get_components_per_topic(
 
 def get_components(topic, filters=[]):
     returned_components = []
-    tag_per_type = {filter["type"]: filter["tag"] for filter in filters}
-    for component_type in topic["component_types"]:
-        component_type = component_type.lower()
+    if not filters:
+        filters = [
+            {"type": component_type} for component_type in topic["component_types"]
+        ]
+    for filter in filters:
+        component_type = filter["type"].lower()
         where = "type:%s,state:active" % component_type
-        if component_type in tag_per_type:
-            where += ",tags:%s" % tag_per_type[component_type]
+        if "tag" in filter and filter["tag"]:
+            where += ",tags:%s" % filter["tag"]
         components = get_components_per_topic(
             topic_id=topic["id"],
             sort="-created_at",

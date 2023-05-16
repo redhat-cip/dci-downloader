@@ -1,4 +1,3 @@
-from pytest import raises
 from dci_downloader.cli import parse_arguments
 
 
@@ -234,17 +233,6 @@ def test_parsing_filters():
     assert args["filters"] == [{"type": "compose", "tag": "nightly"}]
 
 
-def test_parsing_bad_filter_raise_exception():
-    with raises(SystemExit):
-        parse_arguments(
-            [
-                "--filter=nightly",
-                "RHEL-8",
-                "/tmp/repo",
-            ]
-        )
-
-
 def test_parsing_filters_change_type_to_lower_case():
     args = parse_arguments(
         [
@@ -257,6 +245,20 @@ def test_parsing_filters_change_type_to_lower_case():
     assert args["download_folder"] == "/tmp/repo"
     assert args["archs"] == ["x86_64"]
     assert args["filters"] == [{"type": "compose", "tag": "Nightly"}]
+
+
+def test_parsing_filters_without_a_tag():
+    args = parse_arguments(
+        [
+            "--filter=compose-noinstall",
+            "RHEL-8",
+            "/tmp/repo",
+        ]
+    )
+    assert args["name"] == "RHEL-8"
+    assert args["download_folder"] == "/tmp/repo"
+    assert args["archs"] == ["x86_64"]
+    assert args["filters"] == [{"type": "compose-noinstall", "tag": None}]
 
 
 def test_parsing_registry():

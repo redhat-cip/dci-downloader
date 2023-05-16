@@ -5,6 +5,7 @@ topics:
     filters:
       - type: compose
         tag: nightly
+      - type: compose-noinstall
   - name: RHEL-8.4
     filters:
       - type: compose

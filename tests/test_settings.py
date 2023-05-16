@@ -745,6 +745,7 @@ def test_get_settings_v2():
             "dci_key_file": ANY,
             "filters": [
                 {"type": "compose", "tag": "nightly"},
+                {"type": "compose-noinstall"},
             ],
         },
     ]
