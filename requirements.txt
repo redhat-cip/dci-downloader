@@ -1,4 +1,4 @@
-requests==2.22.0
+requests==2.31.0
 dciclient==2.1.0
 PyYAML==5.3
 dciauth==2.1.7
