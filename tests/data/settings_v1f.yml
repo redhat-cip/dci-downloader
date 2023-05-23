@@ -1,5 +1,0 @@
-local_repo: /tmp/repo6
-dci_key_file: /etc/dci-rhel-agent/dci.key
-dci_cert_file: /etc/dci-rhel-agent/dci.crt
-topics:
-  - topic: RHEL-8.2

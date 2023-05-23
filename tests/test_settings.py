@@ -9,7 +9,6 @@ from dci_downloader.settings import (
     exit_if_env_variables_invalid,
     get_settings,
 )
-from mock import ANY
 
 
 def test_read_settings_file_v1a():
@@ -128,9 +127,7 @@ def test_get_settings_read_arguments():
         "client_id": "",
         "api_secret": "",
         "cs_url": "",
-        "dci_key_file": ANY,
         "components": [],
-        "dci_cert_file": ANY,
         "name": "RHEL-8",
         "with_debug": False,
         "registry": None,
@@ -162,9 +159,7 @@ def test_get_settings_read_arguments_download_everything():
         "client_id": "",
         "api_secret": "",
         "cs_url": "",
-        "dci_key_file": ANY,
         "components": [],
-        "dci_cert_file": ANY,
         "name": "RHEL-8",
         "with_debug": False,
         "registry": None,
@@ -196,9 +191,7 @@ def test_get_settings_from_dci_rhel_agent_settings_file_with_only_topic_key():
             "client_id": "remoteci/9dd94b70-1707-46c5-a2bb-661e8d5d4212",
             "api_secret": "",
             "cs_url": "",
-            "dci_key_file": ANY,
             "components": [],
-            "dci_cert_file": ANY,
             "name": "RHEL-7",
             "with_debug": False,
             "registry": None,
@@ -235,9 +228,7 @@ def test_get_settings_from_first_dci_rhel_agent_settings_file():
             "client_id": "remoteci/66194b70-46c5-1707-a2bb-9dde8d5d4212",
             "api_secret": "",
             "cs_url": "",
-            "dci_key_file": ANY,
             "components": [],
-            "dci_cert_file": ANY,
             "name": "RHEL-8.1",
             "with_debug": False,
             "registry": None,
@@ -325,8 +316,6 @@ def test_get_settings_with_jobs_key():
             "download_everything": False,
             "download_folder": "/tmp/repo10",
             "repo_url": "https://repo.distributed-ci.io",
-            "dci_key_file": ANY,
-            "dci_cert_file": ANY,
             "registry": None,
             "component_id": None,
             "remoteci_id": None,
@@ -350,8 +339,6 @@ def test_get_settings_with_jobs_key():
             "download_everything": False,
             "download_folder": "/tmp/repo10",
             "repo_url": "https://repo.distributed-ci.io",
-            "dci_key_file": ANY,
-            "dci_cert_file": ANY,
             "registry": None,
             "component_id": None,
             "remoteci_id": None,
@@ -390,9 +377,7 @@ def test_get_settings_local_repo_added_to_an_old_settings_file():
         "client_id": "",
         "api_secret": "",
         "cs_url": "",
-        "dci_key_file": ANY,
         "components": [],
-        "dci_cert_file": ANY,
         "name": "RHEL-8.2",
         "with_debug": False,
         "registry": None,
@@ -418,9 +403,7 @@ def test_get_settings_local_repo_with_multiple_topics():
         "client_id": "",
         "api_secret": "",
         "cs_url": "",
-        "dci_key_file": ANY,
         "components": [],
-        "dci_cert_file": ANY,
         "name": "RHEL-7.6",
         "with_debug": False,
         "registry": None,
@@ -437,9 +420,7 @@ def test_get_settings_local_repo_with_multiple_topics():
         "client_id": "",
         "api_secret": "",
         "cs_url": "",
-        "dci_key_file": ANY,
         "components": [],
-        "dci_cert_file": ANY,
         "name": "RHEL-8.1",
         "with_debug": False,
         "registry": None,
@@ -456,49 +437,6 @@ def test_backward_compatibility_test_variants_are_invalid_with_metadata():
         _variants_are_invalid({"name": "RHEL-8", "variants": [{"name": "metadata"}]})
         is False
     )
-
-
-def test_get_settings_set_ssl_files_to_default_if_not_setted():
-    settings = get_settings(
-        sys_args=["RHEL-8", "/tmp/repo1"],
-        env_variables={
-            "DCI_CLIENT_ID": "remoteci/9dd94b70-1707-46c5-a2bb-661e8d5d4212",
-            "DCI_API_SECRET": "",
-            "DCI_CS_URL": "",
-            "XDG_DATA_HOME": "/home/dci/.local/share",
-        },
-    )
-    topic = settings[0]
-    assert topic["dci_cert_file"] == "/home/dci/.local/share/dci-downloader/dci.crt"
-    assert topic["dci_key_file"] == "/home/dci/.local/share/dci-downloader/dci.key"
-
-
-def test_get_settings_set_ssl_file_from_env():
-    settings = get_settings(
-        sys_args=["RHEL-8", "/tmp/repo1"],
-        env_variables={
-            "DCI_CLIENT_ID": "remoteci/9dd94b70-1707-46c5-a2bb-661e8d5d4212",
-            "DCI_API_SECRET": "",
-            "DCI_CS_URL": "",
-            "DCI_KEY_FILE": "/etc/dci-rhel-agent/dci.key",
-            "DCI_CERT_FILE": "/etc/dci-rhel-agent/dci.crt",
-        },
-    )
-    topic = settings[0]
-    assert topic["dci_key_file"] == "/etc/dci-rhel-agent/dci.key"
-    assert topic["dci_cert_file"] == "/etc/dci-rhel-agent/dci.crt"
-
-
-def test_get_settings_set_ssl_file_from_settings_file():
-    test_dir = os.path.dirname(os.path.abspath(__file__))
-    settings_file_path = os.path.join(test_dir, "data", "settings_v1f.yml")
-    settings = get_settings(
-        sys_args=["--settings", settings_file_path],
-        env_variables={"DCI_CLIENT_ID": "", "DCI_API_SECRET": "", "DCI_CS_URL": ""},
-    )
-    topic = settings[0]
-    assert topic["dci_key_file"] == "/etc/dci-rhel-agent/dci.key"
-    assert topic["dci_cert_file"] == "/etc/dci-rhel-agent/dci.crt"
 
 
 def test_get_settings_with_debug_without_a_variant():
@@ -519,9 +457,7 @@ def test_get_settings_with_debug_without_a_variant():
         "client_id": "",
         "api_secret": "",
         "cs_url": "",
-        "dci_key_file": ANY,
         "components": [],
-        "dci_cert_file": ANY,
         "name": "RHEL-8.2-milestone",
         "with_debug": True,
         "registry": None,
@@ -550,9 +486,7 @@ def test_get_settings_with_debug_with_variants():
         "client_id": "",
         "api_secret": "",
         "cs_url": "",
-        "dci_key_file": ANY,
         "components": [],
-        "dci_cert_file": ANY,
         "name": "RHEL-8.5",
         "with_debug": True,
         "registry": None,
@@ -581,9 +515,7 @@ def test_nrt_get_settings_with_debug_in_the_cli_overwriting_settings():
         "client_id": "",
         "api_secret": "",
         "cs_url": "",
-        "dci_key_file": ANY,
         "components": [],
-        "dci_cert_file": ANY,
         "name": "RHEL-8.5",
         "with_debug": True,
         "registry": None,
@@ -688,7 +620,6 @@ def test_get_settings_v2():
             "components": [],
             "variants": [],
             "name": "RHEL-8.2",
-            "dci_cert_file": ANY,
             "archs": ["x86_64"],
             "download_everything": False,
             "with_debug": False,
@@ -699,7 +630,6 @@ def test_get_settings_v2():
             "client_id": "",
             "api_secret": "",
             "cs_url": "",
-            "dci_key_file": ANY,
             "filters": [],
         },
         {
@@ -710,7 +640,6 @@ def test_get_settings_v2():
                 {"name": "BaseOS", "with_debug": True},
             ],
             "name": "RHEL-8.4",
-            "dci_cert_file": ANY,
             "archs": ["ppc64le"],
             "download_everything": False,
             "with_debug": False,
@@ -721,7 +650,6 @@ def test_get_settings_v2():
             "client_id": "",
             "api_secret": "",
             "cs_url": "",
-            "dci_key_file": ANY,
             "filters": [
                 {"type": "compose", "tag": "milestone"},
             ],
@@ -731,7 +659,6 @@ def test_get_settings_v2():
             "components": [],
             "variants": [],
             "name": "RHEL-9.0",
-            "dci_cert_file": ANY,
             "archs": ["x86_64"],
             "download_everything": False,
             "with_debug": False,
@@ -742,7 +669,6 @@ def test_get_settings_v2():
             "client_id": "",
             "api_secret": "",
             "cs_url": "",
-            "dci_key_file": ANY,
             "filters": [
                 {"type": "compose", "tag": "nightly"},
                 {"type": "compose-noinstall"},

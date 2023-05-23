@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-import os
 import traceback
 import yaml
 import sys
@@ -44,8 +43,6 @@ def _clean_topic(topic_info):
         "variants": variants,
         "download_everything": topic_info.get("download_everything", False),
         "download_folder": topic_info["download_folder"],
-        "dci_key_file": topic_info["dci_key_file"],
-        "dci_cert_file": topic_info["dci_cert_file"],
         "remoteci_id": topic_info["remoteci_id"],
         "repo_url": topic_info["repo_url"].rstrip("/"),
         "cs_url": topic_info["cs_url"].rstrip("/"),
@@ -59,14 +56,9 @@ def _clean_topic(topic_info):
 
 
 def _clean_settings(settings):
-    dci_home_path = _get_dci_downloader_home_folder(settings["env_variables"])
-    key = settings.get("dci_key_file", os.path.join(dci_home_path, "dci.key"))
-    crt = settings.get("dci_cert_file", os.path.join(dci_home_path, "dci.crt"))
     new_settings = []
     for topic in settings["topics"]:
         topic["download_folder"] = settings["download_folder"]
-        topic["dci_key_file"] = key
-        topic["dci_cert_file"] = crt
         topic["remoteci_id"] = settings.get("remoteci_id")
         topic["repo_url"] = settings.get("repo_url", "https://repo.distributed-ci.io")
         topic["cs_url"] = settings.get("cs_url", "https://api.distributed-ci.io")
@@ -86,20 +78,10 @@ def _keep_backward_compatibility(settings):
         settings["topics"] = [settings.copy()]
     if "jobs" in settings:
         settings["topics"] = settings["jobs"]
-    if "download_key_file" in settings:
-        settings["dci_key_file"] = settings["download_key_file"]
-    if "download_crt_file" in settings:
-        settings["dci_cert_file"] = settings["download_crt_file"]
     settings["download_folder"] = settings.get("download_folder")
     settings["registry"] = settings.get("registry")
     settings["topics"] = settings.get("topics", [])
     return settings
-
-
-def _get_dci_downloader_home_folder(env_variables):
-    DEFAULT_XDG_DATA_HOME = os.path.join(os.path.expanduser("~"), ".local", "share")
-    data_home_path = env_variables.get("XDG_DATA_HOME", DEFAULT_XDG_DATA_HOME)
-    return os.path.join(data_home_path, "dci-downloader")
 
 
 def _remove_none_values(d):
@@ -128,8 +110,6 @@ def _get_remoteci_id(env_variables):
 def get_settings(sys_args, env_variables={}):
     settings_from_env_variables = {
         "env_variables": env_variables,
-        "dci_key_file": env_variables.get("DCI_KEY_FILE"),
-        "dci_cert_file": env_variables.get("DCI_CERT_FILE"),
         "download_folder": env_variables.get("DCI_LOCAL_REPO"),
         "registry": env_variables.get("DCI_REGISTRY"),
         "remoteci_id": _get_remoteci_id(env_variables),

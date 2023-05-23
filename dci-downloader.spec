@@ -2,7 +2,7 @@
 %global srcname dci-downloader
 
 Name:             %{srcname}
-Version:          3.1.0
+Version:          3.2.0
 Release:          1.VERS%{?dist}
 Summary:          %{summary}
 
@@ -45,6 +45,8 @@ Requires:       skopeo >= 0.1.41
 %{_bindir}/%{srcname}
 
 %changelog
+* Tue May 23 2023 Guillaume Vincent <gvincent@redhat.com> - 3.2.0-1
+- Added parallel download
 * Thu Feb 09 2023 Guillaume Vincent <gvincent@redhat.com> - 3.1.0-1
 - Download component on s3 if available
 - Build only for python3

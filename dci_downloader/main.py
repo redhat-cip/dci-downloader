@@ -9,7 +9,6 @@ from dci_downloader import api
 from dci_downloader import downloader
 from dci_downloader.lock import file_lock, LockError
 from dci_downloader.fs import get_topic_folder, create_parent_dir
-from dci_downloader.certificates import configure_ssl_certificates
 from dci_downloader.settings import (
     get_settings,
     exit_if_settings_invalid,
@@ -36,8 +35,6 @@ def download_topic(topic_info):
     sleep = 30
     while not_finished and count < (ten_hours / sleep):
         try:
-            configure_ssl_certificates(topic_info)
-            api.check_repo_is_accessible(topic_info)
             api.check_api_is_accessible(topic_info)
             topic = api.get_topic(topic_info["name"])
             if topic is None:

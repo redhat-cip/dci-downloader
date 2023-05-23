@@ -6,9 +6,7 @@ from dci_downloader.api import (
     get_files_list,
     get_and_save_image_list,
     download_files,
-    is_component_on_s3,
     build_s3_context,
-    build_repo_context,
 )
 from dci_downloader.containers import mirror_container_images
 from dci_downloader.stats import check_download_folder_size
@@ -36,21 +34,12 @@ def clean_download_folder(files_list, download_folder):
 
 def download_component(topic_info, topic, component):
     print("Download component %s" % component["name"])
-    remoteci_context = build_s3_context(
+    context = build_s3_context(
         component_id=component["id"],
         cs_url=topic_info["cs_url"],
         client_id=topic_info["client_id"],
         api_secret=topic_info["api_secret"],
     )
-    repo_context = build_repo_context(
-        product_id=topic["product_id"],
-        topic_id=topic["id"],
-        component_id=component["id"],
-        repo_url=topic_info["repo_url"],
-        cert=topic_info["dci_cert_file"],
-        key=topic_info["dci_key_file"],
-    )
-    context = remoteci_context if is_component_on_s3(remoteci_context) else repo_context
     files_list = get_files_list(context)
     if component["type"].lower() in ["compose", "compose-noinstall"]:
         files_list = filter_files_list(topic_info, files_list)
