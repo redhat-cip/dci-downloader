@@ -7,3 +7,4 @@ topics:
     archs:
       - x86_64
     with_debug: false
+    with_source: false

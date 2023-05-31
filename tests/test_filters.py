@@ -128,6 +128,50 @@ def test_filter_files_list_with_debug():
     assert filter_files_list(topic_info, dci_files_list) == expected_files_list
 
 
+def test_filter_files_list_with_source():
+    dci_files_list = {
+        "directories": [],
+        "files": [
+            {
+                "path": "BaseOS/source/tree/Packages",
+                "sha256": "6f48f0d285918e502035da74decf447c6bb29898206406a4ed6a92ece94d276a",
+                "name": "kernel-4.18.0-477.10.1.el8_8.src.rpm",
+                "size": 145052,
+            },
+            {
+                "path": "BaseOS/x86_64/os/Packages",
+                "sha256": "8fe293470f677bfc6eb04204c47b5e1a0e5d15431ef7ed9dbb269aaea386ed9f",
+                "name": "kernel-4.18.0-477.10.1.el8_8.x86_64.rpm",
+                "size": 28616,
+            },
+        ],
+        "symlinks": [],
+    }
+    topic_info = get_settings(
+        sys_args=["RHEL-8", "/tmp", "--variant", "BaseOS", "--src"]
+    )[0]
+    expected_files_list = {
+        "directories": [],
+        "files": [
+            {
+                "path": "BaseOS/source/tree/Packages",
+                "sha256": "6f48f0d285918e502035da74decf447c6bb29898206406a4ed6a92ece94d276a",
+                "name": "kernel-4.18.0-477.10.1.el8_8.src.rpm",
+                "size": 145052,
+            },
+            {
+                "path": "BaseOS/x86_64/os/Packages",
+                "sha256": "8fe293470f677bfc6eb04204c47b5e1a0e5d15431ef7ed9dbb269aaea386ed9f",
+                "name": "kernel-4.18.0-477.10.1.el8_8.x86_64.rpm",
+                "size": 28616,
+            },
+        ],
+        "symlinks": [],
+    }
+    print(filter_files_list(topic_info, dci_files_list))
+    assert filter_files_list(topic_info, dci_files_list) == expected_files_list
+
+
 def test_filter_files_list_with_debug_keep_os_folder_nrt():
     dci_files_list = {
         "directories": [],
@@ -247,6 +291,12 @@ def test_non_existing_variants_are_ignored():
                 "sha256": "6f48f0d285918e502035da74decf447c6bb29898206406a4ed6a92ece94d276a",
                 "name": "PackageKit-command-not-found-debuginfo-1.1.12-2.el8.x86_64.rpm",
                 "size": 45052,
+            },
+            {
+                "path": "BaseOS/source/tree/Packages",
+                "sha256": "6f48f0d285918e502035da74decf447c6bb29898206406a4ed6a92ece94d276a",
+                "name": "kernel-4.18.0-477.10.1.el8_8.src.rpm",
+                "size": 145052,
             },
             {
                 "path": "AppStream/x86_64/os/Packages",

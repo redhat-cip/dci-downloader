@@ -82,7 +82,12 @@ def test_read_settings_file_v1c():
                 "archs": ["x86_64"],
                 "variants": [
                     "AppStream",
-                    {"name": "BaseOS", "with_debug": True, "with_iso": False},
+                    {
+                        "name": "BaseOS",
+                        "with_debug": True,
+                        "with_source": True,
+                        "with_iso": False,
+                    },
                 ],
                 "systems": ["SUT4"],
             },
@@ -117,7 +122,14 @@ def test_get_settings_read_arguments():
         env_variables={"DCI_CLIENT_ID": "", "DCI_API_SECRET": "", "DCI_CS_URL": ""},
     )
     assert settings[0] == {
-        "variants": [{"name": "BaseOS", "with_debug": False, "with_iso": False}],
+        "variants": [
+            {
+                "name": "BaseOS",
+                "with_debug": False,
+                "with_source": False,
+                "with_iso": False,
+            }
+        ],
         "download_everything": False,
         "download_folder": "/tmp/repo2",
         "repo_url": "https://repo.distributed-ci.io",
@@ -130,6 +142,7 @@ def test_get_settings_read_arguments():
         "components": [],
         "name": "RHEL-8",
         "with_debug": False,
+        "with_source": False,
         "registry": None,
         "filters": [],
     }
@@ -162,6 +175,7 @@ def test_get_settings_read_arguments_download_everything():
         "components": [],
         "name": "RHEL-8",
         "with_debug": False,
+        "with_source": False,
         "registry": None,
         "filters": [],
     }
@@ -194,6 +208,7 @@ def test_get_settings_from_dci_rhel_agent_settings_file_with_only_topic_key():
             "components": [],
             "name": "RHEL-7",
             "with_debug": False,
+            "with_source": False,
             "registry": None,
             "filters": [],
         }
@@ -216,8 +231,18 @@ def test_get_settings_from_first_dci_rhel_agent_settings_file():
     assert settings == [
         {
             "variants": [
-                {"name": "AppStream", "with_debug": False, "with_iso": False},
-                {"name": "BaseOS", "with_debug": False, "with_iso": False},
+                {
+                    "name": "AppStream",
+                    "with_debug": False,
+                    "with_source": False,
+                    "with_iso": False,
+                },
+                {
+                    "name": "BaseOS",
+                    "with_debug": False,
+                    "with_source": False,
+                    "with_iso": False,
+                },
             ],
             "download_everything": False,
             "download_folder": "/tmp/repo5",
@@ -231,6 +256,7 @@ def test_get_settings_from_first_dci_rhel_agent_settings_file():
             "components": [],
             "name": "RHEL-8.1",
             "with_debug": False,
+            "with_source": False,
             "registry": None,
             "filters": [],
         }
@@ -310,8 +336,18 @@ def test_get_settings_with_jobs_key():
             "components": [],
             "archs": ["x86_64", "ppc64le"],
             "variants": [
-                {"name": "Server", "with_debug": False, "with_iso": False},
-                {"name": "Server-SAP", "with_debug": False, "with_iso": False},
+                {
+                    "name": "Server",
+                    "with_debug": False,
+                    "with_source": False,
+                    "with_iso": False,
+                },
+                {
+                    "name": "Server-SAP",
+                    "with_debug": False,
+                    "with_source": False,
+                    "with_iso": False,
+                },
             ],
             "download_everything": False,
             "download_folder": "/tmp/repo10",
@@ -323,6 +359,7 @@ def test_get_settings_with_jobs_key():
             "api_secret": "",
             "cs_url": "",
             "with_debug": False,
+            "with_source": False,
             "filters": [
                 {"type": "component_type1", "tag": "tag1"},
                 {"type": "component_type2", "tag": "tag2"},
@@ -333,8 +370,18 @@ def test_get_settings_with_jobs_key():
             "components": [],
             "archs": ["x86_64"],
             "variants": [
-                {"name": "AppStream", "with_debug": False, "with_iso": False},
-                {"name": "BaseOS", "with_debug": True, "with_iso": False},
+                {
+                    "name": "AppStream",
+                    "with_debug": False,
+                    "with_source": False,
+                    "with_iso": False,
+                },
+                {
+                    "name": "BaseOS",
+                    "with_debug": True,
+                    "with_source": True,
+                    "with_iso": False,
+                },
             ],
             "download_everything": False,
             "download_folder": "/tmp/repo10",
@@ -346,6 +393,7 @@ def test_get_settings_with_jobs_key():
             "api_secret": "",
             "cs_url": "",
             "with_debug": False,
+            "with_source": False,
             "filters": [],
         },
     ]
@@ -365,8 +413,18 @@ def test_get_settings_local_repo_added_to_an_old_settings_file():
     )
     assert settings[0] == {
         "variants": [
-            {"name": "AppStream", "with_debug": False, "with_iso": False},
-            {"name": "BaseOS", "with_debug": False, "with_iso": False},
+            {
+                "name": "AppStream",
+                "with_debug": False,
+                "with_source": False,
+                "with_iso": False,
+            },
+            {
+                "name": "BaseOS",
+                "with_debug": False,
+                "with_source": False,
+                "with_iso": False,
+            },
         ],
         "download_everything": False,
         "download_folder": "/tmp/repo4",
@@ -380,6 +438,7 @@ def test_get_settings_local_repo_added_to_an_old_settings_file():
         "components": [],
         "name": "RHEL-8.2",
         "with_debug": False,
+        "with_source": False,
         "registry": None,
         "filters": [],
     }
@@ -406,6 +465,7 @@ def test_get_settings_local_repo_with_multiple_topics():
         "components": [],
         "name": "RHEL-7.6",
         "with_debug": False,
+        "with_source": False,
         "registry": None,
         "filters": [],
     }
@@ -423,6 +483,7 @@ def test_get_settings_local_repo_with_multiple_topics():
         "components": [],
         "name": "RHEL-8.1",
         "with_debug": False,
+        "with_source": False,
         "registry": None,
         "filters": [],
     }
@@ -460,6 +521,7 @@ def test_get_settings_with_debug_without_a_variant():
         "components": [],
         "name": "RHEL-8.2-milestone",
         "with_debug": True,
+        "with_source": False,
         "registry": None,
         "filters": [],
     }
@@ -474,8 +536,18 @@ def test_get_settings_with_debug_with_variants():
     )
     assert settings[0] == {
         "variants": [
-            {"name": "AppStream", "with_debug": True, "with_iso": False},
-            {"name": "BaseOS", "with_debug": True, "with_iso": False},
+            {
+                "name": "AppStream",
+                "with_debug": True,
+                "with_source": True,
+                "with_iso": False,
+            },
+            {
+                "name": "BaseOS",
+                "with_debug": True,
+                "with_source": True,
+                "with_iso": False,
+            },
         ],
         "download_everything": False,
         "download_folder": "/var/www/html",
@@ -489,6 +561,7 @@ def test_get_settings_with_debug_with_variants():
         "components": [],
         "name": "RHEL-8.5",
         "with_debug": True,
+        "with_source": True,
         "registry": None,
         "filters": [],
     }
@@ -503,8 +576,18 @@ def test_nrt_get_settings_with_debug_in_the_cli_overwriting_settings():
     )
     assert settings[0] == {
         "variants": [
-            {"name": "AppStream", "with_debug": True, "with_iso": False},
-            {"name": "BaseOS", "with_debug": True, "with_iso": False},
+            {
+                "name": "AppStream",
+                "with_debug": True,
+                "with_source": False,
+                "with_iso": False,
+            },
+            {
+                "name": "BaseOS",
+                "with_debug": True,
+                "with_source": False,
+                "with_iso": False,
+            },
         ],
         "download_everything": False,
         "download_folder": "/var/www/html",
@@ -518,6 +601,7 @@ def test_nrt_get_settings_with_debug_in_the_cli_overwriting_settings():
         "components": [],
         "name": "RHEL-8.5",
         "with_debug": True,
+        "with_source": False,
         "registry": None,
         "filters": [],
     }
@@ -623,6 +707,7 @@ def test_get_settings_v2():
             "archs": ["x86_64"],
             "download_everything": False,
             "with_debug": False,
+            "with_source": False,
             "download_folder": "/var/www/html",
             "repo_url": "https://repo2.distributed-ci.io",
             "component_id": None,
@@ -636,13 +721,19 @@ def test_get_settings_v2():
             "registry": None,
             "components": [],
             "variants": [
-                {"name": "AppStream", "with_iso": False, "with_debug": False},
+                {
+                    "name": "AppStream",
+                    "with_iso": False,
+                    "with_source": False,
+                    "with_debug": False,
+                },
                 {"name": "BaseOS", "with_debug": True},
             ],
             "name": "RHEL-8.4",
             "archs": ["ppc64le"],
             "download_everything": False,
             "with_debug": False,
+            "with_source": False,
             "download_folder": "/var/www/html",
             "repo_url": "https://repo2.distributed-ci.io",
             "component_id": None,
@@ -662,6 +753,7 @@ def test_get_settings_v2():
             "archs": ["x86_64"],
             "download_everything": False,
             "with_debug": False,
+            "with_source": False,
             "download_folder": "/var/www/html",
             "repo_url": "https://repo2.distributed-ci.io",
             "component_id": None,

@@ -7,8 +7,11 @@ def _get_patterns(filters):
     variants = filters["variants"]
     archs = filters["archs"]
     with_debug = filters["with_debug"]
+    with_source = filters["with_source"]
     patterns = []
     patterns.append(re.compile(r"^metadata"))
+    if with_source:
+        patterns.append(re.compile(r"^(.*)\/source/tree"))
     archs = archs if archs else [".*"]
     if not variants:
         patterns.append(re.compile(r"^(.*)\/(%s)/os" % "|".join(archs)))

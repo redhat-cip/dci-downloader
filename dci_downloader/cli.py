@@ -89,8 +89,11 @@ def parse_arguments(arguments):
         "--debug", help="download debug RPMs", dest="with_debug", action="store_true"
     )
     parser.add_argument(
+        "--src", help="download src RPMs", dest="with_source", action="store_true"
+    )
+    parser.add_argument(
         "--all",
-        help="download all archs, all variants with debugs rpms",
+        help="download all archs, all variants with sources and debugs rpms",
         dest="download_everything",
         action="store_true",
     )
@@ -149,6 +152,7 @@ def parse_arguments(arguments):
         {
             "name": v,
             "with_debug": parsed_arguments.with_debug,
+            "with_source": parsed_arguments.with_source,
             "with_iso": parsed_arguments.with_iso,
         }
         for v in parsed_arguments.variants

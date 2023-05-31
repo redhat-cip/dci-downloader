@@ -29,10 +29,16 @@ def _clean_topic(topic_info):
     archs = topic_info.get("archs", ["x86_64"])
     variants = topic_info.get("variants", [])
     with_debug = topic_info.get("with_debug", False)
+    with_source = topic_info.get("with_source", False)
     variants = [
         v
         if type(v) is dict
-        else {"name": v, "with_debug": with_debug, "with_iso": False}
+        else {
+            "name": v,
+            "with_debug": with_debug,
+            "with_source": with_source,
+            "with_iso": False,
+        }
         for v in variants
     ]
     filters = topic_info.get("filters", [])
@@ -51,6 +57,7 @@ def _clean_topic(topic_info):
         "registry": topic_info["registry"],
         "component_id": component_id,
         "with_debug": with_debug,
+        "with_source": with_source,
         "filters": filters,
     }
 
@@ -67,6 +74,8 @@ def _clean_settings(settings):
         topic["registry"] = settings["registry"]
         if settings["with_debug"]:
             topic["with_debug"] = settings["with_debug"]
+        if settings["with_source"]:
+            topic["with_source"] = settings["with_source"]
         new_settings.append(_clean_topic(topic))
     return sorted(new_settings, key=lambda k: k["name"])
 
@@ -127,6 +136,7 @@ def get_settings(sys_args, env_variables={}):
         "cs_url": cli_arguments["cs_url"],
         "topics": [],
         "with_debug": cli_arguments["with_debug"],
+        "with_source": cli_arguments["with_source"],
     }
     topic_name = cli_arguments["name"]
     if topic_name:
@@ -135,6 +145,7 @@ def get_settings(sys_args, env_variables={}):
                 "download_everything": cli_arguments["download_everything"],
                 "variants": cli_arguments["variants"],
                 "with_debug": cli_arguments["with_debug"],
+                "with_source": cli_arguments["with_source"],
                 "name": topic_name,
                 "with_iso": cli_arguments["with_iso"],
                 "archs": cli_arguments["archs"],
