@@ -3,12 +3,12 @@
 
 Name:             %{srcname}
 Version:          3.2.0
-Release:          1.VERS%{?dist}
+Release:          2.VERS%{?dist}
 Summary:          %{summary}
 
 License:          ASL 2.0
 URL:              https://github.com/redhat-cip/%{srcname}
-Source0:          %{srcname}-%{version}.tar.gz
+Source0:          %{srcname}-%{version}.postDATE.tar.gz
 
 BuildArch:        noarch
 
@@ -30,7 +30,7 @@ Requires:       skopeo >= 0.1.41
 %{summary}
 
 %prep
-%autosetup -n %{srcname}-%{version}
+%autosetup -n %{srcname}-%{version}.postDATE
 
 %build
 %py3_build
@@ -45,6 +45,8 @@ Requires:       skopeo >= 0.1.41
 %{_bindir}/%{srcname}
 
 %changelog
+* Wed Nov 15 2023 Haïkel Guémar <hguemar@redhat.com> - 3.2.0-2
+- use the new build process compatible with PEP-0440
 * Tue May 23 2023 Guillaume Vincent <gvincent@redhat.com> - 3.2.0-1
 - Added parallel download
 * Thu Feb 09 2023 Guillaume Vincent <gvincent@redhat.com> - 3.1.0-1

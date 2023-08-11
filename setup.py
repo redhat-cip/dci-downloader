@@ -17,7 +17,21 @@
 import os
 import setuptools
 
-from dci_downloader import version
+# dcibuild can be loaded only when doing the sdist sub-command because
+# dci-packaging is extracted at the same level. When doing the other
+# sub-commands like build, we extract the version from version.py.
+try:
+    from dcibuild import sdist, get_version
+
+    sdist.dci_mod = "dci_downloader"
+except:
+    sdist = None
+
+    def get_version():
+        from dci_downloader import version
+
+        return version.__version__
+
 
 root_dir = os.path.dirname(os.path.abspath(__file__))
 readme = open(os.path.join(root_dir, "README.md"), "rb").read().decode("utf-8")
@@ -26,7 +40,7 @@ install_requires = [r.split("==")[0] for r in requirements.split("\n")]
 
 setuptools.setup(
     name="dci-downloader",
-    version=version.__version__,
+    version=get_version(),
     packages=["dci_downloader"],
     author="Distributed CI team",
     author_email="distributed-ci@redhat.com",
@@ -44,4 +58,7 @@ setuptools.setup(
         "Programming Language :: Python :: 3",
     ],
     entry_points={"console_scripts": ["dci-downloader = dci_downloader.main:main"]},
+    cmdclass={
+        "sdist": sdist,
+    },
 )
