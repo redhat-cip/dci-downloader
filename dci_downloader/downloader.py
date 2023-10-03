@@ -51,4 +51,4 @@ def download_component(topic_info, topic, component):
     recreate_symlinks(files_list["symlinks"], download_folder)
     images_list = get_and_save_image_list(context, download_folder)
     if images_list and topic_info.get("registry", None):
-        mirror_container_images(context, topic_info["registry"], topic, images_list)
+        mirror_container_images(topic_info["registry"], topic, images_list)
