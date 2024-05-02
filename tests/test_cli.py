@@ -390,3 +390,15 @@ def test_parsing_local_repo():
 def test_parsing_local_repo_with_positional_arguments():
     args = parse_arguments(["RHEL-9.2", "/tmp/repo", "--local-repo", "/tmp/repo1"])
     assert args["download_folder"] == "/tmp/repo"
+
+
+def test_package_filter_arg():
+    args = parse_arguments(
+        ["RHEL-9.2", "/tmp/repo", "--package-filter", "glibc"])
+    assert args["package_filters"] == ["glibc"]
+
+
+def test_multiple_package_filter_args():
+    args = parse_arguments(
+        ["RHEL-9.2", "/tmp/repo", "--package-filter", "glibc", "--package-filter", "kernel", "--package-filter", "grub"])
+    assert args["package_filters"] == ["glibc", "kernel", "grub"]

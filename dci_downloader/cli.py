@@ -24,6 +24,9 @@ examples:
 
   # download the latest RHEL-9 development build
   dci-downloader --filter=compose:development RHEL-9.0 /tmp/repo
+
+  # download the latest RHEL-8 kernel packages for x86 and ppc64le architectures
+  dci-downloader dci-downloader RHEL-8.8 /tmp --variant BaseOS --arch x86_64 --arch ppc64le --package-filter=kernel
 """
 
 COPYRIGHT = """
@@ -130,6 +133,13 @@ def parse_arguments(arguments):
         default=[],
     )
     parser.add_argument("--version", action="version", version=__version__)
+    parser.add_argument(
+        "--package-filter",
+        action="append",
+        dest="package_filters",
+        help="Download only the specified package(s) (e.g. kernel, glibc, etc)",
+        default=[]
+    )
     parsed_arguments = parser.parse_args(arguments)
     if not parsed_arguments.archs:
         parsed_arguments.archs = ["x86_64"]

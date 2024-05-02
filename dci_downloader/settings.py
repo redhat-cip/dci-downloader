@@ -42,6 +42,7 @@ def _clean_topic(topic_info):
         for v in variants
     ]
     filters = topic_info.get("filters", [])
+    package_filters = topic_info.get("package_filters", [])
     return {
         "name": name,
         "components": components,
@@ -59,6 +60,7 @@ def _clean_topic(topic_info):
         "with_debug": with_debug,
         "with_source": with_source,
         "filters": filters,
+        "package_filters": package_filters,
     }
 
 
@@ -151,6 +153,7 @@ def get_settings(sys_args, env_variables={}):
                 "archs": cli_arguments["archs"],
                 "filters": cli_arguments["filters"],
                 "component_id": cli_arguments["component_id"],
+                "package_filters": cli_arguments["package_filters"],
             }
         )
 

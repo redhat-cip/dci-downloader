@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import re
+import os
 
 
 def _get_patterns(filters):
@@ -11,25 +12,34 @@ def _get_patterns(filters):
     patterns = []
     patterns.append(re.compile(r"^metadata"))
     if with_source:
-        patterns.append(re.compile(r"^(.*)\/source/tree"))
+        patterns.append(re.compile(r"^(.*)/source/tree"))
     archs = archs if archs else [".*"]
-    if not variants:
-        patterns.append(re.compile(r"^(.*)\/(%s)/os" % "|".join(archs)))
-        if with_debug:
-            patterns.append(re.compile(r"^(.*)\/(%s)/debug" % "|".join(archs)))
-        return patterns
+    variants = (
+        variants
+        if variants
+        else [{"name": ".*", "with_iso": False, "with_debug": with_debug}]
+    )
+    package_filters = filters["package_filters"]
+    package_filter_regex = (
+        "|".join([".*%s.*" % p for p in package_filters]) if package_filters else ".*"
+    )
     for variant in variants:
         variant_name = variant["name"]
         variant_with_debug = variant["with_debug"]
         with_iso = variant["with_iso"]
-        regex = r"^(%s)\/(%s)/os" % (variant_name, "|".join(archs))
-        patterns.append(re.compile(regex))
+        iso_os_regex = "os"
         if variant_with_debug:
-            regex = r"^(%s)\/(%s)/debug" % (variant_name, "|".join(archs))
-            patterns.append(re.compile(regex))
+            iso_os_regex += "|debug"
         if with_iso:
-            regex = r"^(%s)\/(%s)/iso" % (variant_name, "|".join(archs))
-            patterns.append(re.compile(regex))
+            iso_os_regex += "|iso"
+        arch_regex = "|".join(archs)
+        regex = r"^(%s)/(%s)/(%s)/(%s)" % (
+            variant_name,
+            arch_regex,
+            iso_os_regex,
+            package_filter_regex,
+        )
+        patterns.append(re.compile(regex))
     return patterns
 
 
@@ -51,6 +61,7 @@ def filter_files_list(topic_info, files_list):
         file_path = file["path"]
         if not file["path"]:
             new_files_list["files"].append(file)
-        if _match_pattern(file_path, patterns):
+            continue
+        if _match_pattern(os.path.join(file_path, file["name"]), patterns):
             new_files_list["files"].append(file)
     return new_files_list

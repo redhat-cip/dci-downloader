@@ -158,6 +158,15 @@ Download RHEL-9.2 compose with debug rpms
 $ dci-downloader RHEL-9.2 /tmp/repo --debug
 ```
 
+### Download only specified packages
+
+To download packages specified on the command line, use the `--package-filter` flag
+
+Download all kernel and glibc packages for RHEL-8.8 for the ppc64le architecture
+
+```console
+$ dci-downloader RHEL-8.8 /tmp --variant BaseOS --arch ppc64le --package-filter=kernel --package-filter=glibc
+```
 ### Settings file
 
 You can use a settings file to send parameters to parameterize dci-downloader.

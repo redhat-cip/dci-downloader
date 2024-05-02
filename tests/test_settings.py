@@ -145,6 +145,7 @@ def test_get_settings_read_arguments():
         "with_source": False,
         "registry": None,
         "filters": [],
+        "package_filters": [],
     }
 
 
@@ -178,6 +179,7 @@ def test_get_settings_read_arguments_download_everything():
         "with_source": False,
         "registry": None,
         "filters": [],
+        "package_filters": [],
     }
 
 
@@ -211,6 +213,7 @@ def test_get_settings_from_dci_rhel_agent_settings_file_with_only_topic_key():
             "with_source": False,
             "registry": None,
             "filters": [],
+            "package_filters": [],
         }
     ]
 
@@ -259,6 +262,7 @@ def test_get_settings_from_first_dci_rhel_agent_settings_file():
             "with_source": False,
             "registry": None,
             "filters": [],
+            "package_filters": [],
         }
     ]
 
@@ -364,6 +368,7 @@ def test_get_settings_with_jobs_key():
                 {"type": "component_type1", "tag": "tag1"},
                 {"type": "component_type2", "tag": "tag2"},
             ],
+            "package_filters": [],
         },
         {
             "name": "RHEL-8.1",
@@ -395,6 +400,7 @@ def test_get_settings_with_jobs_key():
             "with_debug": False,
             "with_source": False,
             "filters": [],
+            "package_filters": [],
         },
     ]
 
@@ -441,6 +447,7 @@ def test_get_settings_local_repo_added_to_an_old_settings_file():
         "with_source": False,
         "registry": None,
         "filters": [],
+        "package_filters": [],
     }
 
 
@@ -468,6 +475,7 @@ def test_get_settings_local_repo_with_multiple_topics():
         "with_source": False,
         "registry": None,
         "filters": [],
+        "package_filters": [],
     }
     assert settings[1] == {
         "variants": [],
@@ -486,6 +494,7 @@ def test_get_settings_local_repo_with_multiple_topics():
         "with_source": False,
         "registry": None,
         "filters": [],
+        "package_filters": [],
     }
 
 
@@ -524,6 +533,7 @@ def test_get_settings_with_debug_without_a_variant():
         "with_source": False,
         "registry": None,
         "filters": [],
+        "package_filters": [],
     }
 
 
@@ -564,6 +574,7 @@ def test_get_settings_with_debug_with_variants():
         "with_source": True,
         "registry": None,
         "filters": [],
+        "package_filters": [],
     }
 
 
@@ -604,6 +615,7 @@ def test_nrt_get_settings_with_debug_in_the_cli_overwriting_settings():
         "with_source": False,
         "registry": None,
         "filters": [],
+        "package_filters": [],
     }
 
 
@@ -716,6 +728,7 @@ def test_get_settings_v2():
             "api_secret": "",
             "cs_url": "",
             "filters": [],
+            "package_filters":[],
         },
         {
             "registry": None,
@@ -744,6 +757,7 @@ def test_get_settings_v2():
             "filters": [
                 {"type": "compose", "tag": "milestone"},
             ],
+            "package_filters": [],
         },
         {
             "registry": None,
@@ -765,6 +779,7 @@ def test_get_settings_v2():
                 {"type": "compose", "tag": "nightly"},
                 {"type": "compose-noinstall"},
             ],
+            "package_filters": [],
         },
     ]
 
