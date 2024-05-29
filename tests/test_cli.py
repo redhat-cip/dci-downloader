@@ -402,3 +402,9 @@ def test_multiple_package_filter_args():
     args = parse_arguments(
         ["RHEL-9.2", "/tmp/repo", "--package-filter", "glibc", "--package-filter", "kernel", "--package-filter", "grub"])
     assert args["package_filters"] == ["glibc", "kernel", "grub"]
+
+
+def test_tech_preview_arg():
+    args = parse_arguments(
+        ["RHEL-9.2", "/tmp/repo", "--local-repo", "/tmp/repo", "--tech-preview", "rhdl"])
+    assert args["tech_preview"] == ["rhdl"]

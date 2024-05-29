@@ -146,6 +146,7 @@ def test_get_settings_read_arguments():
         "registry": None,
         "filters": [],
         "package_filters": [],
+        "tech_preview": [],
     }
 
 
@@ -180,6 +181,7 @@ def test_get_settings_read_arguments_download_everything():
         "registry": None,
         "filters": [],
         "package_filters": [],
+        "tech_preview": [],
     }
 
 
@@ -214,6 +216,7 @@ def test_get_settings_from_dci_rhel_agent_settings_file_with_only_topic_key():
             "registry": None,
             "filters": [],
             "package_filters": [],
+            "tech_preview": [],
         }
     ]
 
@@ -263,6 +266,7 @@ def test_get_settings_from_first_dci_rhel_agent_settings_file():
             "registry": None,
             "filters": [],
             "package_filters": [],
+            "tech_preview": [],
         }
     ]
 
@@ -369,6 +373,7 @@ def test_get_settings_with_jobs_key():
                 {"type": "component_type2", "tag": "tag2"},
             ],
             "package_filters": [],
+            "tech_preview": [],
         },
         {
             "name": "RHEL-8.1",
@@ -401,6 +406,7 @@ def test_get_settings_with_jobs_key():
             "with_source": False,
             "filters": [],
             "package_filters": [],
+            "tech_preview": [],
         },
     ]
 
@@ -448,6 +454,7 @@ def test_get_settings_local_repo_added_to_an_old_settings_file():
         "registry": None,
         "filters": [],
         "package_filters": [],
+        "tech_preview": [],
     }
 
 
@@ -476,6 +483,7 @@ def test_get_settings_local_repo_with_multiple_topics():
         "registry": None,
         "filters": [],
         "package_filters": [],
+        "tech_preview": [],
     }
     assert settings[1] == {
         "variants": [],
@@ -495,6 +503,7 @@ def test_get_settings_local_repo_with_multiple_topics():
         "registry": None,
         "filters": [],
         "package_filters": [],
+        "tech_preview": [],
     }
 
 
@@ -534,6 +543,7 @@ def test_get_settings_with_debug_without_a_variant():
         "registry": None,
         "filters": [],
         "package_filters": [],
+        "tech_preview": [],
     }
 
 
@@ -575,6 +585,7 @@ def test_get_settings_with_debug_with_variants():
         "registry": None,
         "filters": [],
         "package_filters": [],
+        "tech_preview": [],
     }
 
 
@@ -616,6 +627,7 @@ def test_nrt_get_settings_with_debug_in_the_cli_overwriting_settings():
         "registry": None,
         "filters": [],
         "package_filters": [],
+        "tech_preview": [],
     }
 
 
@@ -728,7 +740,8 @@ def test_get_settings_v2():
             "api_secret": "",
             "cs_url": "",
             "filters": [],
-            "package_filters":[],
+            "package_filters": [],
+            "tech_preview": [],
         },
         {
             "registry": None,
@@ -758,6 +771,7 @@ def test_get_settings_v2():
                 {"type": "compose", "tag": "milestone"},
             ],
             "package_filters": [],
+            "tech_preview": [],
         },
         {
             "registry": None,
@@ -780,6 +794,7 @@ def test_get_settings_v2():
                 {"type": "compose-noinstall"},
             ],
             "package_filters": [],
+            "tech_preview": [],
         },
     ]
 

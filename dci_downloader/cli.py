@@ -140,6 +140,13 @@ def parse_arguments(arguments):
         help="Download only the specified package(s) (e.g. kernel, glibc, etc)",
         default=[]
     )
+    parser.add_argument(
+        "--tech-preview",
+        action="append",
+        dest="tech_preview",
+        help=argparse.SUPPRESS,
+        default=[]
+    )
     parsed_arguments = parser.parse_args(arguments)
     if not parsed_arguments.archs:
         parsed_arguments.archs = ["x86_64"]

@@ -101,16 +101,18 @@ def get_components(topic, filters=[]):
     return returned_components
 
 
-def build_s3_context(component_id, cs_url, client_id, api_secret):
+def build_s3_context(component_id, options):
     class S3Context(object):
         """
         S3Context builds a request Session() object configured to download
         files from S3 through a redirection from DCI API.
         """
 
-        def __init__(self, base_url, client_id, api_secret):
+        def __init__(self, base_url, options):
             self.threadlocal = local()
-            self.session_auth = DciSignatureAuth(client_id, api_secret)
+            self.session_auth = DciSignatureAuth(
+                options["client_id"], options["api_secret"]
+            )
             self.base_url = base_url
 
         @property
@@ -137,8 +139,12 @@ def build_s3_context(component_id, cs_url, client_id, api_secret):
                 "%s/%s" % (self.base_url, relpath.lstrip("/")), allow_redirects=True
             )
 
-    base_url = "%s/api/v1/components/%s/files" % (cs_url, component_id)
-    return S3Context(base_url, client_id, api_secret)
+    base_url = (
+        "%s/api/v2/components/%s/files" % (options["cs_url"], component_id)
+        if "rhdl" in options["tech_preview"]
+        else "%s/api/v1/components/%s/files" % (options["cs_url"], component_id)
+    )
+    return S3Context(base_url, options)
 
 
 def retry(tries=3, delay=2, multiplier=2):

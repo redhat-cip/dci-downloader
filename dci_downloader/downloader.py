@@ -36,9 +36,12 @@ def download_component(topic_info, topic, component):
     print("Download component %s" % component["name"])
     context = build_s3_context(
         component_id=component["id"],
-        cs_url=topic_info["cs_url"],
-        client_id=topic_info["client_id"],
-        api_secret=topic_info["api_secret"],
+        options={
+            "cs_url": topic_info["cs_url"],
+            "client_id": topic_info["client_id"],
+            "api_secret": topic_info["api_secret"],
+            "tech_preview": topic_info["tech_preview"],
+        },
     )
     files_list = get_files_list(context)
     if component["type"].lower() in ["compose", "compose-noinstall"]:

@@ -61,6 +61,7 @@ def _clean_topic(topic_info):
         "with_source": with_source,
         "filters": filters,
         "package_filters": package_filters,
+        "tech_preview": topic_info.get("tech_preview", []),
     }
 
 
@@ -154,6 +155,7 @@ def get_settings(sys_args, env_variables={}):
                 "filters": cli_arguments["filters"],
                 "component_id": cli_arguments["component_id"],
                 "package_filters": cli_arguments["package_filters"],
+                "tech_preview": cli_arguments["tech_preview"],
             }
         )
 
