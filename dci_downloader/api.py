@@ -139,11 +139,7 @@ def build_s3_context(component_id, options):
                 "%s/%s" % (self.base_url, relpath.lstrip("/")), allow_redirects=True
             )
 
-    base_url = (
-        "%s/api/v2/components/%s/files" % (options["cs_url"], component_id)
-        if "rhdl" in options["tech_preview"]
-        else "%s/api/v1/components/%s/files" % (options["cs_url"], component_id)
-    )
+    base_url = "%s/api/v1/components/%s/files" % (options["cs_url"], component_id)
     return S3Context(base_url, options)
 
 

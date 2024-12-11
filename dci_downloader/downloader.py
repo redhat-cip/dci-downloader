@@ -40,7 +40,6 @@ def download_component(topic_info, topic, component):
             "cs_url": topic_info["cs_url"],
             "client_id": topic_info["client_id"],
             "api_secret": topic_info["api_secret"],
-            "tech_preview": topic_info["tech_preview"],
         },
     )
     files_list = get_files_list(context)
